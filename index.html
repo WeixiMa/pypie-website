@@ -16,8 +16,11 @@
             overflow: hidden;
         }
         :root {
-            --code-left: 20vw;
+            --code-left: 18vw;
             --code-left-secondary: var(--code-left);
+            --hero-pad-x: 2rem;
+            --hero-pad-top: clamp(3.5rem, 8vh, 6rem);
+            --hero-pad-bottom: clamp(1.5rem, 4vh, 2.5rem);
         }
         .top-actions {
             display: flex;
@@ -37,7 +40,7 @@
         .hero {
             background-color: #343a40;
             color: white;
-            padding: clamp(3.5rem, 8vh, 6rem) 2rem clamp(1.5rem, 4vh, 2.5rem);
+            padding: var(--hero-pad-top) var(--hero-pad-x) var(--hero-pad-bottom);
             flex: 1 1 auto;
             min-height: 0;
             text-align: center;
@@ -48,7 +51,7 @@
             position: absolute;
             inset: 0;
             margin: 0;
-            padding: 2rem 2rem 2rem var(--code-left);
+            padding: 2rem 2rem 2rem calc(var(--code-left) + var(--hero-pad-x));
             font-family: "Courier New", monospace;
             font-size: 1.35rem;
             line-height: 1.6;
@@ -158,24 +161,13 @@
         <a class="btn" href="#">Language Reference</a>
     </div>
     <div class="hero">
-        <pre class="hero-code" aria-hidden="true"><span class="op">@</span><span class="fn">op</span>
-<span class="kw">def</span> <span class="fn">softmax</span>(<span class="code-var">x</span>: <span class="type">Tensor</span>[<span class="type">float</span>][[<span class="code-var">m</span>, <span class="code-var">n</span>]]) <span class="op">-></span> <span class="type">Tensor</span>[<span class="type">float</span>][[<span class="code-var">m</span>, <span class="code-var">n</span>]]:
-    <span class="code-var">x_exp</span> = <span class="code-var">x</span>.exp()
-    <span class="code-var">sums</span> = <span class="code-var">x_exp</span>.sum(<span class="num">1</span>).reshape([<span class="code-var">m</span>, <span class="num">1</span>])
-    <span class="kw">return</span> <span class="code-var">x_exp</span> <span class="op">/</span> <span class="code-var">sums</span></pre>
+        <pre class="hero-code" aria-hidden="true"></pre>
         <div class="hero-content">
             <h1>PyPie</h1>
             <p>Tensor programming, fluid & safe</p>
         </div>
-        <pre class="hero-code-secondary" aria-hidden="true"><span class="op">@</span><span class="fn">op</span>
-<span class="kw">def</span> <span class="fn">cross_entropy</span>(<span class="code-var">pred</span>: <span class="type">Tensor</span>[<span class="type">float</span>][[<span class="code-var">m</span>, <span class="code-var">n</span>]], <span class="code-var">indices</span>: <span class="type">Tensor</span>[<span class="type">int</span>][[<span class="code-var">m</span>]]) <span class="op">-></span> <span class="type">float</span>:
-    <span class="code-var">probs</span> = softmax(<span class="code-var">pred</span>)
-    <span class="code-var">labels</span> = [<span class="code-var">row</span>[<span class="code-var">idx</span>] <span class="kw">for</span> <span class="code-var">row</span>, <span class="code-var">idx</span> <span class="kw">in</span> zip(<span class="code-var">probs</span>, <span class="code-var">indices</span>)]
-    <span class="kw">return</span> -<span class="code-var">labels</span>.log().mean()</pre>
-        <pre class="hero-code-example" aria-hidden="true"><span class="code-var">pred</span> = <span class="type">Tensor</span>([[<span class="num">0.1</span>, <span class="num">0.3</span>, <span class="num">0.6</span>], [<span class="num">0.3</span>, <span class="num">0.2</span>, <span class="num">0.5</span>]])
-<span class="code-var">indices</span> = <span class="type">Tensor</span>([<span class="num">0</span>, <span class="num">2</span>])
-<span class="op">&gt;</span> <span class="fn">cross_entropy</span><span class="op">(</span><span class="code-var">pred</span>, <span class="code-var">indices</span><span class="op">)</span>
-<span class="num">1.1465</span></pre>
+        <pre class="hero-code-secondary" aria-hidden="true"></pre>
+        <pre class="hero-code-example" aria-hidden="true"></pre>
     </div>
     <div class="content">
         <div class="about">
