@@ -135,7 +135,7 @@
         overview: {
             id: "overview",
             slug: "index.html",
-            title: "Overview",
+            title: "0. Overview",
             lead:
                 "Four short chapters that move from tensors to fitting a quadratic. Each page pairs prose with a PyPie AST snippet you can reuse.",
             callout: "Tip: Use the left navigation to hop between chapters.",
@@ -144,7 +144,7 @@
             {
                 id: "tensors",
                 slug: "tensors.html",
-                title: "Tensors",
+                title: "1. Tensors",
                 lead:
                     "Tensors are typed arrays with explicit shapes. PyPie keeps shapes in the type system, so you can reason about batch size, features, and outputs before you run.",
                 summary: "Typed arrays with explicit shapes and a scaling helper.",
@@ -159,7 +159,7 @@
             {
                 id: "forward-line",
                 slug: "forward-line.html",
-                title: "A Forward Line",
+                title: "2. A Forward Line",
                 lead:
                     "A single linear layer maps inputs into a new space. This forward pass is the core primitive behind every dense layer.",
                 summary: "The matrix multiply plus bias that powers dense layers.",
@@ -174,7 +174,7 @@
             {
                 id: "learning-line",
                 slug: "learning-line.html",
-                title: "Learning a Line",
+                title: "3. Learning a Line",
                 lead:
                     "Training a line means nudging weights in the direction of lower error. Even with a tiny batch, gradient steps look the same.",
                 summary: "One gradient step for a linear model.",
@@ -189,7 +189,7 @@
             {
                 id: "learning-quad",
                 slug: "learning-quad.html",
-                title: "Learning a Quad",
+                title: "4. Learning a Quad",
                 lead:
                     "Quadratics can be learned by expanding the forward pass. This example keeps the shape annotations explicit so you can track the math.",
                 summary: "Expanding the model to a quadratic.",
