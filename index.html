@@ -17,7 +17,7 @@
         }
         :root {
             --code-left: 20vw;
-            --code-left-secondary: calc(var(--code-left) - 2vw);
+            --code-left-secondary: var(--code-left);
         }
         .top-actions {
             display: flex;
@@ -83,6 +83,23 @@
             z-index: 0;
             margin-top: 0.75rem;
         }
+        .code-type-tooltip {
+            position: fixed;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -130%);
+            background: rgba(12, 12, 12, 0.9);
+            color: #f8f9fa;
+            font-family: "Courier New", monospace;
+            font-size: 0.9rem;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 3;
+            transition: opacity 120ms ease;
+        }
         .hero-code .kw,
         .hero-code-secondary .kw,
         .hero-code-example .kw {
@@ -107,6 +124,9 @@
         .hero-code-secondary .op,
         .hero-code-example .op {
             color: rgba(255, 255, 255, 0.3);
+        }
+        .code-var {
+            display: inline-block;
         }
         .hero-content {
             position: relative;
@@ -139,22 +159,22 @@
     </div>
     <div class="hero">
         <pre class="hero-code" aria-hidden="true"><span class="op">@</span><span class="fn">op</span>
-<span class="kw">def</span> <span class="fn">softmax</span>(x: <span class="type">Tensor</span>[<span class="type">float</span>][[m, n]]) <span class="op">-></span> <span class="type">Tensor</span>[<span class="type">float</span>][[m, n]]:
-    x_exp = x.exp()
-    sums = x_exp.sum(<span class="num">1</span>).reshape([m, <span class="num">1</span>])
-    <span class="kw">return</span> x_exp <span class="op">/</span> sums</pre>
+<span class="kw">def</span> <span class="fn">softmax</span>(<span class="code-var">x</span>: <span class="type">Tensor</span>[<span class="type">float</span>][[<span class="code-var">m</span>, <span class="code-var">n</span>]]) <span class="op">-></span> <span class="type">Tensor</span>[<span class="type">float</span>][[<span class="code-var">m</span>, <span class="code-var">n</span>]]:
+    <span class="code-var">x_exp</span> = <span class="code-var">x</span>.exp()
+    <span class="code-var">sums</span> = <span class="code-var">x_exp</span>.sum(<span class="num">1</span>).reshape([<span class="code-var">m</span>, <span class="num">1</span>])
+    <span class="kw">return</span> <span class="code-var">x_exp</span> <span class="op">/</span> <span class="code-var">sums</span></pre>
         <div class="hero-content">
             <h1>PyPie</h1>
             <p>Tensor programming, fluid & safe</p>
         </div>
         <pre class="hero-code-secondary" aria-hidden="true"><span class="op">@</span><span class="fn">op</span>
-<span class="kw">def</span> <span class="fn">cross_entropy</span>(pred: <span class="type">Tensor</span>[<span class="type">float</span>][[m, n]], indices: <span class="type">Tensor</span>[<span class="type">int</span>][[m]]) <span class="op">-></span> <span class="type">float</span>:
-    probs = softmax(pred)
-    labels = [row[idx] <span class="kw">for</span> row, idx <span class="kw">in</span> zip(probs, indices)]
-    <span class="kw">return</span> -labels.log().mean()</pre>
-        <pre class="hero-code-example" aria-hidden="true">pred = <span class="type">Tensor</span>([[<span class="num">0.1</span>, <span class="num">0.3</span>, <span class="num">0.6</span>], [<span class="num">0.3</span>, <span class="num">0.2</span>, <span class="num">0.5</span>]])
-indices = <span class="type">Tensor</span>([<span class="num">0</span>, <span class="num">2</span>])
-<span class="op">&gt;</span> <span class="fn">cross_entropy</span><span class="op">(</span>pred, indices<span class="op">)</span>
+<span class="kw">def</span> <span class="fn">cross_entropy</span>(<span class="code-var">pred</span>: <span class="type">Tensor</span>[<span class="type">float</span>][[<span class="code-var">m</span>, <span class="code-var">n</span>]], <span class="code-var">indices</span>: <span class="type">Tensor</span>[<span class="type">int</span>][[<span class="code-var">m</span>]]) <span class="op">-></span> <span class="type">float</span>:
+    <span class="code-var">probs</span> = softmax(<span class="code-var">pred</span>)
+    <span class="code-var">labels</span> = [<span class="code-var">row</span>[<span class="code-var">idx</span>] <span class="kw">for</span> <span class="code-var">row</span>, <span class="code-var">idx</span> <span class="kw">in</span> zip(<span class="code-var">probs</span>, <span class="code-var">indices</span>)]
+    <span class="kw">return</span> -<span class="code-var">labels</span>.log().mean()</pre>
+        <pre class="hero-code-example" aria-hidden="true"><span class="code-var">pred</span> = <span class="type">Tensor</span>([[<span class="num">0.1</span>, <span class="num">0.3</span>, <span class="num">0.6</span>], [<span class="num">0.3</span>, <span class="num">0.2</span>, <span class="num">0.5</span>]])
+<span class="code-var">indices</span> = <span class="type">Tensor</span>([<span class="num">0</span>, <span class="num">2</span>])
+<span class="op">&gt;</span> <span class="fn">cross_entropy</span><span class="op">(</span><span class="code-var">pred</span>, <span class="code-var">indices</span><span class="op">)</span>
 <span class="num">1.1465</span></pre>
     </div>
     <div class="content">
@@ -167,5 +187,7 @@ indices = <span class="type">Tensor</span>([<span class="num">0</span>, <span cl
         </div>
 
     </div>
+    <div class="code-type-tooltip" aria-hidden="true"></div>
+    <script src="code-types.js"></script>
 </body>
 </html>
