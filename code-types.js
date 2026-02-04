@@ -37,6 +37,7 @@ const exprStmt = (value) => ({ kind: "ExprStmt", value });
 const replInput = (value) => ({ kind: "ReplInput", value });
 const replOutput = (value) => ({ kind: "ReplOutput", value });
 const replAssign = (target, value) => ({ kind: "ReplAssign", target, value });
+const block = (body) => ({ kind: "Block", body });
 
 const attr = (value, name) => ({ kind: "Attribute", value, attr: plainId(name) });
 const call = (callee, args) => ({ kind: "Call", callee, args });
@@ -134,11 +135,12 @@ const exampleBlock = {
   ],
 };
 
-const blocks = [
+const DEFAULT_BLOCKS = [
   { selector: ".hero-code", block: softmaxBlock },
   { selector: ".hero-code-secondary", block: crossEntropyBlock },
   { selector: ".hero-code-example", block: exampleBlock },
 ];
+let blocks = DEFAULT_BLOCKS;
 
 const escapeHtml = (value) =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -441,6 +443,47 @@ const rebuildMap = () => {
   });
 };
 
+const setBlocks = (nextBlocks) => {
+  if (Array.isArray(nextBlocks) && nextBlocks.length > 0) {
+    blocks = nextBlocks;
+  } else {
+    blocks = DEFAULT_BLOCKS;
+  }
+  renderBlocks();
+  rebuildMap();
+};
+
+if (typeof window !== "undefined") {
+  window.PYPIE_SET_BLOCKS = setBlocks;
+  window.PYPIE_AST = {
+    id,
+    varId,
+    fnId,
+    typeId,
+    plainId,
+    typeList,
+    typeSubscript,
+    arg,
+    funcDef,
+    assign,
+    ret,
+    exprStmt,
+    replInput,
+    replOutput,
+    replAssign,
+    attr,
+    call,
+    subscript,
+    listExpr,
+    listComp,
+    binOp,
+    unaryOp,
+    number,
+    tensorType,
+    block,
+  };
+}
+
 const findTypeAt = (x, y) => {
   for (const entry of rectEntries) {
     const rect = entry.rect;
@@ -469,9 +512,10 @@ const findTypeAt = (x, y) => {
 };
 
 const tooltip = document.querySelector(".code-type-tooltip");
-const hero = document.querySelector(".hero");
+const codeSurface =
+  document.querySelector("[data-code-surface]") || document.querySelector(".hero");
 
-if (tooltip && hero) {
+if (tooltip && codeSurface) {
   const show = (x, y, type) => {
     tooltip.textContent = type;
     tooltip.style.opacity = "1";
@@ -484,12 +528,12 @@ if (tooltip && hero) {
   };
 
   const handleMove = (event) => {
-    const heroRect = hero.getBoundingClientRect();
+    const surfaceRect = codeSurface.getBoundingClientRect();
     if (
-      event.clientX < heroRect.left ||
-      event.clientX > heroRect.right ||
-      event.clientY < heroRect.top ||
-      event.clientY > heroRect.bottom
+      event.clientX < surfaceRect.left ||
+      event.clientX > surfaceRect.right ||
+      event.clientY < surfaceRect.top ||
+      event.clientY > surfaceRect.bottom
     ) {
       hide();
       return;
@@ -500,6 +544,10 @@ if (tooltip && hero) {
       return;
     }
     const target = event.target;
+    if (target instanceof Element && target.closest("[data-code-ignore]")) {
+      hide();
+      return;
+    }
     if (target instanceof Element && target.closest(".hero-content")) {
       hide();
       return;
@@ -516,7 +564,7 @@ if (tooltip && hero) {
   window.addEventListener("load", rebuildAndSync);
 
   document.addEventListener("mousemove", handleMove);
-  hero.addEventListener("mouseleave", hide);
+  codeSurface.addEventListener("mouseleave", hide);
 
   if (document.fonts && "ready" in document.fonts) {
     document.fonts.ready.then(rebuildAndSync);

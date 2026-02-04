@@ -4,10 +4,20 @@
         return;
     }
 
+    const getRootUrl = () => {
+        if (document.currentScript && document.currentScript.src) {
+            return new URL(".", document.currentScript.src);
+        }
+        return new URL("./", window.location.href);
+    };
+
+    const rootUrl = getRootUrl();
+    const withRoot = (href) => new URL(href, rootUrl).href;
+
     const links = [
-        { href: "learn.html", label: "Deep Learning 101" },
-        { href: "language-reference.html", label: "Language Reference" },
-        { href: "installation.html", label: "Installation" }
+        { href: withRoot("learn/index.html"), label: "Deep Learning 101" },
+        { href: withRoot("language-reference.html"), label: "Language Reference" },
+        { href: withRoot("installation.html"), label: "Installation" }
     ];
 
     const linksMarkup = links
