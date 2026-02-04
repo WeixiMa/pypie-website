@@ -213,12 +213,7 @@
     </style>
 </head>
 <body class="theme-dark">
-    <div class="top-actions">
-        <a class="btn" href="learn.html">Learn DL with PyPie</a>
-        <a class="btn" href="language-reference.html">Language Reference</a>
-        <a class="btn" href="installation.html">Installation</a>
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="To the light side!" title="To the light side!"></button>
-    </div>
+    <div data-top-actions></div>
     <div class="hero">
         <pre class="hero-code" aria-hidden="true"></pre>
         <div class="hero-content">
@@ -239,26 +234,7 @@
 
     </div>
     <div class="code-type-tooltip" aria-hidden="true"></div>
+    <script src="top-actions.js"></script>
     <script src="code-types.js"></script>
-    <script>
-        const themeToggle = document.getElementById("theme-toggle");
-        const root = document.body;
-        const setTheme = (name) => {
-            root.classList.remove("theme-dark", "theme-solaris");
-            root.classList.add(name);
-            if (themeToggle) {
-                const label = name === "theme-solaris" ? "To the dark side!" : "To the light side!";
-                themeToggle.setAttribute("aria-label", label);
-                themeToggle.setAttribute("title", label);
-            }
-        };
-        if (themeToggle) {
-            themeToggle.addEventListener("click", () => {
-                const isSolaris = root.classList.contains("theme-solaris");
-                setTheme(isSolaris ? "theme-dark" : "theme-solaris");
-            });
-        }
-        setTheme("theme-dark");
-    </script>
 </body>
 </html>

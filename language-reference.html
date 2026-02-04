@@ -86,37 +86,13 @@
     </style>
 </head>
 <body class="theme-dark">
-    <div class="top-actions">
-        <a class="btn" href="learn.html">Learn DL with PyPie</a>
-        <a class="btn" href="language-reference.html">Language Reference</a>
-        <a class="btn" href="installation.html">Installation</a>
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="I'm with the light side" title="I'm with the light side"></button>
-    </div>
+    <div data-top-actions></div>
     <main class="page">
         <div>
             <h1>Language Reference</h1>
             <p>Every tensor primitive, shape rule, and optimizer hint in one place. Explore the syntax that makes PyPie feel effortless.</p>
         </div>
     </main>
-    <script>
-        const themeToggle = document.getElementById("theme-toggle");
-        const root = document.body;
-        const setTheme = (name) => {
-            root.classList.remove("theme-dark", "theme-solaris");
-            root.classList.add(name);
-            if (themeToggle) {
-                const label = name === "theme-solaris" ? "I'm with the dark side" : "I'm with the light side";
-                themeToggle.setAttribute("aria-label", label);
-                themeToggle.setAttribute("title", label);
-            }
-        };
-        if (themeToggle) {
-            themeToggle.addEventListener("click", () => {
-                const isSolaris = root.classList.contains("theme-solaris");
-                setTheme(isSolaris ? "theme-dark" : "theme-solaris");
-            });
-        }
-        setTheme("theme-dark");
-    </script>
+    <script src="top-actions.js"></script>
 </body>
 </html>
