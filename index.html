@@ -8,8 +8,8 @@
         body {
             font-family: sans-serif;
             margin: 0;
-            background-color: #f8f9fa;
-            color: #212529;
+            background-color: var(--page-bg);
+            color: var(--text-color);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -21,25 +21,62 @@
             --hero-pad-x: 2rem;
             --hero-pad-top: clamp(3.5rem, 8vh, 6rem);
             --hero-pad-bottom: clamp(1.5rem, 4vh, 2.5rem);
+            --page-bg: #f8f9fa;
+            --text-color: #212529;
+            --hero-bg: #343a40;
+            --hero-text: #ffffff;
+            --top-bar-bg: #212529;
+            --btn-text: #f8f9fa;
+            --btn-border: #f8f9fa;
+            --code-base: rgba(255, 255, 255, 0.18);
+            --code-kw: rgba(255, 219, 92, 0.3);
+            --code-fn: rgba(138, 235, 255, 0.3);
+            --code-type: rgba(255, 167, 227, 0.3);
+            --code-num: rgba(190, 255, 151, 0.3);
+            --code-op: rgba(255, 255, 255, 0.3);
+            --tooltip-bg: rgba(12, 12, 12, 0.9);
+            --tooltip-text: #f8f9fa;
+            --tooltip-border: rgba(255, 255, 255, 0.2);
+        }
+        body.theme-solaris {
+            --page-bg: #fdf6e3;
+            --text-color: #586e75;
+            --hero-bg: #eee8d5;
+            --hero-text: #073642;
+            --top-bar-bg: #e7ddc7;
+            --btn-text: #586e75;
+            --btn-border: #93a1a1;
+            --code-base: rgba(88, 110, 117, 0.45);
+            --code-kw: rgba(181, 137, 0, 0.6);
+            --code-fn: rgba(42, 161, 152, 0.6);
+            --code-type: rgba(108, 113, 196, 0.6);
+            --code-num: rgba(133, 153, 0, 0.6);
+            --code-op: rgba(88, 110, 117, 0.6);
+            --tooltip-bg: rgba(253, 246, 227, 0.95);
+            --tooltip-text: #586e75;
+            --tooltip-border: rgba(147, 161, 161, 0.5);
         }
         .top-actions {
             display: flex;
             justify-content: center;
             gap: 1rem;
             padding: clamp(0.5rem, 2vh, 1rem) 2rem;
-            background-color: #212529;
+            background-color: var(--top-bar-bg);
         }
         .top-actions .btn {
-            color: #f8f9fa;
+            color: var(--btn-text);
             text-decoration: none;
-            border: 1px solid #f8f9fa;
+            border: 1px solid var(--btn-border);
             padding: 0.5rem 1.25rem;
             border-radius: 4px;
             font-weight: 600;
+            background: transparent;
+            cursor: pointer;
+            font: inherit;
         }
         .hero {
-            background-color: #343a40;
-            color: white;
+            background-color: var(--hero-bg);
+            color: var(--hero-text);
             padding: var(--hero-pad-top) var(--hero-pad-x) var(--hero-pad-bottom);
             flex: 1 1 auto;
             min-height: 0;
@@ -55,7 +92,7 @@
             font-family: "Courier New", monospace;
             font-size: 1.35rem;
             line-height: 1.6;
-            color: rgba(255, 255, 255, 0.18);
+            color: var(--code-base);
             white-space: pre;
             text-align: left;
             pointer-events: none;
@@ -67,7 +104,7 @@
             font-family: "Courier New", monospace;
             font-size: 1.35rem;
             line-height: 1.6;
-            color: rgba(255, 255, 255, 0.18);
+            color: var(--code-base);
             white-space: pre;
             text-align: left;
             pointer-events: none;
@@ -79,7 +116,7 @@
             font-family: "Courier New", monospace;
             font-size: 1.35rem;
             line-height: 1.6;
-            color: rgba(255, 255, 255, 0.18);
+            color: var(--code-base);
             white-space: pre;
             text-align: left;
             pointer-events: none;
@@ -91,12 +128,12 @@
             left: 0;
             top: 0;
             transform: translate(-50%, -130%);
-            background: rgba(12, 12, 12, 0.9);
-            color: #f8f9fa;
+            background: var(--tooltip-bg);
+            color: var(--tooltip-text);
             font-family: "Courier New", monospace;
             font-size: 0.9rem;
             padding: 0.25rem 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--tooltip-border);
             border-radius: 4px;
             opacity: 0;
             pointer-events: none;
@@ -106,27 +143,27 @@
         .hero-code .kw,
         .hero-code-secondary .kw,
         .hero-code-example .kw {
-            color: rgba(255, 219, 92, 0.3);
+            color: var(--code-kw);
         }
         .hero-code .fn,
         .hero-code-secondary .fn,
         .hero-code-example .fn {
-            color: rgba(138, 235, 255, 0.3);
+            color: var(--code-fn);
         }
         .hero-code .type,
         .hero-code-secondary .type,
         .hero-code-example .type {
-            color: rgba(255, 167, 227, 0.3);
+            color: var(--code-type);
         }
         .hero-code .num,
         .hero-code-secondary .num,
         .hero-code-example .num {
-            color: rgba(190, 255, 151, 0.3);
+            color: var(--code-num);
         }
         .hero-code .op,
         .hero-code-secondary .op,
         .hero-code-example .op {
-            color: rgba(255, 255, 255, 0.3);
+            color: var(--code-op);
         }
         .code-var {
             display: inline-block;
@@ -155,10 +192,11 @@
         }
     </style>
 </head>
-<body>
+<body class="theme-dark">
     <div class="top-actions">
         <a class="btn" href="#">Learn DL with PyPie</a>
         <a class="btn" href="#">Language Reference</a>
+        <button class="btn" id="theme-toggle" type="button">Solaris Light</button>
     </div>
     <div class="hero">
         <pre class="hero-code" aria-hidden="true"></pre>
@@ -181,5 +219,23 @@
     </div>
     <div class="code-type-tooltip" aria-hidden="true"></div>
     <script src="code-types.js"></script>
+    <script>
+        const themeToggle = document.getElementById("theme-toggle");
+        const root = document.body;
+        const setTheme = (name) => {
+            root.classList.remove("theme-dark", "theme-solaris");
+            root.classList.add(name);
+            if (themeToggle) {
+                themeToggle.textContent = name === "theme-solaris" ? "Dark Mode" : "Solaris Light";
+            }
+        };
+        if (themeToggle) {
+            themeToggle.addEventListener("click", () => {
+                const isSolaris = root.classList.contains("theme-solaris");
+                setTheme(isSolaris ? "theme-dark" : "theme-solaris");
+            });
+        }
+        setTheme("theme-dark");
+    </script>
 </body>
 </html>
