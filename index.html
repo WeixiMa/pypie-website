@@ -10,9 +10,10 @@
             margin: 0;
             background-color: #f8f9fa;
             color: #212529;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         :root {
             --code-left: 20vw;
@@ -22,7 +23,7 @@
             display: flex;
             justify-content: center;
             gap: 1rem;
-            padding: 1rem 2rem;
+            padding: clamp(0.5rem, 2vh, 1rem) 2rem;
             background-color: #212529;
         }
         .top-actions .btn {
@@ -36,8 +37,9 @@
         .hero {
             background-color: #343a40;
             color: white;
-            padding: 6rem 2rem 2.5rem;
-            min-height: 55vh;
+            padding: clamp(3.5rem, 8vh, 6rem) 2rem clamp(1.5rem, 4vh, 2.5rem);
+            flex: 1 1 auto;
+            min-height: 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -119,10 +121,11 @@
             margin-bottom: 2rem;
         }
         .content {
-            padding: 0 2rem 2rem;
+            padding: clamp(0.5rem, 2vh, 1rem) 2rem 1.5rem;
             max-width: 800px;
-            margin: auto;
+            margin: 0 auto;
             width: 100%;
+            flex: 0 0 auto;
         }
         .about {
             margin-top: 0;
@@ -131,8 +134,8 @@
 </head>
 <body>
     <div class="top-actions">
-        <a class="btn" href="#">Documentation</a>
-        <a class="btn" href="#">Tutorials</a>
+        <a class="btn" href="#">Learn DL with PyPie</a>
+        <a class="btn" href="#">Language Reference</a>
     </div>
     <div class="hero">
         <pre class="hero-code" aria-hidden="true"><span class="op">@</span><span class="fn">op</span>
