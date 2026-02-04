@@ -14,6 +14,10 @@
             display: flex;
             flex-direction: column;
         }
+        :root {
+            --code-left: 20vw;
+            --code-left-secondary: calc(var(--code-left) - 2vw);
+        }
         .top-actions {
             display: flex;
             justify-content: center;
@@ -32,9 +36,79 @@
         .hero {
             background-color: #343a40;
             color: white;
-            padding: 6rem 2rem 5rem;
+            padding: 6rem 2rem 2.5rem;
             min-height: 55vh;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-code {
+            position: absolute;
+            inset: 0;
+            margin: 0;
+            padding: 2rem 2rem 2rem var(--code-left);
+            font-family: "Courier New", monospace;
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.18);
+            white-space: pre;
+            text-align: left;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-code-secondary {
+            margin: 0;
+            padding: 0 2rem 2rem var(--code-left-secondary);
+            font-family: "Courier New", monospace;
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.18);
+            white-space: pre;
+            text-align: left;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero-code-example {
+            margin: 0;
+            padding: 0 2rem 2rem var(--code-left-secondary);
+            font-family: "Courier New", monospace;
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.18);
+            white-space: pre;
+            text-align: left;
+            pointer-events: none;
+            z-index: 0;
+            margin-top: 0.75rem;
+        }
+        .hero-code .kw,
+        .hero-code-secondary .kw,
+        .hero-code-example .kw {
+            color: rgba(255, 219, 92, 0.3);
+        }
+        .hero-code .fn,
+        .hero-code-secondary .fn,
+        .hero-code-example .fn {
+            color: rgba(138, 235, 255, 0.3);
+        }
+        .hero-code .type,
+        .hero-code-secondary .type,
+        .hero-code-example .type {
+            color: rgba(255, 167, 227, 0.3);
+        }
+        .hero-code .num,
+        .hero-code-secondary .num,
+        .hero-code-example .num {
+            color: rgba(190, 255, 151, 0.3);
+        }
+        .hero-code .op,
+        .hero-code-secondary .op,
+        .hero-code-example .op {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
         .hero h1 {
             font-size: 3rem;
@@ -45,16 +119,13 @@
             margin-bottom: 2rem;
         }
         .content {
-            padding: 2rem;
+            padding: 0 2rem 2rem;
             max-width: 800px;
             margin: auto;
             width: 100%;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
         }
         .about {
-            margin-top: auto;
+            margin-top: 0;
         }
     </style>
 </head>
@@ -64,15 +135,31 @@
         <a class="btn" href="#">Tutorials</a>
     </div>
     <div class="hero">
-        <h1>PyPie</h1>
-        <p>Tensor programming, fluid & safe</p>
+        <pre class="hero-code" aria-hidden="true"><span class="op">@</span><span class="fn">op</span>
+<span class="kw">def</span> <span class="fn">softmax</span>(x: <span class="type">Tensor</span>[<span class="type">float</span>][[m, n]]) <span class="op">-></span> <span class="type">Tensor</span>[<span class="type">float</span>][[m, n]]:
+    x_exp = x.exp()
+    sums = x_exp.sum(<span class="num">1</span>).reshape([m, <span class="num">1</span>])
+    <span class="kw">return</span> x_exp <span class="op">/</span> sums</pre>
+        <div class="hero-content">
+            <h1>PyPie</h1>
+            <p>Tensor programming, fluid & safe</p>
+        </div>
+        <pre class="hero-code-secondary" aria-hidden="true"><span class="op">@</span><span class="fn">op</span>
+<span class="kw">def</span> <span class="fn">cross_entropy</span>(pred: <span class="type">Tensor</span>[<span class="type">float</span>][[m, n]], indices: <span class="type">Tensor</span>[<span class="type">int</span>][[m]]) <span class="op">-></span> <span class="type">float</span>:
+    probs = softmax(pred)
+    labels = [row[idx] <span class="kw">for</span> row, idx <span class="kw">in</span> zip(probs, indices)]
+    <span class="kw">return</span> -labels.log().mean()</pre>
+        <pre class="hero-code-example" aria-hidden="true">pred = <span class="type">Tensor</span>([[<span class="num">0.1</span>, <span class="num">0.3</span>, <span class="num">0.6</span>], [<span class="num">0.3</span>, <span class="num">0.2</span>, <span class="num">0.5</span>]])
+indices = <span class="type">Tensor</span>([<span class="num">0</span>, <span class="num">2</span>])
+<span class="op">&gt;</span> <span class="fn">cross_entropy</span><span class="op">(</span>pred, indices<span class="op">)</span>
+<span class="num">1.1465</span></pre>
     </div>
     <div class="content">
         <div class="about">
             <h2>About PyPie</h2>
             <p>
                 PyPie is a Python library that brings simplicity and clarity to tensor programming.
-                Tensors statically typed by shapes, with broadcast and fusion.
+                Tensors are statically typed, with broadcast and fusion.
             </p>
         </div>
 
