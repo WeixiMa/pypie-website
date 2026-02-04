@@ -214,9 +214,10 @@
 </head>
 <body class="theme-dark">
     <div class="top-actions">
-        <a class="btn" href="#">Learn DL with PyPie</a>
-        <a class="btn" href="#">Language Reference</a>
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="I'm with the light side" title="I'm with the light side"></button>
+        <a class="btn" href="learn.html">Learn DL with PyPie</a>
+        <a class="btn" href="language-reference.html">Language Reference</a>
+        <a class="btn" href="installation.html">Installation</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="To the light side!" title="To the light side!"></button>
     </div>
     <div class="hero">
         <pre class="hero-code" aria-hidden="true"></pre>
@@ -246,7 +247,7 @@
             root.classList.remove("theme-dark", "theme-solaris");
             root.classList.add(name);
             if (themeToggle) {
-                const label = name === "theme-solaris" ? "I'm with the dark side" : "I'm with the light side";
+                const label = name === "theme-solaris" ? "To the dark side!" : "To the light side!";
                 themeToggle.setAttribute("aria-label", label);
                 themeToggle.setAttribute("title", label);
             }
