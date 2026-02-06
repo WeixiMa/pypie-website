@@ -26,73 +26,65 @@
     const stmtBlock = (ast, statement) => ast.block([statement]);
     render({
         id: "learning-line",
-        lead: "Training a line means nudging weights in the direction of lower error. This chapter uses turn-by-turn dialogue to explain one training step.",
-        section: {
-            id: "gradient-step",
-            title: "Gradient Step Chat",
-            body: "Follow the conversation from prediction to update.",
-            codeClass: "learning-line-code",
-            dialog: [
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "How does the model learn from one batch?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Predict, measure error, compute gradient, then update.",
-                },
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "What is the error expression?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Use this:",
-                    codeLabel: "Error expression",
-                    buildCodeBlock: (ast) => stmtBlock(ast, ast.assign(ast.varId("error"), ast.binOp(ast.varId("pred"), "-", ast.varId("y")))),
-                },
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "How do we compute the gradient?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Compute it like this:",
-                    codeLabel: "Gradient expression",
-                    buildCodeBlock: (ast) => stmtBlock(ast, ast.assign(ast.varId("grad"), ast.call(ast.attr(ast.attr(ast.varId("x"), "T"), "matmul"), [ast.varId("error")]))),
-                },
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "How are weights updated?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Update step:",
-                    codeLabel: "Weight update",
-                    buildCodeBlock: (ast) => stmtBlock(ast, ast.assign(ast.varId("w_next"), ast.binOp(ast.varId("w"), "-", ast.binOp(ast.varId("lr", "float"), "*", ast.varId("grad"))))),
-                },
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "Can I see the full step?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Here is the complete training-step function:",
-                    codeClass: "learning-line-code",
-                    codeLabel: "Linear train step",
-                },
-            ],
-        },
-        buildBlock: buildLearningLineBlock,
+        dialog: [
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "How does the model learn from one batch?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Predict, measure error, compute gradient, then update.",
+            },
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "What is the error expression?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Use this:",
+                codeLabel: "Error expression",
+                buildCodeBlock: (ast) => stmtBlock(ast, ast.assign(ast.varId("error"), ast.binOp(ast.varId("pred"), "-", ast.varId("y")))),
+            },
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "How do we compute the gradient?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Compute it like this:",
+                codeLabel: "Gradient expression",
+                buildCodeBlock: (ast) => stmtBlock(ast, ast.assign(ast.varId("grad"), ast.call(ast.attr(ast.attr(ast.varId("x"), "T"), "matmul"), [ast.varId("error")]))),
+            },
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "How are weights updated?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Update step:",
+                codeLabel: "Weight update",
+                buildCodeBlock: (ast) => stmtBlock(ast, ast.assign(ast.varId("w_next"), ast.binOp(ast.varId("w"), "-", ast.binOp(ast.varId("lr", "float"), "*", ast.varId("grad"))))),
+            },
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "Can I see the full step?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Here is the complete training-step function:",
+                codeLabel: "Linear train step",
+                buildCodeBlock: buildLearningLineBlock,
+            },
+        ],
     });
 })();

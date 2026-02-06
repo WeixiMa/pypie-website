@@ -10,19 +10,9 @@
         buildCodeBlock?: (ast: AstApi) => unknown;
     };
 
-    type LearnSectionConfig = {
-        id: string;
-        title: string;
-        body: string;
-        codeClass?: string;
-        dialog: LearnDialogMessage[];
-    };
-
     type LearnPageConfig = {
         id: string;
-        lead: string;
-        section: LearnSectionConfig;
-        buildBlock?: (ast: AstApi) => unknown;
+        dialog: LearnDialogMessage[];
     };
 
     type LearnRender = (config: LearnPageConfig) => void;
@@ -74,78 +64,69 @@
 
     render({
         id: "learning-quad",
-        lead: "Quadratics can be learned by expanding the forward pass. This final chapter keeps the same chat style and explicit typing.",
-        section: {
-            id: "quadratic-model",
-            title: "Quadratic Model Chat",
-            body: "A curved model, explained in the same two-person format.",
-            codeClass: "learning-quad-code",
-            dialog: [
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "What if the relationship is curved instead of linear?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Use this quadratic expression:",
-                    codeLabel: "Quadratic formula",
-                    buildCodeBlock: (ast: AstApi) =>
-                        exprBlock(
-                            ast,
+        dialog: [
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "What if the relationship is curved instead of linear?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Use this quadratic expression:",
+                codeLabel: "Quadratic formula",
+                buildCodeBlock: (ast: AstApi) =>
+                    exprBlock(
+                        ast,
+                        ast.binOp(
                             ast.binOp(
                                 ast.binOp(
-                                    ast.binOp(
-                                        ast.varId("a", "float"),
-                                        "*",
-                                        ast.binOp(ast.varId("x"), "*", ast.varId("x")),
-                                    ),
-                                    "+",
-                                    ast.binOp(ast.varId("b", "float"), "*", ast.varId("x")),
+                                    ast.varId("a", "float"),
+                                    "*",
+                                    ast.binOp(ast.varId("x"), "*", ast.varId("x")),
                                 ),
                                 "+",
-                                ast.varId("c", "float"),
+                                ast.binOp(ast.varId("b", "float"), "*", ast.varId("x")),
                             ),
+                            "+",
+                            ast.varId("c", "float"),
                         ),
-                },
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "Can this still run on a batch?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Yes. Input and output keep the same batch axis:",
-                    codeLabel: "Batched axis",
-                    buildCodeBlock: (ast: AstApi) =>
-                        exprBlock(ast, ast.listExpr([ast.varId("b", "int")])),
-                },
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "Why keep types visible here too?",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Type annotations catch shape mistakes before runtime.",
-                },
-                {
-                    side: "left",
-                    speaker: "Learner",
-                    text: "Show me the full function.",
-                },
-                {
-                    side: "right",
-                    speaker: "Guide",
-                    text: "Here is the batched quadratic definition:",
-                    codeClass: "learning-quad-code",
-                    codeLabel: "Quadratic forward model",
-                },
-            ],
-        },
-        buildBlock: buildLearningQuadBlock,
+                    ),
+            },
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "Can this still run on a batch?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Yes. Input and output keep the same batch axis:",
+                codeLabel: "Batched axis",
+                buildCodeBlock: (ast: AstApi) => exprBlock(ast, ast.listExpr([ast.varId("b", "int")])),
+            },
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "Why keep types visible here too?",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Type annotations catch shape mistakes before runtime.",
+            },
+            {
+                side: "left",
+                speaker: "Learner",
+                text: "Show me the full function.",
+            },
+            {
+                side: "right",
+                speaker: "Guide",
+                text: "Here is the batched quadratic definition:",
+                codeLabel: "Quadratic forward model",
+                buildCodeBlock: buildLearningQuadBlock,
+            },
+        ],
     });
 })();

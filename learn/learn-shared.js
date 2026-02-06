@@ -24,32 +24,34 @@
                 id: "tensors",
                 slug: "tensors/index.html",
                 title: "1. Tensors",
-                summary: "Typed arrays with explicit shapes and a scaling helper.",
             },
             {
                 id: "forward-line",
                 slug: "forward-line/index.html",
                 title: "2. A Forward Line",
-                summary: "The matrix multiply plus bias that powers dense layers.",
             },
             {
                 id: "learning-line",
                 slug: "learning-line/index.html",
                 title: "3. Learning a Line",
-                summary: "One gradient step for a linear model.",
             },
             {
                 id: "learning-quad",
                 slug: "learning-quad/index.html",
                 title: "4. Learning a Quad",
-                summary: "Expanding the model to a quadratic.",
             },
         ],
     };
     const setText = (selector, value) => {
         const element = document.querySelector(selector);
-        if (element && value) {
+        if (element && value !== undefined) {
             element.textContent = value;
+        }
+    };
+    const setHidden = (selector, hidden) => {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.toggleAttribute("hidden", hidden);
         }
     };
     const escapeHtml = (value) => String(value)
@@ -152,45 +154,36 @@
         const list = document.querySelector("[data-learn-overview-list]");
         if (list) {
             list.innerHTML = LEARN_SERIES.pages
-                .map((page) => `<p><a href="${withLearnRoot(page.slug)}">${page.title}</a> - ${page.summary}</p>`)
+                .map((page) => `<p><a href="${withLearnRoot(page.slug)}">${page.title}</a></p>`)
                 .join("");
         }
         setText("[data-learn-title]", LEARN_SERIES.overview.title);
         setText("[data-learn-lead]", leadOverride || LEARN_SERIES.overview.lead);
         setText("[data-learn-callout]", calloutOverride || LEARN_SERIES.overview.callout);
     };
-    const renderChapter = (config, pageId) => {
+    const renderChapter = (metaPage, dialogMessages = [], pageId) => {
         const section = document.querySelector("[data-learn-section]");
-        if (!section || !config.section) {
+        if (!section) {
             return;
         }
-        section.id = config.section.id;
+        section.id = pageId;
         const sectionTitle = section.querySelector("[data-learn-section-title]");
         if (sectionTitle) {
-            sectionTitle.textContent = config.section.title;
+            sectionTitle.textContent = "";
         }
         const sectionBody = section.querySelector("[data-learn-section-body]");
         if (sectionBody) {
-            sectionBody.textContent = config.section.body;
+            sectionBody.textContent = "";
         }
         const dialog = section.querySelector("[data-learn-dialog]");
         if (dialog) {
-            dialog.innerHTML = renderDialog(config.section.dialog, pageId);
+            dialog.innerHTML = renderDialog(dialogMessages, pageId);
         }
         const ast = learnWindow.PYPIE_AST;
         const setBlocks = learnWindow.PYPIE_SET_BLOCKS;
         if (ast && typeof setBlocks === "function") {
             const blocks = [];
-            if (typeof config.buildBlock === "function" && config.section.codeClass) {
-                const sectionBlock = config.buildBlock(ast);
-                if (sectionBlock) {
-                    blocks.push({
-                        selector: `.${config.section.codeClass}`,
-                        block: sectionBlock,
-                    });
-                }
-            }
-            (config.section.dialog || []).forEach((message, index) => {
+            dialogMessages.forEach((message, index) => {
                 if (typeof message.buildCodeBlock !== "function") {
                     return;
                 }
@@ -219,19 +212,26 @@
             return;
         }
         renderNav(pageId);
-        setText("[data-learn-eyebrow]", LEARN_SERIES.eyebrow);
+        const eyebrowText = pageId === LEARN_SERIES.overview.id ? LEARN_SERIES.eyebrow : metaPage.title;
+        setText("[data-learn-eyebrow]", eyebrowText);
         const baseTitle = `PyPie - ${LEARN_SERIES.title}`;
         document.title =
             pageId === LEARN_SERIES.overview.id
                 ? baseTitle
                 : `${baseTitle}: ${metaPage.title}`;
         if (pageId === LEARN_SERIES.overview.id) {
+            setHidden("[data-learn-title]", false);
             renderOverview(config.lead, config.callout);
             return;
         }
-        setText("[data-learn-title]", metaPage.title);
-        setText("[data-learn-lead]", config.lead);
-        renderChapter(config, pageId);
+        const chapterMeta = LEARN_SERIES.pages.find((page) => page.id === pageId);
+        if (!chapterMeta) {
+            return;
+        }
+        setHidden("[data-learn-title]", true);
+        setText("[data-learn-title]", "");
+        setText("[data-learn-lead]", "");
+        renderChapter(chapterMeta, config.dialog, pageId);
     };
     learnWindow.PYPIE_LEARN_RENDER = renderPage;
 })();
