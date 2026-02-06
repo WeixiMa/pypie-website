@@ -116,6 +116,13 @@
         }
     };
 
+    const setMarginTop = (selector: string, value: string): void => {
+        const element = document.querySelector(selector) as HTMLElement | null;
+        if (element) {
+            element.style.marginTop = value;
+        }
+    };
+
     const escapeHtml = (value: string): string =>
         String(value)
             .replace(/&/g, "&amp;")
@@ -253,11 +260,9 @@
         setText("[data-learn-callout]", calloutOverride || LEARN_SERIES.overview.callout);
     };
 
-    const renderChapter = (
-        metaPage: LearnChapterMeta,
-        dialogMessages: LearnDialogMessage[] = [],
-        pageId: string
-    ): void => {
+    const renderChapter = (dialogMessages: LearnDialogMessage[] = [], pageId: string): void => {
+        setMarginTop("[data-learn-section]", "0");
+
         const section = document.querySelector("[data-learn-section]");
         if (!section) {
             return;
@@ -267,11 +272,13 @@
 
         const sectionTitle = section.querySelector("[data-learn-section-title]");
         if (sectionTitle) {
+            sectionTitle.toggleAttribute("hidden", true);
             sectionTitle.textContent = "";
         }
 
         const sectionBody = section.querySelector("[data-learn-section-body]");
         if (sectionBody) {
+            sectionBody.toggleAttribute("hidden", true);
             sectionBody.textContent = "";
         }
 
@@ -331,6 +338,7 @@
 
         if (pageId === LEARN_SERIES.overview.id) {
             setHidden("[data-learn-title]", false);
+            setHidden("[data-learn-lead]", false);
             renderOverview(config.lead, config.callout);
             return;
         }
@@ -341,9 +349,10 @@
         }
 
         setHidden("[data-learn-title]", true);
+        setHidden("[data-learn-lead]", true);
         setText("[data-learn-title]", "");
         setText("[data-learn-lead]", "");
-        renderChapter(chapterMeta, config.dialog, pageId);
+        renderChapter(config.dialog, pageId);
     };
 
     learnWindow.PYPIE_LEARN_RENDER = renderPage;

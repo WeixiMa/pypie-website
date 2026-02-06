@@ -17,7 +17,7 @@
             message("W", "Is `5` a `Num`?"),
             message("D", "That's right! Do you know other `Num`s?"),
             message("W", "Hmm... `0` and `-42`?"),
-            message("D", "Good, they also `Num`s too."),
+            message("D", "Good, they are `Num`s too."),
             message("W", "What about `-42.42`?"),
             message("D", "Yes, `-42.42` is also a `Num`, but it is different from `42`."),
             message("W", "How?"),
@@ -33,9 +33,12 @@
             message("W", "Seems like, `List[t]` is a type, as long as `t` is a type.\nSo, there must be a type called `List[List[int]]`?"),
             message("D", "Yes, `List` can be nested, such as `[[1, 2, 3], [4, 5, 6]]`."),
             message("W", "What about `[[1, 2, 3], [4, 5]]`?"),
-            message("D", "That's also a `List[List[int]]`, since all its elements are `List[int]`..."),
-            message("W", "... and all inner elements in its first elements are `int`s, all inner elements in its second elements are `int`s."),
-            message("D", "Exactly.\nNext, there is a stricter way to group things."),
+            message("D", "That's also a `List[List[int]]`, since its first element is a `List[int]`..."),
+            message("W", "... because all sub-elements in its element are `ints`.\n" +
+                "Then, its second element is also a `List[int]`, since all elements there are `ints`.\n" +
+                "Phew... that's a lot of reasoning."),
+            message("D", "Fortunately, we have machine to do the reasoning for us, rigorously and efficiently.\n" +
+                "Next, there is a stricter way to group things."),
             message("W", "Go for it!"),
             message("D", "```Tensor([[1, 2, 3], [4, 5, 6]])```"),
             message("W", "It merely wraps this `Tensor` thing around the list. How is it different?"),

@@ -54,6 +54,12 @@
             element.toggleAttribute("hidden", hidden);
         }
     };
+    const setMarginTop = (selector, value) => {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.style.marginTop = value;
+        }
+    };
     const escapeHtml = (value) => String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -161,7 +167,8 @@
         setText("[data-learn-lead]", leadOverride || LEARN_SERIES.overview.lead);
         setText("[data-learn-callout]", calloutOverride || LEARN_SERIES.overview.callout);
     };
-    const renderChapter = (metaPage, dialogMessages = [], pageId) => {
+    const renderChapter = (dialogMessages = [], pageId) => {
+        setMarginTop("[data-learn-section]", "0");
         const section = document.querySelector("[data-learn-section]");
         if (!section) {
             return;
@@ -169,10 +176,12 @@
         section.id = pageId;
         const sectionTitle = section.querySelector("[data-learn-section-title]");
         if (sectionTitle) {
+            sectionTitle.toggleAttribute("hidden", true);
             sectionTitle.textContent = "";
         }
         const sectionBody = section.querySelector("[data-learn-section-body]");
         if (sectionBody) {
+            sectionBody.toggleAttribute("hidden", true);
             sectionBody.textContent = "";
         }
         const dialog = section.querySelector("[data-learn-dialog]");
@@ -221,6 +230,7 @@
                 : `${baseTitle}: ${metaPage.title}`;
         if (pageId === LEARN_SERIES.overview.id) {
             setHidden("[data-learn-title]", false);
+            setHidden("[data-learn-lead]", false);
             renderOverview(config.lead, config.callout);
             return;
         }
@@ -229,9 +239,10 @@
             return;
         }
         setHidden("[data-learn-title]", true);
+        setHidden("[data-learn-lead]", true);
         setText("[data-learn-title]", "");
         setText("[data-learn-lead]", "");
-        renderChapter(chapterMeta, config.dialog, pageId);
+        renderChapter(config.dialog, pageId);
     };
     learnWindow.PYPIE_LEARN_RENDER = renderPage;
 })();
