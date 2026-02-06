@@ -87,7 +87,7 @@
                 ),
                 message(
                     "W",
-                    "Oh! `[2, 3]` is a `List` that describes the shape of `[[1, 2, 3], [4, 5, 6]]`, since the outer layer has contains `List[int]`s and the inner layer contains three `int`s?",
+                    "Oh! `[2, 3]` is a `List` that describes the shape of `[[1, 2, 3], [4, 5, 6]]`, since the outer layer contains two `List[int]`s and the inner layer contains three `int`s?",
                 ),
                 message("D", "Exactly!\nCan we make `[[1, 2, 3], [4, 5]]` a `Tensor`?"),
                 message("W", "Hmm... I don't know how to describe its shape."),

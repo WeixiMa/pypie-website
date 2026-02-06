@@ -41,7 +41,7 @@
                 message("D", "```Tensor([[1, 2, 3], [4, 5, 6]])```"),
                 message("W", "It merely wraps this `Tensor` thing around the list. How is it different?"),
                 message("D", "We call this one a `Tensor[int][[2, 3]]`. More than saying that all elements are `int`s, we set a constrain on how many elements the `Tensor` may contain."),
-                message("W", "Oh! `[2, 3]` is a `List` that describes the shape of `[[1, 2, 3], [4, 5, 6]]`, since the outer layer has contains `List[int]`s and the inner layer contains three `int`s?"),
+                message("W", "Oh! `[2, 3]` is a `List` that describes the shape of `[[1, 2, 3], [4, 5, 6]]`, since the outer layer contains two `List[int]`s and the inner layer contains three `int`s?"),
                 message("D", "Exactly!\nCan we make `[[1, 2, 3], [4, 5]]` a `Tensor`?"),
                 message("W", "Hmm... I don't know how to describe its shape."),
                 message("D", "Neither do I. We cannot make `[[1, 2, 3], [4, 5]]` a `Tensor`, since no one can describe its shape!"),
