@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyPie - Deep Learning 101: Tensors</title>
+    <title>PyPie - Deep Learning 101</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@400;600&display=swap");
 
@@ -27,6 +27,13 @@
             --panel-border: rgba(255, 255, 255, 0.14);
             --muted-text: rgba(248, 249, 250, 0.72);
             --link-color: #9ddcff;
+            --chat-left-bg: rgba(255, 255, 255, 0.05);
+            --chat-left-border: rgba(255, 255, 255, 0.22);
+            --chat-right-bg: rgba(157, 220, 255, 0.15);
+            --chat-right-border: rgba(157, 220, 255, 0.48);
+            --chat-speaker: rgba(248, 249, 250, 0.68);
+            --inline-code-bg: rgba(0, 0, 0, 0.32);
+            --inline-code-border: rgba(255, 255, 255, 0.18);
             --code-bg: rgba(0, 0, 0, 0.35);
             --code-border: rgba(255, 255, 255, 0.2);
             --code-base: rgba(255, 255, 255, 0.88);
@@ -50,6 +57,13 @@
             --panel-border: rgba(147, 161, 161, 0.5);
             --muted-text: rgba(88, 110, 117, 0.78);
             --link-color: #268bd2;
+            --chat-left-bg: rgba(253, 246, 227, 0.88);
+            --chat-left-border: rgba(147, 161, 161, 0.5);
+            --chat-right-bg: rgba(38, 139, 210, 0.14);
+            --chat-right-border: rgba(38, 139, 210, 0.44);
+            --chat-speaker: rgba(88, 110, 117, 0.72);
+            --inline-code-bg: rgba(7, 54, 66, 0.08);
+            --inline-code-border: rgba(147, 161, 161, 0.45);
             --code-bg: rgba(253, 246, 227, 0.9);
             --code-border: rgba(147, 161, 161, 0.5);
             --code-base: rgba(88, 110, 117, 0.95);
@@ -130,12 +144,15 @@
         .doc-nav a:hover {
             color: var(--link-color);
         }
+        .doc-nav a[aria-current="page"] {
+            color: var(--link-color);
+        }
         .doc-content {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 20px;
             padding: clamp(1.75rem, 4vw, 3rem);
-            line-height: 1.7;
+            line-height: 1.65;
         }
         .doc-header p {
             color: var(--muted-text);
@@ -156,8 +173,112 @@
             font-size: clamp(1.5rem, 3vw, 2rem);
             margin-bottom: 0.75rem;
         }
-        .doc-content a {
-            color: var(--link-color);
+        .lesson-chat__intro {
+            margin: 0 0 1.2rem;
+            color: var(--muted-text);
+        }
+        .chat-thread {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            width: 100%;
+            max-width: min(72ch, 100%);
+            margin-inline: auto;
+        }
+        .chat-row {
+            display: flex;
+            width: 100%;
+        }
+        .chat-row--left {
+            padding-right: clamp(0.5rem, 2.5vw, 1.5rem);
+        }
+        .chat-row--right {
+            padding-left: clamp(0.5rem, 2.5vw, 1.5rem);
+        }
+        .chat-bubble {
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            border: 1px solid;
+            border-radius: 10px;
+            padding: clamp(0.9rem, 2.4vw, 1.15rem) clamp(1rem, 2.6vw, 1.3rem);
+            min-height: 7rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .chat-bubble--left {
+            background: var(--chat-left-bg);
+            border-color: var(--chat-left-border);
+        }
+        .chat-bubble--right {
+            background: var(--chat-right-bg);
+            border-color: var(--chat-right-border);
+        }
+        .chat-bubble--left::before,
+        .chat-bubble--left::after,
+        .chat-bubble--right::before,
+        .chat-bubble--right::after {
+            content: "";
+            position: absolute;
+            top: 1rem;
+            width: 0;
+            height: 0;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+        }
+        .chat-bubble--left::before {
+            left: -15px;
+            border-right: 8px solid var(--chat-left-border);
+        }
+        .chat-bubble--left::after {
+            left: -13px;
+            border-right: 8px solid var(--chat-left-bg);
+        }
+        .chat-bubble--right::before {
+            right: -15px;
+            border-left: 8px solid var(--chat-right-border);
+        }
+        .chat-bubble--right::after {
+            right: -13px;
+            border-left: 8px solid var(--chat-right-bg);
+        }
+        .chat-bubble__speaker {
+            margin: 0 0 0.35rem;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--chat-speaker);
+        }
+        .chat-bubble__text {
+            margin: 0;
+        }
+        .chat-bubble__text + .chat-bubble__text {
+            margin-top: 0.55rem;
+        }
+        .chat-bubble__text code {
+            font-family: "IBM Plex Mono", "Courier New", monospace;
+            font-size: 0.9em;
+            background: var(--inline-code-bg);
+            border: 1px solid var(--inline-code-border);
+            border-radius: 4px;
+            padding: 0.1rem 0.35rem;
+        }
+        .chat-bubble .doc-code {
+            margin: 0.7rem 0 0;
+            border-radius: 8px;
+        }
+        .chat-bubble__fenced-code {
+            margin: 0.7rem 0 0;
+            border-radius: 8px;
+        }
+        .chat-bubble__fenced-code code {
+            font: inherit;
+            color: inherit;
+        }
+        .chat-bubble__fenced-code + .chat-bubble__text {
+            margin-top: 0.7rem;
         }
         .doc-code {
             background: var(--code-bg);
@@ -217,14 +338,20 @@
                 margin-bottom: 0;
             }
         }
-    
-        .doc-nav a[aria-current="page"] {
-            color: var(--link-color);
+        @media (max-width: 640px) {
+            .chat-row--left,
+            .chat-row--right {
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .chat-bubble {
+                width: 100%;
+                min-height: 6rem;
+            }
         }
-
     </style>
 </head>
-<body class="theme-dark" data-learn-page="tensors">
+<body class="theme-dark" data-learn-page="learning-line">
     <div data-top-actions></div>
     <div class="doc-shell">
         <aside class="doc-nav" data-learn-nav></aside>
@@ -235,16 +362,17 @@
                 <p class="doc-lead" data-learn-lead></p>
             </header>
 
-            <section data-learn-section>
+            <section class="lesson-chat" data-learn-section>
                 <h2 data-learn-section-title></h2>
-                <p data-learn-section-body></p>
-                <pre class="doc-code" data-learn-code></pre>
+                <p class="lesson-chat__intro" data-learn-section-body></p>
+                <div class="chat-thread" data-learn-dialog></div>
             </section>
         </article>
     </div>
     <div class="code-type-tooltip" aria-hidden="true"></div>
-    <script src="../top-actions.js"></script>
-    <script src="../code-types.js"></script>
-    <script src="learn-pages.js"></script>
+    <script src="../../top-actions.js"></script>
+    <script src="../../code-types.js"></script>
+    <script src="../learn-shared.js"></script>
+    <script src="learning-line.js"></script>
 </body>
 </html>

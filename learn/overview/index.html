@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyPie - Deep Learning 101: A Forward Line</title>
+    <title>PyPie - Deep Learning 101</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@400;600&display=swap");
 
@@ -130,6 +130,9 @@
         .doc-nav a:hover {
             color: var(--link-color);
         }
+        .doc-nav a[aria-current="page"] {
+            color: var(--link-color);
+        }
         .doc-content {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
@@ -217,14 +220,9 @@
                 margin-bottom: 0;
             }
         }
-    
-        .doc-nav a[aria-current="page"] {
-            color: var(--link-color);
-        }
-
     </style>
 </head>
-<body class="theme-dark" data-learn-page="forward-line">
+<body class="theme-dark" data-learn-page="overview">
     <div data-top-actions></div>
     <div class="doc-shell">
         <aside class="doc-nav" data-learn-nav></aside>
@@ -235,16 +233,17 @@
                 <p class="doc-lead" data-learn-lead></p>
             </header>
 
-            <section data-learn-section>
-                <h2 data-learn-section-title></h2>
-                <p data-learn-section-body></p>
-                <pre class="doc-code" data-learn-code></pre>
+            <section id="chapters" data-learn-overview>
+                <h2>Chapters</h2>
+                <div data-learn-overview-list></div>
+                <p class="callout" data-learn-callout></p>
             </section>
         </article>
     </div>
     <div class="code-type-tooltip" aria-hidden="true"></div>
-    <script src="../top-actions.js"></script>
-    <script src="../code-types.js"></script>
-    <script src="learn-pages.js"></script>
+    <script src="../../top-actions.js"></script>
+    <script src="../../code-types.js"></script>
+    <script src="../learn-shared.js"></script>
+    <script src="overview.js"></script>
 </body>
 </html>

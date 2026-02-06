@@ -15,7 +15,7 @@
     const withRoot = (href) => new URL(href, rootUrl).href;
 
     const links = [
-        { href: withRoot("learn/index.html"), label: "Deep Learning 101" },
+        { href: withRoot("learn/overview/index.html"), label: "Deep Learning 101" },
         { href: withRoot("language-reference.html"), label: "Language Reference" },
         { href: withRoot("installation.html"), label: "Installation" }
     ];
