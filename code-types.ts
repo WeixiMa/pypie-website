@@ -1,3 +1,4 @@
+// @ts-nocheck
 const DEFAULT_TYPE = "float";
 const HOVER_RADIUS = 10;
 

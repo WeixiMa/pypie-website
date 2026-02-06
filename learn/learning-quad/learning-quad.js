@@ -3,43 +3,20 @@
     if (typeof render !== "function") {
         return;
     }
-
     const buildLearningQuadBlock = (ast) => {
         const typeB = ast.varId("b", "int");
-
         return ast.block([
-            ast.funcDef(
-                "quad",
-                [
-                    ast.arg("x", ast.tensorType("float", [typeB])),
-                    ast.arg("a", ast.typeId("float"), "float"),
-                    ast.arg("b", ast.typeId("float"), "float"),
-                    ast.arg("c", ast.typeId("float"), "float"),
-                ],
-                ast.tensorType("float", [typeB]),
-                [
-                    ast.ret(
-                        ast.binOp(
-                            ast.binOp(
-                                ast.binOp(
-                                    ast.varId("a", "float"),
-                                    "*",
-                                    ast.binOp(ast.varId("x"), "*", ast.varId("x")),
-                                ),
-                                "+",
-                                ast.binOp(ast.varId("b", "float"), "*", ast.varId("x")),
-                            ),
-                            "+",
-                            ast.varId("c", "float"),
-                        ),
-                    ),
-                ],
-            ),
+            ast.funcDef("quad", [
+                ast.arg("x", ast.tensorType("float", [typeB])),
+                ast.arg("a", ast.typeId("float"), "float"),
+                ast.arg("b", ast.typeId("float"), "float"),
+                ast.arg("c", ast.typeId("float"), "float"),
+            ], ast.tensorType("float", [typeB]), [
+                ast.ret(ast.binOp(ast.binOp(ast.binOp(ast.varId("a", "float"), "*", ast.binOp(ast.varId("x"), "*", ast.varId("x"))), "+", ast.binOp(ast.varId("b", "float"), "*", ast.varId("x"))), "+", ast.varId("c", "float"))),
+            ]),
         ]);
     };
-
     const exprBlock = (ast, expr) => ast.block([ast.exprStmt(expr)]);
-
     render({
         id: "learning-quad",
         lead: "Quadratics can be learned by expanding the forward pass. This final chapter keeps the same chat style and explicit typing.",
@@ -59,23 +36,7 @@
                     speaker: "Guide",
                     text: "Use this quadratic expression:",
                     codeLabel: "Quadratic formula",
-                    buildCodeBlock: (ast) =>
-                        exprBlock(
-                            ast,
-                            ast.binOp(
-                                ast.binOp(
-                                    ast.binOp(
-                                        ast.varId("a", "float"),
-                                        "*",
-                                        ast.binOp(ast.varId("x"), "*", ast.varId("x")),
-                                    ),
-                                    "+",
-                                    ast.binOp(ast.varId("b", "float"), "*", ast.varId("x")),
-                                ),
-                                "+",
-                                ast.varId("c", "float"),
-                            ),
-                        ),
+                    buildCodeBlock: (ast) => exprBlock(ast, ast.binOp(ast.binOp(ast.binOp(ast.varId("a", "float"), "*", ast.binOp(ast.varId("x"), "*", ast.varId("x"))), "+", ast.binOp(ast.varId("b", "float"), "*", ast.varId("x"))), "+", ast.varId("c", "float"))),
                 },
                 {
                     side: "left",
@@ -87,8 +48,7 @@
                     speaker: "Guide",
                     text: "Yes. Input and output keep the same batch axis:",
                     codeLabel: "Batched axis",
-                    buildCodeBlock: (ast) =>
-                        exprBlock(ast, ast.listExpr([ast.varId("b", "int")])),
+                    buildCodeBlock: (ast) => exprBlock(ast, ast.listExpr([ast.varId("b", "int")])),
                 },
                 {
                     side: "left",

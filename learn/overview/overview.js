@@ -3,7 +3,6 @@
     if (typeof render !== "function") {
         return;
     }
-
     render({
         id: "overview",
     });

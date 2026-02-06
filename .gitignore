@@ -1,0 +1,16 @@
+# Local dependencies
+node_modules/
+
+# TypeScript build outputs
+code-types.js
+top-actions.js
+learn/learn-shared.js
+learn/overview/overview.js
+learn/tensors/tensors.js
+learn/forward-line/forward-line.js
+learn/learning-line/learning-line.js
+learn/learning-quad/learning-quad.js
+*.tsbuildinfo
+
+# npm logs
+npm-debug.log*

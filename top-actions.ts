@@ -1,34 +1,46 @@
 (() => {
+    type LearnLink = {
+        href: string;
+        label: string;
+    };
+
     const container = document.querySelector("[data-top-actions]");
     if (!container) {
         return;
     }
-    const getRootUrl = () => {
-        const currentScript = document.currentScript;
+
+    const getRootUrl = (): URL => {
+        const currentScript = document.currentScript as HTMLScriptElement | null;
         if (currentScript && currentScript.src) {
             return new URL(".", currentScript.src);
         }
         return new URL("./", window.location.href);
     };
+
     const rootUrl = getRootUrl();
-    const withRoot = (href) => new URL(href, rootUrl).href;
-    const links = [
+    const withRoot = (href: string): string => new URL(href, rootUrl).href;
+
+    const links: LearnLink[] = [
         { href: withRoot("learn/overview/index.html"), label: "Deep Learning 101" },
         { href: withRoot("language-reference.html"), label: "Language Reference" },
         { href: withRoot("installation.html"), label: "Installation" },
     ];
+
     const linksMarkup = links
         .map((link) => `<a class="btn" href="${link.href}">${link.label}</a>`)
         .join("");
+
     container.innerHTML = `
         <div class="top-actions">
             ${linksMarkup}
             <button class="theme-toggle" id="theme-toggle" type="button" aria-label="To the light side!" title="To the light side!"></button>
         </div>
     `.trim();
+
     const themeToggle = container.querySelector("#theme-toggle");
     const root = document.body;
-    const setTheme = (name) => {
+
+    const setTheme = (name: "theme-dark" | "theme-solaris"): void => {
         root.classList.remove("theme-dark", "theme-solaris");
         root.classList.add(name);
         if (themeToggle) {
@@ -37,11 +49,13 @@
             themeToggle.setAttribute("title", label);
         }
     };
+
     if (themeToggle) {
         themeToggle.addEventListener("click", () => {
             const isSolaris = root.classList.contains("theme-solaris");
             setTheme(isSolaris ? "theme-dark" : "theme-solaris");
         });
     }
+
     setTheme("theme-dark");
 })();
