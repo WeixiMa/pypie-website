@@ -30,7 +30,7 @@
     });
 
     render({
-        id: "tensors",
+        id: "Types",
         dialog: [
             message("D", "Alrighty, let's get started."),
             message("W", "Can't wait!"),
@@ -45,8 +45,8 @@
             message(
                 "D",
                 "On machines, `42` and `42.42` are stored differently. When running programs, they may also behave differently.\n" +
-                "We have a special name for `Num`s like `42`: `int`. And we have another name, `float`, for `Num`s like `42.42`.\n" +
-                "`int` and `float` are *types*. A *type* describes the behavior of a set of values.",
+                "We have a special name for `Num`s like `42`: `int`. And we have another name, `float`, for `Num`s like `42.42`. " +
+                "`int` and `float` are **types**. A **type** describes the behavior of a set of values.",
             ),
             message("W", "Is `Num` also a type?"),
             message(
@@ -75,7 +75,7 @@
             ),
             message(
                 "D",
-                "Fortunately, we have machines to do that reasoning for us, rigorously and efficiently.\n" +
+                "Fortunately, machines may do that reasoning for us, rigorously and efficiently.\n" +
                     "Now, there is a stricter way to group things.",
             ),
             message("W", "Go for it!"),
@@ -94,7 +94,7 @@
             ),
             message(
                 "D",
-                "You are almost right!\n" +
+                "That's almost right.\n" +
                     "The elements of the outer layer, however, are not `List[int]`s; they are `Tensor[int][[3]]`s.\n" +
                     "Here is how we see that `Tensor([[1, 2, 3], [4, 5, 6]])` has type `Tensor[int][[2, 3]]`:\n" +
                     "The outer layer contains two `Tensor[int][[3]]`s, and each inner layer contains three `Tensor[int][[]]`s.",
@@ -126,10 +126,10 @@
                 "D",
                 "Running programs on GPUs, in parallel and efficiently!",
             ),
-            message("W", "Sounds like a cool thing! I want to see an example!"),
+            message("W", "Sounds like a cool thing! Let's see see an example!"),
             message(
                 "D",
-                "You will, in the next chapter. Now it's time to take a break."
+                "We will, in the next chapter. Now it's time to take a break."
             ),
             message("W", "See you there!"),
         ],

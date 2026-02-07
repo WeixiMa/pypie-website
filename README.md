@@ -2,27 +2,18 @@
 
 **Deep Learning 101 Pages**
 The learn pages now use:
-- `learn/learn-shared.js` for shared navigation and rendering logic.
-- One script per page for chapter content and AST code blocks:
-  - `learn/overview/overview.js`
-  - `learn/tensors/tensors.js`
-  - `learn/forward-line/forward-line.js`
-  - `learn/learning-line/learning-line.js`
-  - `learn/learning-quad/learning-quad.js`
+- `learn/chapter-template.html` as the shared HTML template for all chapter pages.
+- `learn/generate-chapter-indexes.js` to generate each `learn/*/index.html`.
+- `learn/learn-shared.ts` for shared navigation and rendering logic.
+- One `learn/<chapter>/main.ts` file per chapter for dialog content.
 
 **Modify Existing Pages**
-1. Open the page-specific script in the chapter folder (for example `learn/tensors/tensors.js`).
-2. Edit that page's `lead`, `section`, dialog text, or `buildBlock` function as needed.
-3. Save and reload the page.
+1. Edit chapter content in `learn/<chapter>/main.ts`.
+2. Edit shared layout/styles in `learn/chapter-template.html`.
+3. Run `make build` to regenerate chapter HTML and compile TypeScript.
 
 **Add New Pages**
 1. Create a new chapter folder in `learn/` (for example `learn/new-topic/`).
-2. Copy an existing learn page (for example `learn/tensors/index.html`) to `learn/new-topic/index.html`.
-3. In the new HTML file, set `data-learn-page` on `<body>` to your new page id.
-4. Create a matching page script (for example `learn/new-topic/new-topic.js`) that calls `window.PYPIE_LEARN_RENDER({ ... })`.
-5. In `learn/learn-shared.js`, add your new page to `LEARN_SERIES.pages` with matching `id`, `slug`, `title`, and `summary`.
-6. In the new HTML file, include:
-   - `../learn-shared.js`
-   - your page script (`new-topic.js`)
-7. If the page needs code, include a `buildBlock` function and set `section.codeClass` in the page script.
-8. Save and reload. The nav and overview list will include the new page automatically.
+2. Add `learn/new-topic/main.ts` that calls `window.PYPIE_LEARN_RENDER({ ... })`.
+3. Add the chapter slug to `LEARN_SERIES.pages` in `learn/learn-shared.ts`.
+4. Run `make build` (or `make generate-learn-html`) to generate `learn/new-topic/index.html`.

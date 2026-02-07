@@ -11,36 +11,36 @@
     const withLearnRoot = (href) => new URL(href, learnRootUrl).href;
     const LEARN_SERIES = {
         title: "Deep Learning 101",
-        eyebrow: "Deep Learning 101",
-        overview: {
-            id: "overview",
-            slug: "overview/index.html",
-            title: "0. Overview",
-            lead: "Four short chapters that move from tensors to fitting a quadratic. Each page pairs prose with a PyPie AST snippet you can reuse.",
-            callout: "Tip: Use the left navigation to hop between chapters.",
-        },
+        preludeSlug: "overview/index.html",
         pages: [
             {
-                id: "tensors",
-                slug: "tensors/index.html",
-                title: "1. Tensors",
+                slug: "types/index.html",
             },
             {
-                id: "forward-line",
-                slug: "forward-line/index.html",
-                title: "2. A Forward Line",
-            },
-            {
-                id: "learning-line",
-                slug: "learning-line/index.html",
-                title: "3. Learning a Line",
-            },
-            {
-                id: "learning-quad",
-                slug: "learning-quad/index.html",
-                title: "4. Learning a Quad",
+                slug: "tensor_ops/index.html",
             },
         ],
+    };
+    const PRELUDE_PAGE_ID = "prelude";
+    const pageIdFromSlug = (slug) => {
+        const firstPathSegment = String(slug).split("/")[0] || "";
+        return firstPathSegment === "overview" ? PRELUDE_PAGE_ID : firstPathSegment;
+    };
+    const formatPageTitle = (pageId) => String(pageId)
+        .split("-")
+        .filter((segment) => segment.length > 0)
+        .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+        .join(" ");
+    const getAllPages = () => {
+        const allSlugs = [LEARN_SERIES.preludeSlug, ...LEARN_SERIES.pages.map((page) => page.slug)];
+        return allSlugs.map((slug, index) => {
+            const id = pageIdFromSlug(slug);
+            return {
+                id,
+                slug,
+                navTitle: `${index}. ${formatPageTitle(id)}`,
+            };
+        });
     };
     const setText = (selector, value) => {
         const element = document.querySelector(selector);
@@ -64,10 +64,41 @@
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
+    const formatBoldText = (text) => {
+        const escaped = escapeHtml(String(text || ""));
+        return escaped
+            .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*([^*\n]+)\*/g, "<strong>$1</strong>");
+    };
     const formatInlineCode = (text) => String(text || "")
         .split("`")
-        .map((part, index) => index % 2 === 1 ? `<code>${escapeHtml(part)}</code>` : escapeHtml(part))
+        .map((part, index) => index % 2 === 1 ? `<code>${escapeHtml(part)}</code>` : formatBoldText(part))
         .join("");
+    const collectKeywordsFromText = (text) => {
+        const keywords = new Set();
+        const keywordRegex = /\*\*([^*\n]+)\*\*/g;
+        let match = null;
+        while ((match = keywordRegex.exec(String(text || ""))) !== null) {
+            const keyword = String(match[1] || "").trim();
+            if (keyword) {
+                keywords.add(keyword);
+            }
+        }
+        return keywords;
+    };
+    const mergeKeywordSets = (target, source) => {
+        source.forEach((keyword) => target.add(keyword));
+    };
+    const sortKeywords = (keywords) => Array.from(keywords).sort((left, right) => left.localeCompare(right, undefined, { sensitivity: "base" }));
+    const renderKeywordList = (keywords) => {
+        const sortedKeywords = sortKeywords(keywords);
+        if (sortedKeywords.length === 0) {
+            return '<li class="keyword-panel__item keyword-panel__item--empty">No keywords yet.</li>';
+        }
+        return sortedKeywords
+            .map((keyword) => `<li class="keyword-panel__item"><code>${escapeHtml(keyword)}</code></li>`)
+            .join("");
+    };
     const trimFenceEdgeNewlines = (text) => {
         let value = String(text || "");
         if (value.startsWith("\n")) {
@@ -93,7 +124,10 @@
     const renderMessageText = (text) => {
         const source = String(text || "");
         if (!source) {
-            return "";
+            return {
+                html: "",
+                keywords: new Set(),
+            };
         }
         const fenceRegex = /```([\s\S]*?)```/g;
         const segments = [];
@@ -109,63 +143,64 @@
         if (cursor < source.length) {
             segments.push({ kind: "text", value: source.slice(cursor) });
         }
-        return segments
+        const keywords = new Set();
+        const html = segments
             .map((segment) => {
             if (segment.kind === "code") {
                 return `<pre class="doc-code chat-bubble__fenced-code" data-code-ignore="true"><code>${escapeHtml(segment.value)}</code></pre>`;
             }
+            mergeKeywordSets(keywords, collectKeywordsFromText(segment.value));
             return renderTextParagraphs(segment.value);
         })
             .join("");
+        return {
+            html,
+            keywords,
+        };
     };
     const getDialogCodeClass = (pageId, index) => `chat-code-${pageId}-${index}`;
-    const renderDialog = (dialog = [], pageId = "") => dialog
-        .map((message, index) => {
-        const side = message.side === "right" ? "right" : "left";
-        const speaker = message.speaker
-            ? `<p class="chat-bubble__speaker">${escapeHtml(message.speaker)}</p>`
-            : "";
-        const text = message.text ? renderMessageText(message.text) : "";
-        const autoCodeClass = typeof message.buildCodeBlock === "function"
-            ? getDialogCodeClass(pageId, index)
-            : "";
-        const codeClass = message.codeClass || autoCodeClass;
-        const code = codeClass
-            ? `<pre class="doc-code ${codeClass}" aria-label="${escapeHtml(message.codeLabel || "Code snippet")}"></pre>`
-            : "";
-        return `<div class="chat-row chat-row--${side}"><article class="chat-bubble chat-bubble--${side}">${speaker}${text}${code}</article></div>`;
-    })
-        .join("");
-    const getMetaPage = (pageId) => {
-        if (pageId === LEARN_SERIES.overview.id) {
-            return LEARN_SERIES.overview;
-        }
-        return LEARN_SERIES.pages.find((page) => page.id === pageId) || null;
+    const renderDialog = (dialog = [], pageId = "") => {
+        const keywords = new Set();
+        const html = dialog
+            .map((message, index) => {
+            const side = message.side === "right" ? "right" : "left";
+            const bubbleNumber = `<span class="chat-bubble__index">${index + 1}</span>`;
+            const speaker = message.speaker
+                ? `<p class="chat-bubble__speaker">${escapeHtml(message.speaker)}</p>`
+                : "";
+            const renderedText = message.text ? renderMessageText(message.text) : null;
+            if (renderedText) {
+                mergeKeywordSets(keywords, renderedText.keywords);
+            }
+            const text = renderedText ? renderedText.html : "";
+            const autoCodeClass = typeof message.buildCodeBlock === "function"
+                ? getDialogCodeClass(pageId, index)
+                : "";
+            const codeClass = message.codeClass || autoCodeClass;
+            const code = codeClass
+                ? `<pre class="doc-code ${codeClass}" aria-label="${escapeHtml(message.codeLabel || "Code snippet")}"></pre>`
+                : "";
+            return `<div class="chat-row chat-row--${side}"><article class="chat-bubble chat-bubble--${side}">${bubbleNumber}${speaker}${text}${code}</article></div>`;
+        })
+            .join("");
+        return {
+            html,
+            keywords,
+        };
     };
     const renderNav = (pageId) => {
         const nav = document.querySelector("[data-learn-nav]");
         if (!nav) {
             return;
         }
-        const allPages = [LEARN_SERIES.overview, ...LEARN_SERIES.pages];
+        const allPages = getAllPages();
         const navLinks = allPages
             .map((page) => {
             const currentAttr = page.id === pageId ? ' aria-current="page"' : "";
-            return `<a href="${withLearnRoot(page.slug)}"${currentAttr}>${page.title}</a>`;
+            return `<a href="${withLearnRoot(page.slug)}"${currentAttr}>${page.navTitle}</a>`;
         })
             .join("");
         nav.innerHTML = `<div class="doc-nav__title">${LEARN_SERIES.title}</div>${navLinks}`;
-    };
-    const renderOverview = (leadOverride, calloutOverride) => {
-        const list = document.querySelector("[data-learn-overview-list]");
-        if (list) {
-            list.innerHTML = LEARN_SERIES.pages
-                .map((page) => `<p><a href="${withLearnRoot(page.slug)}">${page.title}</a></p>`)
-                .join("");
-        }
-        setText("[data-learn-title]", LEARN_SERIES.overview.title);
-        setText("[data-learn-lead]", leadOverride || LEARN_SERIES.overview.lead);
-        setText("[data-learn-callout]", calloutOverride || LEARN_SERIES.overview.callout);
     };
     const renderChapter = (dialogMessages = [], pageId) => {
         setMarginTop("[data-learn-section]", "0");
@@ -184,9 +219,14 @@
             sectionBody.toggleAttribute("hidden", true);
             sectionBody.textContent = "";
         }
+        const renderedDialog = renderDialog(dialogMessages, pageId);
         const dialog = section.querySelector("[data-learn-dialog]");
         if (dialog) {
-            dialog.innerHTML = renderDialog(dialogMessages, pageId);
+            dialog.innerHTML = renderedDialog.html;
+        }
+        const keywords = document.querySelector("[data-learn-keywords]");
+        if (keywords) {
+            keywords.innerHTML = renderKeywordList(renderedDialog.keywords);
         }
         const ast = learnWindow.PYPIE_AST;
         const setBlocks = learnWindow.PYPIE_SET_BLOCKS;
@@ -216,28 +256,11 @@
         if (!pageId) {
             return;
         }
-        const metaPage = getMetaPage(pageId);
-        if (!metaPage) {
-            return;
-        }
         renderNav(pageId);
-        const eyebrowText = pageId === LEARN_SERIES.overview.id ? LEARN_SERIES.eyebrow : metaPage.title;
-        setText("[data-learn-eyebrow]", eyebrowText);
+        const renderedTitle = formatPageTitle(pageId);
+        setText("[data-learn-eyebrow]", renderedTitle);
         const baseTitle = `PyPie - ${LEARN_SERIES.title}`;
-        document.title =
-            pageId === LEARN_SERIES.overview.id
-                ? baseTitle
-                : `${baseTitle}: ${metaPage.title}`;
-        if (pageId === LEARN_SERIES.overview.id) {
-            setHidden("[data-learn-title]", false);
-            setHidden("[data-learn-lead]", false);
-            renderOverview(config.lead, config.callout);
-            return;
-        }
-        const chapterMeta = LEARN_SERIES.pages.find((page) => page.id === pageId);
-        if (!chapterMeta) {
-            return;
-        }
+        document.title = `${baseTitle}: ${renderedTitle}`;
         setHidden("[data-learn-title]", true);
         setHidden("[data-learn-lead]", true);
         setText("[data-learn-title]", "");

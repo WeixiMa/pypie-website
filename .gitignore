@@ -5,11 +5,11 @@ node_modules/
 code-types.js
 top-actions.js
 learn/learn-shared.js
-learn/overview/overview.js
-learn/tensors/tensors.js
-learn/forward-line/forward-line.js
-learn/learning-line/learning-line.js
-learn/learning-quad/learning-quad.js
+learn/overview/main.js
+learn/types/main.js
+learn/forward-line/main.js
+learn/learning-line/main.js
+learn/learning-quad/main.js
 *.tsbuildinfo
 
 # npm logs
