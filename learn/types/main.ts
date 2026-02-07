@@ -46,7 +46,7 @@
                 "D",
                 "On machines, `42` and `42.42` are stored differently. When running programs, they may also behave differently.\n" +
                 "We have a special name for `Num`s like `42`: `int`. And we have another name, `float`, for `Num`s like `42.42`. " +
-                "`int` and `float` are **types**. A **type** describes the behavior of a set of values.",
+                "`int` and `float` are **type**s. A type describes the behavior of a set of values.",
             ),
             message("W", "Is `Num` also a type?"),
             message(

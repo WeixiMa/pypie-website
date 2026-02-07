@@ -42,6 +42,14 @@
             };
         });
     };
+    const getNavPageById = (pageId) => {
+        const normalized = String(pageId || "").trim().toLowerCase();
+        if (!normalized) {
+            return null;
+        }
+        const allPages = getAllPages();
+        return allPages.find((page) => page.id.toLowerCase() === normalized) || null;
+    };
     const setText = (selector, value) => {
         const element = document.querySelector(selector);
         if (element && value !== undefined) {
@@ -90,13 +98,19 @@
         source.forEach((keyword) => target.add(keyword));
     };
     const sortKeywords = (keywords) => Array.from(keywords).sort((left, right) => left.localeCompare(right, undefined, { sensitivity: "base" }));
-    const renderKeywordList = (keywords) => {
+    const renderKeywordList = (keywords, keywordTargets) => {
         const sortedKeywords = sortKeywords(keywords);
         if (sortedKeywords.length === 0) {
             return '<li class="keyword-panel__item keyword-panel__item--empty">No keywords yet.</li>';
         }
         return sortedKeywords
-            .map((keyword) => `<li class="keyword-panel__item"><code>${escapeHtml(keyword)}</code></li>`)
+            .map((keyword) => {
+            const targetId = keywordTargets.get(keyword);
+            if (!targetId) {
+                return `<li class="keyword-panel__item"><code>${escapeHtml(keyword)}</code></li>`;
+            }
+            return `<li class="keyword-panel__item"><a class="keyword-panel__link" href="#${escapeHtml(targetId)}"><code>${escapeHtml(keyword)}</code></a></li>`;
+        })
             .join("");
     };
     const trimFenceEdgeNewlines = (text) => {
@@ -159,18 +173,34 @@
         };
     };
     const getDialogCodeClass = (pageId, index) => `chat-code-${pageId}-${index}`;
+    const normalizeDomIdToken = (value) => String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    const getDialogBubbleId = (pageId, index) => {
+        const normalizedPageId = normalizeDomIdToken(pageId) || "learn";
+        return `chat-bubble-${normalizedPageId}-${index + 1}`;
+    };
     const renderDialog = (dialog = [], pageId = "") => {
         const keywords = new Set();
+        const keywordTargets = new Map();
         const html = dialog
             .map((message, index) => {
             const side = message.side === "right" ? "right" : "left";
             const bubbleNumber = `<span class="chat-bubble__index">${index + 1}</span>`;
+            const bubbleId = getDialogBubbleId(pageId, index);
             const speaker = message.speaker
                 ? `<p class="chat-bubble__speaker">${escapeHtml(message.speaker)}</p>`
                 : "";
             const renderedText = message.text ? renderMessageText(message.text) : null;
             if (renderedText) {
                 mergeKeywordSets(keywords, renderedText.keywords);
+                renderedText.keywords.forEach((keyword) => {
+                    if (!keywordTargets.has(keyword)) {
+                        keywordTargets.set(keyword, bubbleId);
+                    }
+                });
             }
             const text = renderedText ? renderedText.html : "";
             const autoCodeClass = typeof message.buildCodeBlock === "function"
@@ -180,12 +210,13 @@
             const code = codeClass
                 ? `<pre class="doc-code ${codeClass}" aria-label="${escapeHtml(message.codeLabel || "Code snippet")}"></pre>`
                 : "";
-            return `<div class="chat-row chat-row--${side}"><article class="chat-bubble chat-bubble--${side}">${bubbleNumber}${speaker}${text}${code}</article></div>`;
+            return `<div class="chat-row chat-row--${side}"><article id="${escapeHtml(bubbleId)}" class="chat-bubble chat-bubble--${side}">${bubbleNumber}${speaker}${text}${code}</article></div>`;
         })
             .join("");
         return {
             html,
             keywords,
+            keywordTargets,
         };
     };
     const renderNav = (pageId) => {
@@ -226,7 +257,7 @@
         }
         const keywords = document.querySelector("[data-learn-keywords]");
         if (keywords) {
-            keywords.innerHTML = renderKeywordList(renderedDialog.keywords);
+            keywords.innerHTML = renderKeywordList(renderedDialog.keywords, renderedDialog.keywordTargets);
         }
         const ast = learnWindow.PYPIE_AST;
         const setBlocks = learnWindow.PYPIE_SET_BLOCKS;
@@ -256,11 +287,14 @@
         if (!pageId) {
             return;
         }
-        renderNav(pageId);
-        const renderedTitle = formatPageTitle(pageId);
+        const currentBodyPageId = document.body?.dataset.learnPage || pageId;
+        renderNav(currentBodyPageId);
+        const currentNavPage = getNavPageById(currentBodyPageId) || getNavPageById(pageId);
+        const renderedTitle = currentNavPage ? currentNavPage.navTitle : formatPageTitle(pageId);
         setText("[data-learn-eyebrow]", renderedTitle);
         const baseTitle = `PyPie - ${LEARN_SERIES.title}`;
-        document.title = `${baseTitle}: ${renderedTitle}`;
+        const documentTitle = currentNavPage ? formatPageTitle(currentNavPage.id) : formatPageTitle(pageId);
+        document.title = `${baseTitle}: ${documentTitle}`;
         setHidden("[data-learn-title]", true);
         setHidden("[data-learn-lead]", true);
         setText("[data-learn-title]", "");
