@@ -38,7 +38,7 @@
             ),
             message(
                 "W",
-                "`2`. That's easy and they are not even `Tensor`s!"
+                "`2`. That's easy and those are not even `Tensor`s!"
             ),
             message("D", 
                 "`2` is correct, but [it wasn't too easy.](https://en.wikipedia.org/wiki/Principia_Mathematica#/media/File:Principia_Mathematica_54-43.png)\n" + 
@@ -46,7 +46,7 @@
                 "Here's a more interesting one: `Tensor([1]) + Tensor([1])`."
             ),
             message("W", 
-                "Ok, perhaps we may add elements at matching positions. " +
+                "Ok, maybe we may add elements at matching positions. " +
                 "It's `Tensor([2])`, right?\n" + 
                 "I have another example:\n"  +
                 "`Tensor([1, 2, 3]) + Tensor([5, 7, 9])` becomes `Tensor([6, 9, 12])`."
@@ -63,7 +63,7 @@
             message(
                 "D",
                 "Yes, as long as the smaller shape is a tail of the larger shape.\n" + 
-                "Then we add the smaller tensors, repeatedly on leading positions.\n" +
+                "Then we add the smaller tensors, repeatedly across leading positions.\n" +
                 "Here, `[3]` is a tail of `[2, 3]`.\n" +
                 "So we first run `Tensor([1, 2, 3]) + Tensor([5, 7, 9])`, then run `Tensor([3, 2, 1]) + Tensor([5, 7, 9])`..."
             ),
@@ -86,7 +86,7 @@
             ),
             message(
                 "W",
-                "Ooph! What an intimidating word!"
+                "Oof! What an intimidating word!"
             ),
             message(
                 "D",
@@ -101,12 +101,12 @@
             message(
                 "D",
                 "Correct! When designing a function, we need to define the shapes for its inputs and output. " +
-                "Often times, this function encouters inputs with larger ranks than defined. " +
+                "Oftentimes, this function encouters inputs with larger ranks than defined. " +
                 "Then, rank polymorphism decides whether we may use the function on these inputs."
             ),
             message(
                 "W",
-                "Now it's less intimidating. You mentioned functions, is `+` a **function**?"
+                "Now it's less intimidating. You mentioned functions. Is `+` a **function**?"
             ),
             message(
                 "D",
@@ -118,7 +118,7 @@
                 "W",
                 "Let me guess. This function type tells us:\n" +
                 "- The function `+` expects two inputs, called `x` and `y`.\n" +
-                "- `x` must be rank `0` tensor containing `int`s, so do `y`.\n" +
+                "- `x` must be rank `0` tensor containing `int`s, so must `y`.\n" +
                 "- `+` results in a `Tensor` that is also rank `0` containing `int`s.\n"
             ),
             message(
@@ -141,7 +141,7 @@
             ),
             message(
                 "D",
-                "Rank polymophism comes to rescue. It works in two steps, both rely on our **tail** trick."
+                "Rank polymophism comes to the rescue. It works in two steps, both rely on our **tail** trick."
             ),
             message(
                 "W",
@@ -162,7 +162,7 @@
             message(
                 "D",
                 "Now we use the trick, twice.\n" +
-                "- First, for each input of `+`, we compare the given shape and the expected shape. This result in a lead and a tail for each input.\n" +
+                "- First, for each input of `+`, we compare the given shape and the expected shape. This results in a lead and a tail for each input.\n" +
                 "- Then, we compare the two leads and find a lead of the leads!"
             ),
             message(
@@ -181,7 +181,8 @@
             ),
             message(
                 "D",
-                "Great! By finding the lead of leads, we have showned that `+` may apply to a `Tensor[int][[2, 3]]]` and a `Tensor[int][[3]]`.\n" +
+                "Great! By finding the lead of leads, "+
+                "we have shown that `Tensor[int][[2, 3]]` and `Tensor[int][[3]]` are valid `x` and `y` for `+`.\n" +
                 "We are not done yet--the function also has an output type."
             ),
             message(
@@ -208,7 +209,7 @@
             ),
             message(
                 "D",
-                "Congratz on mastering rank polymorphism!\n" +
+                "Congrats on mastering rank polymorphism!\n" +
                 "Come up with some examples where rank polymorphism would say no, that is, the inputs do not share a lead.\n" +
                 "It reinforces your understanding."
             ),
@@ -228,7 +229,7 @@
             message(
                 "D",
                 "A lot. In fact, you can define as many as you need.\n" +
-                "We have it covered in the next chapter."
+                "We'll cover it in the next chapter."
             ),
             message(
                 "W",
