@@ -327,6 +327,16 @@
         .chat-bubble__text + .chat-bubble__text {
             margin-top: 0.55rem;
         }
+        .chat-bubble__link {
+            color: var(--link-color);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .chat-bubble__link:focus-visible {
+            outline: 1px solid var(--btn-border);
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
         .chat-bubble__text code {
             font-family: "IBM Plex Mono", "Courier New", monospace;
             font-size: 0.9em;

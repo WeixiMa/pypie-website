@@ -35,8 +35,8 @@
             message("D", "Alrighty, let's get started."),
             message("W", "Can't wait!"),
             message("D", "What is `5`?"),
-            message("W", "Is `5` a `Num`?"),
-            message("D", "That's right! Do you know other `Num`s?"),
+            message("W", "Is `5` a **`Num`**?"),
+            message("D", "Excellent! Do you know other `Num`s?"),
             message("W", "Hmm... `0` and `-42`?"),
             message("D", "Good, they are `Num`s too."),
             message("W", "What about `-42.42`?"),
@@ -44,8 +44,8 @@
             message("W", "How?"),
             message(
                 "D",
-                "On machines, `42` and `42.42` are stored differently. When running programs, they may also behave differently.\n" +
-                "We have a special name for `Num`s like `42`: `int`. And we have another name, `float`, for `Num`s like `42.42`. " +
+                "On machines, `42` and `42.42` are stored differently. Also, they may behave differently, when running programs.\n" +
+                "We have a special name for `Num`s like `42`: **`int`**. And we have another name, **`float`**, for `Num`s like `42.42`. " +
                 "`int` and `float` are **type**s. A type describes the behavior of a set of values.",
             ),
             message("W", "Is `Num` also a type?"),
@@ -59,7 +59,7 @@
             message("D", "We call `[1, 2, 3]` a `List[int]`."),
             message(
                 "W",
-                "So `List[t]` is a type, as long as `t` is a type.\nThen there must be a type called `List[List[int]]`, right?",
+                "So **`List[t]`** is a type, as long as `t` is a type.\nThen there must be a type called `List[List[int]]`, right?",
             ),
             message("D", "Yes, `List` can be nested, such as `[[1, 2, 3], [4, 5, 6]]`."),
             message("W", "What about `[[1, 2, 3], [4, 5]]`?"),
@@ -90,7 +90,7 @@
             ),
             message(
                 "W",
-                "Oh! `[2, 3]` is a `List` that describes the shape of `[[1, 2, 3], [4, 5, 6]]`, since the outer layer contains two `List[int]`s and each inner layer contains three `int`s?",
+                "Oh! `[2, 3]` is a `List[int]` that describes the **shape** of `Tensor([[1, 2, 3], [4, 5, 6]])`, since the outer layer contains two `List[int]`s and each inner layer contains three `int`s?",
             ),
             message(
                 "D",
@@ -105,7 +105,7 @@
             ),
             message(
                 "D",
-                "That's right. `42` is an `int`, and also a `Tensor[int][[]]`. When a `Tensor` has shape `[]`, we call it a scalar.",
+                "That's right. Machines can identify them, and then simplify the longer type to the smaller one, to make it easier for us to read."
             ),
             message("W", "Why do we need `Tensor`s, since we already have `List`s?"),
             message("D", "Good question! Can we make `[[1, 2, 3], [4, 5]]` a `Tensor`?"),
@@ -117,14 +117,14 @@
             message("W", "So, shapes are important to `Tensor`s!"),
             message(
                 "D",
-                "`Tensor[t][s]` is a type as long as `t` is a type and `s` is a `List[int]`.\n" +
+                "**`Tensor[t][s]`** is a type as long as `t` is a type and `s` is a `List[int]`.\n" +
                     "With shapes, `Tensor`s describe their values more accurately than `List`s do.\n" +
                     "This precision enables many cool things.",
             ),
             message("W", "Such as?"),
             message(
                 "D",
-                "Running programs on GPUs, in parallel and efficiently!",
+                "Running programs in parallel, efficiently.",
             ),
             message("W", "Sounds like a cool thing! Let's see see an example!"),
             message(

@@ -15,9 +15,11 @@
         pages: [
             {
                 slug: "types/index.html",
+                title: "Start with types",
             },
             {
                 slug: "tensor_ops/index.html",
+                title: "Adding different tensors",
             },
         ],
     };
@@ -32,13 +34,16 @@
         .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
         .join(" ");
     const getAllPages = () => {
-        const allSlugs = [LEARN_SERIES.preludeSlug, ...LEARN_SERIES.pages.map((page) => page.slug)];
-        return allSlugs.map((slug, index) => {
+        const allPages = [{ slug: LEARN_SERIES.preludeSlug }, ...LEARN_SERIES.pages];
+        return allPages.map((page, index) => {
+            const slug = page.slug;
             const id = pageIdFromSlug(slug);
+            const title = page.title || formatPageTitle(id);
             return {
                 id,
                 slug,
-                navTitle: `${index}. ${formatPageTitle(id)}`,
+                title,
+                navTitle: `${index}. ${title}`,
             };
         });
     };
@@ -72,22 +77,59 @@
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
-    const formatBoldText = (text) => {
-        const escaped = escapeHtml(String(text || ""));
-        return escaped
-            .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
-            .replace(/\*([^*\n]+)\*/g, "<strong>$1</strong>");
+    const formatBoldText = (text) => String(text || "")
+        .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*([^*\n]+)\*/g, "<strong>$1</strong>");
+    const isSafeLinkHref = (href) => {
+        const normalizedHref = String(href || "").trim();
+        if (!normalizedHref) {
+            return false;
+        }
+        const lowerHref = normalizedHref.toLowerCase();
+        if (lowerHref.startsWith("javascript:") ||
+            lowerHref.startsWith("data:") ||
+            lowerHref.startsWith("vbscript:")) {
+            return false;
+        }
+        return true;
     };
-    const formatInlineCode = (text) => String(text || "")
-        .split("`")
-        .map((part, index) => index % 2 === 1 ? `<code>${escapeHtml(part)}</code>` : formatBoldText(part))
-        .join("");
+    const formatInlineLinks = (text) => String(text || "").replace(/\[([^\]\n]+)\]\(([^)\n]+)\)/g, (fullMatch, label, href) => {
+        const safeHref = String(href || "").trim();
+        if (!isSafeLinkHref(safeHref)) {
+            return fullMatch;
+        }
+        return `<a class="chat-bubble__link" href="${escapeHtml(safeHref)}">${label}</a>`;
+    });
+    const formatInlineCode = (text) => {
+        const source = String(text || "");
+        if (!source) {
+            return "";
+        }
+        const codeSegments = [];
+        const tokenized = source.replace(/`([^`\n]+)`/g, (_match, code) => {
+            const token = `__PYPIE_CODE_TOKEN_${codeSegments.length}__`;
+            codeSegments.push(`<code>${escapeHtml(code)}</code>`);
+            return token;
+        });
+        const escaped = escapeHtml(tokenized);
+        const withBold = formatBoldText(escaped);
+        const withLinks = formatInlineLinks(withBold);
+        return withLinks.replace(/__PYPIE_CODE_TOKEN_(\d+)__/g, (_match, indexText) => {
+            const index = Number(indexText);
+            return codeSegments[index] || "";
+        });
+    };
+    const normalizeKeyword = (keyword) => String(keyword || "")
+        .trim()
+        .replace(/`([^`\n]+)`/g, "$1")
+        .replace(/`/g, "")
+        .replace(/\s+/g, " ");
     const collectKeywordsFromText = (text) => {
         const keywords = new Set();
         const keywordRegex = /\*\*([^*\n]+)\*\*/g;
         let match = null;
         while ((match = keywordRegex.exec(String(text || ""))) !== null) {
-            const keyword = String(match[1] || "").trim();
+            const keyword = normalizeKeyword(String(match[1] || ""));
             if (keyword) {
                 keywords.add(keyword);
             }
@@ -293,7 +335,7 @@
         const renderedTitle = currentNavPage ? currentNavPage.navTitle : formatPageTitle(pageId);
         setText("[data-learn-eyebrow]", renderedTitle);
         const baseTitle = `PyPie - ${LEARN_SERIES.title}`;
-        const documentTitle = currentNavPage ? formatPageTitle(currentNavPage.id) : formatPageTitle(pageId);
+        const documentTitle = currentNavPage ? currentNavPage.title : formatPageTitle(pageId);
         document.title = `${baseTitle}: ${documentTitle}`;
         setHidden("[data-learn-title]", true);
         setHidden("[data-learn-lead]", true);
