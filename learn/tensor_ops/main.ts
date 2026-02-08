@@ -77,7 +77,7 @@
             message(
                 "W",
                 "The result is a `Tensor[int][[2, 3]]`, the same as the input with the larger shape. " +
-                "Seems like, we just need to align the two shapes, starting from their right-most.\n" + 
+                "It seems like we just need to align the two shapes, starting from their right-most.\n" + 
                 "A nice and handy trick!"
             ),
             message(
@@ -134,8 +134,8 @@
             message(
                 "D",
                 "Next one: `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`.\n" +
-                "From the earlier excercise, we know it's a `Tensor[int][[2, 3]]`, by running its value. " +
-                "Now, we are ready to derive the type directly.\n"+
+                "From the earlier exercise, we know it's a `Tensor[int][[2, 3]]`, by running its value. " +
+                "Now we are ready to derive the type directly.\n"+
                 "Let's start with validating the inputs."
             ),
             message(
@@ -167,7 +167,7 @@
             ),
             message(
                 "D",
-                "Next, we validate the compatiblity between the two leads."
+                "Next, we validate the compatibility between the two leads."
             ),
             message(
                 "W",
@@ -209,14 +209,14 @@
                 "Good idea! Will do.\n" +
                 "My recap on using rank polymorphism when applying a function:\n" +
                 "- (1) for each input, it validates the compatibility between the given type and the expected type, it also computes the leads\n" +
-                "- (2) it validates the compatiblity between the leads\n" +
-                "- (3) it adjust the output type with the largest lead\n" +
+                "- (2) it validates the compatibility between the leads\n" +
+                "- (3) it adjusts the output type with the largest lead\n" +
                 "In other systems with [broadcasting](https://docs.pytorch.org/docs/stable/notes/broadcasting.html), there are similar rules for (2) and (3), but not (1). Why is that?"
             ),
             message(
                 "D",
                 "Broadcasting is a simplification of rank polymorphism, with the assumption that all expected types are of the same rank. " +
-                "So (1) always trivally succeeds. " +
+                "So (1) always trivially succeeds. " +
                 "After all, these systems do not have static types and cannot specify expected types for functions.\n" +
                 "But here, rank polymorphism works for all functions."
             ),
