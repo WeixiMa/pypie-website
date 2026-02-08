@@ -861,7 +861,7 @@ const lineDefinitionBlock = {
                 "D",
                 "It's time to upgrade the type for `+`:\n" +
                 "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
-                "It says that `x` and `y` are rank-0 `Tensor`s that contain a type call `T`. " +
+                "It says that `x` and `y` are rank-0 `Tensor`s that contain a type called `T`. " +
                 "`T` must be a `Num`: either `float` or `int`. " +
                 "`x` and `y` must contain the same kind of `Num`."
             ),
@@ -949,7 +949,7 @@ const lineDefinitionBlock = {
             },
             message(
                 "D",
-                "It's not a problem to be far off. But we need to know how far it is."
+                "It's not a problem to be far off. But we need to know how far."
             ),
             message(
                 "W",
