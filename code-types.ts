@@ -44,6 +44,7 @@ const attr = (value, name) => ({ kind: "Attribute", value, attr: plainId(name) }
 const call = (callee, args) => ({ kind: "Call", callee, args });
 const subscript = (value, index) => ({ kind: "Subscript", value, index });
 const listExpr = (elements) => ({ kind: "List", elements });
+const tupleExpr = (elements) => ({ kind: "Tuple", elements });
 const listComp = (elt, target, iter) => ({ kind: "ListComp", elt, target, iter });
 const binOp = (left, op, right) => ({ kind: "BinOp", left, op, right });
 const unaryOp = (op, operand) => ({ kind: "UnaryOp", op, operand });
@@ -164,6 +165,7 @@ const astApi = {
   call,
   subscript,
   listExpr,
+  tupleExpr,
   listComp,
   binOp,
   unaryOp,
@@ -293,7 +295,23 @@ const printType = (builder, node) => {
   }
 };
 
-const printExpr = (builder, node) => {
+const getBinOpPrecedence = (op) => {
+  switch (op) {
+    case "**":
+      return 40;
+    case "*":
+    case "/":
+    case "%":
+      return 30;
+    case "+":
+    case "-":
+      return 20;
+    default:
+      return 10;
+  }
+};
+
+const printExpr = (builder, node, parentPrecedence = 0) => {
   if (!node) {
     return;
   }
@@ -302,7 +320,13 @@ const printExpr = (builder, node) => {
       printIdentifier(builder, node);
       return;
     case "Attribute":
-      printExpr(builder, node.value);
+      if (node.value?.kind === "BinOp" || node.value?.kind === "UnaryOp") {
+        builder.token("(");
+        printExpr(builder, node.value);
+        builder.token(")");
+      } else {
+        printExpr(builder, node.value);
+      }
       builder.token(".");
       printIdentifier(builder, node.attr);
       return;
@@ -335,6 +359,20 @@ const printExpr = (builder, node) => {
       });
       builder.token("]");
       return;
+    case "Tuple":
+      builder.token("(");
+      node.elements.forEach((element, index) => {
+        printExpr(builder, element);
+        if (index < node.elements.length - 1) {
+          builder.token(",");
+          builder.space();
+        }
+      });
+      if (node.elements.length === 1) {
+        builder.token(",");
+      }
+      builder.token(")");
+      return;
     case "ListComp":
       builder.token("[");
       printExpr(builder, node.elt);
@@ -354,13 +392,26 @@ const printExpr = (builder, node) => {
       printExpr(builder, node.iter);
       builder.token("]");
       return;
-    case "BinOp":
-      printExpr(builder, node.left);
+    case "BinOp": {
+      const precedence = getBinOpPrecedence(node.op);
+      const shouldWrap = precedence < parentPrecedence;
+      if (shouldWrap) {
+        builder.token("(");
+      }
+
+      const leftPrecedence = node.op === "**" ? precedence + 1 : precedence;
+      const rightPrecedence = node.op === "**" ? precedence : precedence + 1;
+      printExpr(builder, node.left, leftPrecedence);
       builder.space();
       builder.token(node.op, "op");
       builder.space();
-      printExpr(builder, node.right);
+      printExpr(builder, node.right, rightPrecedence);
+
+      if (shouldWrap) {
+        builder.token(")");
+      }
       return;
+    }
     case "UnaryOp":
       builder.token(node.op, "op");
       printExpr(builder, node.operand);

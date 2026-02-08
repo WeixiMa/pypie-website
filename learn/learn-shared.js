@@ -252,6 +252,9 @@
                 ? `<p class="chat-bubble__speaker">${escapeHtml(message.speaker)}</p>`
                 : "";
             const renderedText = message.text ? renderMessageText(message.text) : null;
+            const renderedTextAfterCode = message.textAfterCode
+                ? renderMessageText(message.textAfterCode)
+                : null;
             if (renderedText) {
                 mergeKeywordSets(keywords, renderedText.keywords);
                 renderedText.keywords.forEach((keyword) => {
@@ -260,7 +263,22 @@
                     }
                 });
             }
+            if (renderedTextAfterCode) {
+                mergeKeywordSets(keywords, renderedTextAfterCode.keywords);
+                renderedTextAfterCode.keywords.forEach((keyword) => {
+                    if (!keywordTargets.has(keyword)) {
+                        keywordTargets.set(keyword, bubbleId);
+                    }
+                });
+            }
             const text = renderedText ? renderedText.html : "";
+            const textAfterCode = renderedTextAfterCode ? renderedTextAfterCode.html : "";
+            const figureSrc = isSafeLinkHref(String(message.figureSrc || ""))
+                ? withLearnRoot(String(message.figureSrc || ""))
+                : "";
+            const figure = figureSrc
+                ? `<figure class="chat-bubble__figure" style="margin: 0.75rem 0 0;"><img class="chat-bubble__image" src="${escapeHtml(figureSrc)}" alt="${escapeHtml(message.figureAlt || "Dialog illustration")}" loading="lazy" style="display: block; max-width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--code-border);"></figure>`
+                : "";
             const autoCodeClass = typeof message.buildCodeBlock === "function"
                 ? getDialogCodeClass(pageId, index)
                 : "";
@@ -268,7 +286,7 @@
             const code = codeClass
                 ? `<pre class="doc-code ${codeClass}" aria-label="${escapeHtml(message.codeLabel || "Code snippet")}"></pre>`
                 : "";
-            return `<div class="chat-row chat-row--${side}"><article id="${escapeHtml(bubbleId)}" class="chat-bubble chat-bubble--${side}">${bubbleNumber}${speaker}${text}${code}</article></div>`;
+            return `<div class="chat-row chat-row--${side}"><article id="${escapeHtml(bubbleId)}" class="chat-bubble chat-bubble--${side}">${bubbleNumber}${speaker}${text}${code}${figure}${textAfterCode}</article></div>`;
         })
             .join("");
         return {
