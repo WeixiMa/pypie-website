@@ -32,6 +32,7 @@ const exprStmt = (value) => ({ kind: "ExprStmt", value });
 const replInput = (value) => ({ kind: "ReplInput", value });
 const replOutput = (value) => ({ kind: "ReplOutput", value });
 const replAssign = (target, value) => ({ kind: "ReplAssign", target, value });
+const block = (body) => ({ kind: "Block", body });
 const attr = (value, name) => ({ kind: "Attribute", value, attr: plainId(name) });
 const call = (callee, args) => ({ kind: "Call", callee, args });
 const subscript = (value, index) => ({ kind: "Subscript", value, index });
@@ -86,11 +87,41 @@ const exampleBlock = {
         replOutput(number(1.1465)),
     ],
 };
-const blocks = [
+const defaultBlocks = [
     { selector: ".hero-code", block: softmaxBlock },
     { selector: ".hero-code-secondary", block: crossEntropyBlock },
     { selector: ".hero-code-example", block: exampleBlock },
 ];
+let activeBlocks = defaultBlocks;
+const astApi = {
+    id,
+    varId,
+    fnId,
+    typeId,
+    plainId,
+    typeList,
+    typeSubscript,
+    arg,
+    funcDef,
+    assign,
+    ret,
+    exprStmt,
+    replInput,
+    replOutput,
+    replAssign,
+    attr,
+    call,
+    subscript,
+    listExpr,
+    listComp,
+    binOp,
+    unaryOp,
+    number,
+    tensorType,
+    block,
+};
+const runtimeWindow = window;
+runtimeWindow.PYPIE_AST = astApi;
 const escapeHtml = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 class DocBuilder {
     constructor() {
@@ -146,18 +177,30 @@ class DocBuilder {
     }
 }
 const printIdentifier = (builder, node) => {
+    const hoverType = typeof node.type === "string" && node.type.trim().length > 0
+        ? node.type
+        : undefined;
     if (node.role === "fn") {
-        builder.token(node.name, "fn");
+        builder.token(node.name, "fn", hoverType);
     }
     else if (node.role === "type") {
-        builder.token(node.name, "type");
+        builder.token(node.name, "type", hoverType);
     }
     else if (node.role === "var") {
-        builder.token(node.name, "code-var", node.type || DEFAULT_TYPE);
+        builder.token(node.name, "code-var", hoverType || DEFAULT_TYPE);
     }
     else {
-        builder.token(node.name);
+        builder.token(node.name, undefined, hoverType);
     }
+};
+const printTypeListItems = (builder, items = []) => {
+    items.forEach((item, index) => {
+        printType(builder, item);
+        if (index < items.length - 1) {
+            builder.token(",");
+            builder.space();
+        }
+    });
 };
 const printType = (builder, node) => {
     if (!node) {
@@ -165,20 +208,19 @@ const printType = (builder, node) => {
     }
     if (node.kind === "TypeList") {
         builder.token("[");
-        node.items.forEach((item, index) => {
-            printType(builder, item);
-            if (index < node.items.length - 1) {
-                builder.token(",");
-                builder.space();
-            }
-        });
+        printTypeListItems(builder, node.items);
         builder.token("]");
         return;
     }
     if (node.kind === "TypeSubscript") {
         printType(builder, node.base);
         builder.token("[");
-        printType(builder, node.index);
+        if (node.index?.kind === "TypeList") {
+            printTypeListItems(builder, node.index.items);
+        }
+        else {
+            printType(builder, node.index);
+        }
         builder.token("]");
         return;
     }
@@ -343,7 +385,7 @@ const printStatement = (builder, node) => {
     }
 };
 const renderBlocks = () => {
-    blocks.forEach(({ selector, block }) => {
+    activeBlocks.forEach(({ selector, block }) => {
         const element = document.querySelector(selector);
         if (!element) {
             return;
@@ -354,6 +396,11 @@ const renderBlocks = () => {
         });
         element.innerHTML = builder.toHtml();
     });
+};
+runtimeWindow.PYPIE_SET_BLOCKS = (nextBlocks) => {
+    activeBlocks = Array.isArray(nextBlocks) ? nextBlocks : [];
+    renderBlocks();
+    rebuildMap();
 };
 const positionTypeMap = new Map();
 let rectEntries = [];
@@ -367,7 +414,7 @@ const getPosKey = (rect) => {
 const rebuildMap = () => {
     positionTypeMap.clear();
     rectEntries = [];
-    const vars = document.querySelectorAll(".code-var");
+    const vars = document.querySelectorAll("[data-type]");
     vars.forEach((el) => {
         const rect = el.getBoundingClientRect();
         const key = getPosKey(rect);
@@ -403,8 +450,10 @@ const findTypeAt = (x, y) => {
     return null;
 };
 const tooltip = document.querySelector(".code-type-tooltip");
-const hero = document.querySelector(".hero");
-if (tooltip && hero) {
+const hoverSurfaces = Array.from(document.querySelectorAll(".hero, [data-code-surface]"));
+const isPointInsideRect = (x, y, rect) => x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+const isInsideAnyHoverSurface = (x, y) => hoverSurfaces.some((surface) => isPointInsideRect(x, y, surface.getBoundingClientRect()));
+if (tooltip && hoverSurfaces.length > 0) {
     const show = (x, y, type) => {
         tooltip.textContent = type;
         tooltip.style.opacity = "1";
@@ -414,12 +463,19 @@ if (tooltip && hero) {
     const hide = () => {
         tooltip.style.opacity = "0";
     };
+    let rebuildQueued = false;
+    const scheduleMapRebuild = () => {
+        if (rebuildQueued) {
+            return;
+        }
+        rebuildQueued = true;
+        requestAnimationFrame(() => {
+            rebuildQueued = false;
+            rebuildMap();
+        });
+    };
     const handleMove = (event) => {
-        const heroRect = hero.getBoundingClientRect();
-        if (event.clientX < heroRect.left ||
-            event.clientX > heroRect.right ||
-            event.clientY < heroRect.top ||
-            event.clientY > heroRect.bottom) {
+        if (!isInsideAnyHoverSurface(event.clientX, event.clientY)) {
             hide();
             return;
         }
@@ -428,21 +484,22 @@ if (tooltip && hero) {
             show(event.clientX, event.clientY, type);
             return;
         }
-        const target = event.target;
-        if (target instanceof Element && target.closest(".hero-content")) {
-            hide();
-            return;
-        }
         hide();
     };
     const rebuildAndSync = () => {
         renderBlocks();
         rebuildMap();
     };
+    const handleScroll = () => {
+        hide();
+        scheduleMapRebuild();
+    };
     window.addEventListener("resize", rebuildAndSync);
     window.addEventListener("load", rebuildAndSync);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("scroll", handleScroll, { passive: true, capture: true });
     document.addEventListener("mousemove", handleMove);
-    hero.addEventListener("mouseleave", hide);
+    hoverSurfaces.forEach((surface) => surface.addEventListener("mouseleave", hide));
     if (document.fonts && "ready" in document.fonts) {
         document.fonts.ready.then(rebuildAndSync);
     }

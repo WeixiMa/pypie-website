@@ -91,9 +91,9 @@
                 "It helps to internalize this trick."),
             message("W", "Will do."),
             message("D", "Let's recap **rank polymorphism**:\n" +
-                "- (1) for each input, validate compatibility between the given and expected types, then find the prefixes;\n" +
+                "- (1) for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
                 "- (2) validate compatibility between those prefixes;\n" +
-                "- (3) wrap the result type by the longer prefix.\n" +
+                "- (3) wrap the result type with the longer prefix.\n" +
                 "This process applies to all functions."),
             message("W", "Are there other functions besides `+`?"),
             message("D", "Yes, you can define as many as you need. " +

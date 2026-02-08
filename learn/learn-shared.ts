@@ -87,6 +87,10 @@
                 slug: "tensor_add/index.html",
                 title: "Adding different tensors",
             },
+            {
+                slug: "forward_line/index.html",
+                title: "A forward line",
+            },
         ],
     };
 
@@ -459,8 +463,15 @@
         }
 
         const keywords = document.querySelector("[data-learn-keywords]");
+        const hasKeywords = renderedDialog.keywords.size > 0;
         if (keywords) {
-            keywords.innerHTML = renderKeywordList(renderedDialog.keywords, renderedDialog.keywordTargets);
+            keywords.innerHTML = hasKeywords
+                ? renderKeywordList(renderedDialog.keywords, renderedDialog.keywordTargets)
+                : "";
+            const keywordPanel = keywords.closest(".keyword-panel");
+            if (keywordPanel) {
+                keywordPanel.toggleAttribute("hidden", !hasKeywords);
+            }
         }
 
         const ast = learnWindow.PYPIE_AST;
