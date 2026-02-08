@@ -112,9 +112,9 @@
             message(
                 "W",
                 "This function type seems to suggest three things:\n" +
-                "- `+` expects two inputs, `x` and `y`.\n" +
-                "- `x` is `Tensor[int][[]]`, and so is `y`.\n" +
-                "- The result is also a `Tensor[int][[]]`."
+                "`+` expects two inputs, `x` and `y`.\n" +
+                "`x` is `Tensor[int][[]]`, and so is `y`.\n" +
+                "The result is also a `Tensor[int][[]]`."
             ),
             message(
                 "D",
@@ -142,7 +142,8 @@
             message("W", "Let's see it!"),
             message(
                 "D",
-                "Two `List[int]` are compatible if the shorter one matches a **suffix** of the longer one. " +
+                "Lining up the two `List[int]`s from the right, " +
+                "they are compatible if the shorter one matches a **suffix** of the longer one.* " +
                 "Then we split the longer shape into two `List[int]`s: the suffix and the remaining **prefix**.\n" +
                 "Find the suffix and prefix for `x` and `y`."
             ),
@@ -189,7 +190,7 @@
             message(
                 "D",
                 "Great work!\n" +
-                "Try a few failing examples too: cases where a given type is incompatible with an expected type, or where the suffixes are incompatible.\n" +
+                "Try a few failing examples too: cases where a given type is incompatible with an expected type, or where the prefixes are incompatible.\n" +
                 "It helps to internalize this trick."
             ),
             message(
@@ -199,7 +200,7 @@
             message(
                 "D",
                 "Let's recap **rank polymorphism**:\n" +
-                "- (1) for each input, validate compatibility between the given and expected types, then find the prefixes*;\n" +
+                "- (1) for each input, validate compatibility between the given and expected types, then find the prefixes;\n" +
                 "- (2) validate compatibility between those prefixes;\n" +
                 "- (3) lift the result type by the longer prefix.\n" +
                 "This process applies to all functions."
@@ -213,9 +214,6 @@
             ),
             message("W", "Okay, ciao!"),
         ],
-        notes: "* Many broadcasting systems, such as [PyTorch](https://docs.pytorch.org/docs/stable/notes/broadcasting.html) " +
-        "and [NumPy](https://numpy.org/doc/stable/user/basics.broadcasting.html), do not include rule (1). " +
-        "Those systems are usually dynamically typed and use a restricted form of rank polymorphism. " +
-        "Effectively, they assume that all expected inputs share the same rank in the broadcasted function, so rule (1) always holds."
+        notes: "Two `int`s match, if they are identical, or if either of them is `1`."
     });
 })();
