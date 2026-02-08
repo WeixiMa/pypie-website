@@ -844,24 +844,24 @@ const lineDefinitionBlock = {
             message(
                 "W",
                 "**`line`**'s `def` makes sense to me. We first give names to the `float`s in `params`: `w` and `b`. " +
-                "Then we run some arithmetics on `w` `x` and `b`, call it `y`.\n" +
-                "Do `return y` suggest that `y` is the result of `line`?"
+                "Then we run arithmetic on `w`, `x`, and `b`, and call it `y`.\n" +
+                "Does `return y` suggest that `y` is the result of `line`?"
             ),
             message(
                 "D",
                 "Exactly!\n" +
-                "With the arithmetics, what is the type of `y`?"
+                "With the arithmetic, what is the type of `y`?"
             ),
             message(
                 "W",
                 "We've learned that `+` has type `(x: Tensor[int][[]], y: Tensor[int][[]]) -> Tensor[int][[]]`. " +
-                "But `w`, `x`, `b` are are `float`s. It does not work!"
+                "But `w`, `x`, `b` are `float`s. It does not work!"
             ),
             message(
                 "D",
                 "It's time to upgrade the type for `+`:\n" +
                 "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
-                "It says that `x` and `y` are rank-0 `Tensor`s that contain any types, call `T`. " +
+                "It says that `x` and `y` are rank-0 `Tensor`s that contain a type call `T`. " +
                 "`T` must be a `Num`: either `float` or `int`. " +
                 "`x` and `y` must contain the same kind of `Num`."
             ),
@@ -888,7 +888,7 @@ const lineDefinitionBlock = {
                 "D",
                 "Our `line` appears to take a single value, `float`, for `x`. But with rank polymorphism, " +
                 "`line` applies to `Tensor`s of many `x`s.\n" +
-                "Let's use `(1.0, 0.5)` for `params` and make up some `x`s to apply the `line`."
+                "Let's use `(1.0, 0.5)` for `params` and make up some `x`s for our `line`."
             ),
             {
                 ...message(
@@ -923,7 +923,7 @@ const lineDefinitionBlock = {
                 "D",
                 "By **learning** the line, we mean to find the **`params`** for the line, using our `xs` and `ys`.\n" +
                 "Remember that, we started with making up `(1.0, 0.5)` for the `params`, and then synthesized our data `xs` and `ys`. " +
-                "In real world, it just the opposite. We first gather data for `xs` and `ys`, and then find `params` using the data.\n" +
+                "In the real world, it's just the opposite. We first gather data for `xs` and `ys`, and then find `params` using the data.\n" +
                 "Now let's pretend that\n" +
                 "- `xs` and `ys` are real data\n" +
                 "- we don't know the actual values for `params`.\n" +
@@ -936,7 +936,7 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "We start with initializing the values for `params`. For the time being, the initial pick doesn't matter. Let's use `(0.0, 0.0)`.\n" +
-                "Run our `line` with the given `xs` and the initial `params`. It predicts some `ys`--let's call it `ys_pred`."
+                "Let's run our `line` with the given `xs` and the initial `params`. It predicts some `ys`--let's call it `ys_pred`."
             ),
             {
                 ...message(
@@ -945,7 +945,7 @@ const lineDefinitionBlock = {
                 ),
                 codeLabel: "init run",
                 buildCodeBlock: (_ast: AstApi) => runningInitParams,
-                textAfterCode: "We get `Tensor([-0.0, 0.0, 0.0, 0.0])`, far off from the real `ys`.",
+                textAfterCode: "We get `Tensor([-0.0, 0.0, 0.0, 0.0])`, far off from the real `ys`!",
             },
             message(
                 "D",
@@ -953,7 +953,7 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "Shall we defing a new function to compute how far?"
+                "Shall we define a new function to compute how far?"
             ),
             {
                 ...message(
@@ -976,14 +976,14 @@ const lineDefinitionBlock = {
             message(
                 "W",
                 "So we may apply `-` on `ys_pred` and `ys`. I suppose that `-` has the same type as `*` and `+`, " +
-                "expects the same shape from both inputs.\n" +
-                "Why we then calculate the power of `2.0` and `sum`?"
+                "expecting the same shape from both inputs.\n" +
+                "Why do we then calculate the power of `2.0` and use `sum`?"
             ),
             message(
                 "D",
                 "The goal of `loss` is to find a scalar `float` to represent how far, by comparing two tensors `ys_pred` and `ys`.\n" +
                 "**`sum`** is a function that adds all elements in a tensor together, resulting in one scalar.\n" +
-                "There are both negative and positive values from `ys_pred - ys`, and we need avoid them accidentally cancelling each other during the `sum`. " +
+                "Since there are both negative and positive values from `ys_pred - ys`, we need to avoid them accidentally canceling each other during the `sum`. " +
                 "So we turn them all to positive using `** 2.0`.\n" +
                 "Let's run the `loss`."
             ),
