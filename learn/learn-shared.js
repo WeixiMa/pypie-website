@@ -177,6 +177,18 @@
         return `<p class="chat-bubble__text">${body}</p>`;
     })
         .join("");
+    const renderNotesText = (text) => String(text || "")
+        .split(/\n{2,}/)
+        .map((paragraph) => paragraph.trim())
+        .filter((paragraph) => paragraph.length > 0)
+        .map((paragraph) => {
+        const body = paragraph
+            .split("\n")
+            .map((line) => formatInlineCode(line))
+            .join("<br>");
+        return `<p class="lesson-chat__intro">${body}</p>`;
+    })
+        .join("");
     const renderMessageText = (text) => {
         const source = String(text || "");
         if (!source) {
@@ -275,7 +287,7 @@
             .join("");
         nav.innerHTML = `<div class="doc-nav__title">${LEARN_SERIES.title}</div>${navLinks}`;
     };
-    const renderChapter = (dialogMessages = [], pageId) => {
+    const renderChapter = (dialogMessages = [], pageId, notes = "") => {
         setMarginTop("[data-learn-section]", "0");
         const section = document.querySelector("[data-learn-section]");
         if (!section) {
@@ -293,9 +305,10 @@
             sectionBody.textContent = "";
         }
         const renderedDialog = renderDialog(dialogMessages, pageId);
+        const renderedNotes = typeof notes === "string" && notes.trim().length > 0 ? renderNotesText(notes) : "";
         const dialog = section.querySelector("[data-learn-dialog]");
         if (dialog) {
-            dialog.innerHTML = renderedDialog.html;
+            dialog.innerHTML = `${renderedDialog.html}${renderedNotes}`;
         }
         const keywords = document.querySelector("[data-learn-keywords]");
         if (keywords) {
@@ -341,7 +354,7 @@
         setHidden("[data-learn-lead]", true);
         setText("[data-learn-title]", "");
         setText("[data-learn-lead]", "");
-        renderChapter(config.dialog, pageId);
+        renderChapter(config.dialog, pageId, config.notes);
     };
     learnWindow.PYPIE_LEARN_RENDER = renderPage;
 })();

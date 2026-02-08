@@ -13,94 +13,91 @@
         dialog: [
             message("D", "Now let's run programs with `Tensor`s.\n" +
                 "What is `1 + 1`?"),
-            message("W", "`2`. Are those even `Tensor`s?"),
-            message("D", "2 is correct! " +
-                "And yes, `1` is actually a `Tensor[int][[]]`.\n" +
-                "Here's a more interesting one: `Tensor([1]) + Tensor([1])`."),
-            message("W", "Ok, maybe we add elements at matching positions. " +
-                "It's `Tensor([2])`, right?\n" +
-                "I have another example:\n" +
-                "`Tensor([1, 2, 3]) + Tensor([5, 7, 9])` becomes `Tensor([6, 9, 12])`."),
-            message("D", "Exactly! How about `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`?"),
-            message("W", "Can we add these two `Tensor`s at all? Their types are different:\n" +
-                "one is `Tensor[int][[2, 3]]` and the other is `Tensor[int][[3]]`."),
-            message("D", "In `Tensor[int][[2, 3]]`, there are two `Tensor[int][[3]]`.\n" +
-                "So we may run `+` twice. In each run, we may still add elements at matching positions."),
-            message("W", "I see.\nFirst: `Tensor([1, 2, 3]) + Tensor([5, 7, 9])`,\nsecond: `Tensor([3, 2, 1]) + Tensor([5, 7, 9])`.\n" +
-                "Then we combine the results and get `Tensor([[6, 9, 12], [8, 9, 10]])`?"),
-            message("D", "Correct. What is the type of the result?"),
-            message("W", "The result is a `Tensor[int][[2, 3]]`, the same as the input with the larger shape. " +
-                "Seems like, we just need to align the two shapes, starting from their right-most.\n" +
-                "A nice and handy trick!"),
-            message("D", "This trick is called rank polymorphism. "),
-            message("W", "What an intimidating name!"),
-            message("D", "It is actually warmer and fuzzier than it sounds. Here, the **rank** is just the shape length.\n" +
-                "For example, " +
-                "`Tensor[int][[3]]` is rank `1` and `Tensor[int][[2, 3]]` is rank `2`."),
-            message("W", "So, `42` has type `Tensor[int][[]]`, which makes it rank `0`?"),
-            message("D", "That's right!\nWhen designing a function, we need to define its expected inputs and output. " +
-                "Oftentimes, we use this function by giving it some inputs of larger ranks than expected. " +
-                "Then, **rank polymorphism** decides whether the given inputs are valid for the function and adjusts the output correspondingly."),
-            message("W", "I see. One definition may work on different types of inputs. That's the polymorphism.\n" +
+            message("W", "`2`. But are those even `Tensor`s?"),
+            message("D", "Correct. And yes: `1` has type `Tensor[int][[]]`.\n" +
+                "Try this one: `Tensor([1]) + Tensor([1])`."),
+            message("W", "Maybe we can add matching positions.\n" +
+                "So it is `Tensor([2])`, right?\n" +
+                "Likewise, `Tensor([1, 2, 3]) + Tensor([5, 7, 9])` gives `Tensor([6, 9, 12])`."),
+            message("D", "Exactly. What about `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`?"),
+            message("W", "Can we add them at all? Their types are different:\n" +
+                "`Tensor[int][[2, 3]]` and `Tensor[int][[3]]`."),
+            message("D", "We can. A `Tensor[int][[2, 3]]` contains two `Tensor[int][[3]]`s.\n" +
+                "So we apply `+` twice on each. This way, each run still adds matching positions."),
+            message("W", "Right.\n" +
+                "First: `Tensor([1, 2, 3]) + Tensor([5, 7, 9])`.\n" +
+                "Second: `Tensor([3, 2, 1]) + Tensor([5, 7, 9])`.\n" +
+                "Then we combine the results as `Tensor([[6, 9, 12], [8, 9, 10]])`?"),
+            message("D", "Correct. What is the result type?"),
+            message("W", "The result is `Tensor[int][[2, 3]]`, same as the larger input shape.\n" +
+                "It's a nice trick to split the larger `Tensor`!"),
+            message("D", "Exactly. The trick has a name, called rank polymorphism."),
+            message("W", "An intimidating name!"),
+            message("D", "It is warmer and fuzzier than it appears. Here, **rank** is just the length of the shape.\n" +
+                "`Tensor[int][[3]]` has rank `1`, and `Tensor[int][[2, 3]]` has rank `2`."),
+            message("W", "Then `42` has type `Tensor[int][[]]`, so rank `0`?"),
+            message("D", "Exactly.\n" +
+                "When we design a function, we define its expected types for inputs and result.\n" +
+                "Rank polymorphism lets us apply that function to higher-rank inputs when they are compatible, and it lifts the result type accordingly."),
+            message("W", "So one function definition works across different input ranks.\n" +
                 "Is `+` a **function**?"),
             message("D", "`+` is a function. Just like\n" +
                 "`5` has type `Tensor[int][[]]`,\n" +
                 "`+` has type `(x: Tensor[int][[]], y: Tensor[int][[]]) -> Tensor[int][[]]`."),
-            message("W", "Let me guess. This function type tells us three things:\n" +
-                "- The function `+` expects two inputs, called `x` and `y`.\n" +
-                "- `x` is a `Tensor[int][[]]`, so is `y`.\n" +
-                "- The result of `+` is also a `Tensor[int][[]]`."),
-            message("D", "Very well! Now imagine feeding `+` with `1` as `x` and `1` as `y`."),
-            message("W", "`1` is a `Tensor[int][[]]`. Its type matches the expected `x` and `y`, precisely.\n" +
-                "So, `1 + 1` results in a `Tensor[int][[]]`, which is the type of `2`."),
-            message("D", "Next one: `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`.\n" +
-                "From the earlier excercise, we know it's a `Tensor[int][[2, 3]]`, by running its value. " +
-                "Now, we are ready to derive the type directly.\n" +
-                "Let's start with validating the inputs."),
-            message("W", "Here, `x` has type `Tensor[int][[2, 3]]` and `y` has type `Tensor[int][[3]]`. " +
-                "Neither precisely matches the expected `Tensor[int][[]]`... shall we align the two shapes from the right-most?"),
-            message("D", "Yes, we do it in a rigorous way to validate compatibility."),
+            message("W", "This function type seems to suggest three things:\n" +
+                "- `+` expects two inputs, `x` and `y`.\n" +
+                "- `x` is `Tensor[int][[]]`, and so is `y`.\n" +
+                "- The result is also a `Tensor[int][[]]`."),
+            message("D", "Exactly. Now imagine applying `+` with `1` as `x` and `1` as `y`."),
+            message("W", "`1` is `Tensor[int][[]]`, so both inputs match exactly.\n" +
+                "Therefore `1 + 1` has result type `Tensor[int][[]]`, which is the type of `2`."),
+            message("D", "Next: `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`. " +
+                "In the earlier exercise, we virtually run the program and found its result type `Tensor[int][[2, 3]]`.\n" +
+                "Now we derive the result type using polymorphism, without needing to run the program.\n" +
+                "Let's start by validating the inputs."),
+            message("W", "Here, `x` has type `Tensor[int][[2, 3]]` and `y` has type `Tensor[int][[3]]`.\n" +
+                "Neither exactly matches the expected `Tensor[int][[]]`.\n" +
+                "Are they compatible?"),
+            message("D", "We need a rule to decide compatibility for `List[int]`s."),
             message("W", "Let's see it!"),
-            message("D", "Two `List[int]`s are compatible, if we find their **lead** and their **tail**.\n" +
-                "When comparing two `List[int]`s, " +
-                "we count from their right-most, see if the smaller list aligns with the tail of the larger one.\n" +
-                "If succeeds, the remaining in the larger `List[int]` becomes the lead."),
-            message("W", "Let me see...\n" +
-                "For `x`, when comparing `[2, 3]` and `[]`, the tail is `[]` and the lead is `[2, 3]`.\n" +
-                "For `y`, when comparing `[3]` and `[]`, the tail is `[]` and the lead is `[3]`.\n" +
-                "So the first input is compatible with `x` and the second input is compatible with `y`!"),
-            message("D", "Next, we validate the compatiblity between the two leads."),
-            message("W", "Do you mean the compatibility between `[2, 3]` and `[3]`? Using the same approach to align from the right-most, we have the tail `[3]` and the lead `[2]`.\n" +
-                "So, `[2, 3]` and `[3]` are compatible, while `[2, 3]` is the larger lead."),
-            message("D", "Great! Here's what we have validated:\n" +
-                "- On each input, the given type is compatible with the expected type. And we have found two leads.\n" +
-                "- These two leads are compatible with one another.\n" +
-                "So, `Tensor[int][[2, 3]]` and `Tensor[int][[3]]` are valid inputs to `Tensor[int][[]]` and `Tensor[int][[]]`!"),
-            message("W", "Nice progress! How about the output type?"),
-            message("D", "By validating the compatibility between the leads, we have learned that `[2, 3]` is the larger lead.\n" +
-                "That means we will apply `+`, repeatedly, for `[2, 3]` times."),
-            message("W", "Got it. The output must be `Tensor[Tensor[int][]][[2, 3]]` " +
-                "and can be simplified to `Tensor[int][[2, 3]]`.\n" +
-                "This is exactly what we got by running the values before!"),
-            message("D", "Congrats on mastering rank polymorphism! " +
-                "And good job for solving the validations problems in your mind.\n" +
-                "Come up with some examples where rank polymorphism would say no: " +
-                "either the given type is not compatible with the expected, or the leads are not compatible.\n" +
-                "It reinforces your understanding."),
-            message("W", "Good idea! Will do.\n" +
-                "My recap on using rank polymorphism when applying a function:\n" +
-                "- (1) for each input, it validates the compatibility between the given type and the expected type, it also computes the leads\n" +
-                "- (2) it validates the compatiblity between the leads\n" +
-                "- (3) it adjust the output type with the largest lead\n" +
-                "In other systems with [broadcasting](https://docs.pytorch.org/docs/stable/notes/broadcasting.html). There are similar rules for (2) and (3), but not (1). Why is that?"),
-            message("D", "Broadcasting is a simplification of rank polymorphism, with the assumption that all expected types are of the same rank. " +
-                "So (1) always trivally succeeds. " +
-                "After all, these systems do not have static types and cannot specify expected types for functions.\n" +
-                "But here, rank polymorphism works for all functions."),
-            message("W", "Cool! Are there other functions besides `+`?"),
-            message("D", "A lot. In fact, you can define as many as you need.\n" +
-                "We'll cover it in the next chapter."),
-            message("W", "Can't wait!")
+            message("D", "Two `List[int]` are compatible if the shorter one matches a **suffix** of the longer one. " +
+                "So we may split the longer shape into two `List[int]`: the suffix and the remainng **preifx**.\n" +
+                "Find the suffix and prefix for `x` and `y`."),
+            message("W", "For `x`, compare `[2, 3]` with `[]`: suffix `[]`, prefix `[2, 3]`.\n" +
+                "For `y`, compare `[3]` with `[]`: suffix `[]`, prefix `[3]`.\n" +
+                "Each given input is compatible with its expected type!"),
+            message("D", "Great. Next, validate compatibility between the two prefixes."),
+            message("W", "Does compatibility work on prefixes too?"),
+            message("D", "Of course. Compatibility applies to `List[int]`s. Prefixes, like shapes, are just `List[int]`s."),
+            message("W", "So we compare `[2, 3]` with `[3]`.\n" +
+                "The suffix is `[3]` and the prefix is `[2]`.\n" +
+                "That means the prefixes from the inputs are also compatible."),
+            message("D", "Exactly. We have shown:\n" +
+                "- each given input type is compatible with its expected type;\n" +
+                "- the two prefixes from the inputs are compatible with one another.\n" +
+                "So `Tensor[int][[2, 3]]` and `Tensor[int][[3]]` are valid inputs for `+`."),
+            message("W", "Nice. What's our next step?"),
+            message("D", "Next we lift the result type. Under rank polymorphism, we repeatedly apply `+` to generate many `Tensor[int][[]]`s.\n" +
+                "The number of repetition depends on the longer prefix."),
+            message("W", "Got it. The longer prefix is `[2, 3]`, so we lift `Tensor[int][[]]` by `[2, 3]`. " +
+                "That is `Tensor[Tensor[[]]][[2, 3]]`, which simplifies to `Tensor[int][[2, 3]]`.\n" +
+                "Exactly what we saw from running the program!"),
+            message("D", "Great work!\n" +
+                "Try a few failing examples too: cases where a given type is incompatible with an expected type, or where the suffixes are incompatible.\n" +
+                "It helps to internalize this rule."),
+            message("W", "Will do."),
+            message("D", "Let recap **rank polymorphism**:\n" +
+                "- (1) for each input, validate compatibility between given and expected types, and find the suffixes*;\n" +
+                "- (2) validate compatibility between the suffixes;\n" +
+                "- (3) lift the result type by the longer suffix.r\n" +
+                "Rank polymorphism applies to all functions."),
+            message("W", "Are there other functions besides `+`?"),
+            message("D", "Yes, you can define as many as you need. " +
+                "We'll cover that in the next chapter.\n" +
+                "It's break time again!"),
+            message("W", "Ok, ciao!"),
         ],
+        notes: "* Rule (1) does not exist in other systems with [broadcasting](https://docs.pytorch.org/docs/stable/notes/broadcasting.html). " +
+            "Broadcasting is a simplified version of rank polymorphism and assumes equal ranks for all inputs in a function, so rule (1) always holds."
     });
 })();

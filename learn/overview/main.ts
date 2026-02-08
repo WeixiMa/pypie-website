@@ -2,6 +2,7 @@
     type LearnPageConfig = {
         id: string;
         dialog: LearnDialogMessage[];
+        notes?: string;
     };
 
     type Side = "left" | "right";

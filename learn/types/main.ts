@@ -10,6 +10,7 @@
     type LearnPageConfig = {
         id: string;
         dialog: LearnDialogMessage[];
+        notes?: string;
     };
 
     type LearnRender = (config: LearnPageConfig) => void;
