@@ -46,8 +46,15 @@
             ),
             message(
                 "W",
-                "Maybe we can add matching positions.\n" +
-                "So it is `Tensor([2])`, right?\n" +
+                "How about adding matching positions?"
+            ),
+            message(
+                "D",
+                "That's how we do it!"
+            ),
+            message(
+                "W",
+                "Then it is `Tensor([2])`, right?\n" +
                 "Likewise, `Tensor([1, 2, 3]) + Tensor([5, 7, 9])` gives `Tensor([6, 9, 12])`."
             ),
             message(
@@ -77,7 +84,7 @@
                 "The result is `Tensor[int][[2, 3]]`, same as the larger input shape.\n" +
                 "It's a nice trick to split the larger `Tensor`!"
             ),
-            message("D", "Exactly. The trick has a name, called rank polymorphism."),
+            message("D", "The trick is called rank polymorphism."),
             message("W", "An intimidating name!"),
             message(
                 "D",
@@ -121,7 +128,7 @@
             message(
                 "D",
                 "Next: `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`. " +
-                "In the earlier exercise, we virtually run the program and found its result type `Tensor[int][[2, 3]]`.\n" +
+                "In the earlier exercise, we virtually ran the program and found its result type `Tensor[int][[2, 3]]`.\n" +
                 "Now we derive the result type using polymorphism, without needing to run the program.\n" +
                 "Let's start by validating the inputs."
             ),
@@ -136,7 +143,7 @@
             message(
                 "D",
                 "Two `List[int]` are compatible if the shorter one matches a **suffix** of the longer one. " +
-                "So we may split the longer shape into two `List[int]`: the suffix and the remainng **preifx**.\n" +
+                "So we may the longer shape into two `List[int]`: the suffix and the remaining **prefix**.\n" +
                 "Find the suffix and prefix for `x` and `y`."
             ),
             message(
@@ -171,7 +178,7 @@
             message(
                 "D",
                 "Next we lift the result type. Under rank polymorphism, we repeatedly apply `+` to generate many `Tensor[int][[]]`s.\n"+
-                "The number of repetition depends on the longer prefix."
+                "The number of repetitions depends on the longer prefix."
             ),
             message(
                 "W",
@@ -191,10 +198,10 @@
                 ),
             message(
                 "D",
-                "Let recap **rank polymorphism**:\n" +
-                "- (1) for each input, validate compatibility between given and expected types, and find the suffixes*;\n" +
-                "- (2) validate compatibility between the suffixes;\n" +
-                "- (3) lift the result type by the longer suffix.r\n" +
+                "Let's recap **rank polymorphism**:\n" +
+                "- (1) for each input, validate compatibility between given and expected types, and find the prefixes*;\n" +
+                "- (2) validate compatibility between the prefixes;\n" +
+                "- (3) lift the result type by the longer prefix.\n" +
                 "Rank polymorphism applies to all functions."
             ),
             message("W", "Are there other functions besides `+`?"),
@@ -206,7 +213,9 @@
             ),
             message("W", "Ok, ciao!"),
         ],
-        notes: "* Rule (1) does not exist in other systems with [broadcasting](https://docs.pytorch.org/docs/stable/notes/broadcasting.html). " +
-        "Broadcasting is a simplified version of rank polymorphism and assumes equal ranks for all inputs in a function, so rule (1) always holds."
+        notes: "* Rule (1) does not exist in other systems with broadcasting, such as [PyTorch](https://docs.pytorch.org/docs/stable/notes/broadcasting.html) " +
+        "and [NumPy](https://numpy.org/doc/stable/user/basics.broadcasting.html). " +
+        "These systems are usually dynamically typed and employ a restricted version of rank polymorphism. " +
+        "They effectively assume that all expected inputs share the same rank in the function being broadcast, making rule (1) always hold."
     });
 })();
