@@ -46,11 +46,12 @@
             ),
             message(
                 "W",
-                "How about adding matching positions?"
+                "Hmm... if we break the larger tensor into smaller tensors, " +
+                "then at the matching position, we have `1 + 1` again--a problem we've already solved."
             ),
             message(
                 "D",
-                "Great instinct. That's exactly how we do it."
+                "Great instinct. Indeed, we add the matching positions."
             ),
             message(
                 "W",
@@ -63,8 +64,9 @@
             ),
             message(
                 "W",
-                "Can we add them at all? Their types are different:\n" +
-                "`Tensor[int][[2, 3]]` and `Tensor[int][[3]]`."
+                "Wait, their types are different: " +
+                "`Tensor[int][[2, 3]]` and `Tensor[int][[3]]`.\n" +
+                "Can we add `Tensor`s with different types?"
             ),
             message(
                 "D",
@@ -96,7 +98,7 @@
                 "D",
                 "Yes.\n" +
                 "When we design a function, we define its expected types for inputs and result.\n" +
-                "Rank polymorphism lets us apply that function to higher-rank inputs when they are compatible, and it lifts the result type accordingly."
+                "Rank polymorphism lets us apply that function to higher-rank inputs when they are compatible, and it wraps the result type accordingly."
             ),
             message(
                 "W",
@@ -129,7 +131,7 @@
                 "D",
                 "Next: `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`. " +
                 "In the earlier exercise, we virtually ran the program and found its result type `Tensor[int][[2, 3]]`.\n" +
-                "Now we derive the result type using polymorphism, without needing to run the program.\n" +
+                "Now we derive the result type, without needing to run the program.\n" +
                 "Let's start by validating the inputs."
             ),
             message(
@@ -142,16 +144,16 @@
             message("W", "Let's see it!"),
             message(
                 "D",
-                "Lining up the two `List[int]`s from the right, " +
-                "they are compatible if the shorter one matches a **suffix** of the longer one.* " +
-                "Then we split the longer shape into two `List[int]`s: the suffix and the remaining **prefix**.\n" +
+                "Two `List[int]`s are **compatible**, if we line them up from the right and find a " +
+                "**suffix** in the longer one that matches the shorter*. " +
+                "The remaining in the longer list is called the **prefix**.\n" +
                 "Find the suffix and prefix for `x` and `y`."
             ),
             message(
                 "W",
                 "For `x`, compare `[2, 3]` with `[]`: suffix `[]`, prefix `[2, 3]`.\n" +
                 "For `y`, compare `[3]` with `[]`: suffix `[]`, prefix `[3]`.\n" +
-                "Each given input is compatible with its expected type!"
+                "That means: each given input is compatible with its expected type!"
             ),
             message("D", "Great. Next, validate compatibility between the two prefixes."),
             message(
@@ -170,20 +172,20 @@
             ),
             message(
                 "D",
-                "Good progress! We have shown:\n" +
+                "Good progress! So far:\n" +
                 "- each given input type is compatible with its expected type;\n" +
                 "- the two prefixes from the inputs are compatible with one another.\n" +
-                "So `Tensor[int][[2, 3]]` and `Tensor[int][[3]]` are valid inputs for `+`."
+                "So `Tensor[int][[2, 3]]` and `Tensor[int][[3]]` are valid inputs for `x` and `y` in `+`."
             ),
             message("W", "Nice. What's our next step?"),
             message(
                 "D",
-                "Now we lift the result type. Under rank polymorphism, we repeatedly apply `+` to generate many `Tensor[int][[]]`s.\n" +
+                "Now we wrap the result type. Under rank polymorphism, we repeatedly apply `+` to generate many `Tensor[int][[]]`s.\n" +
                 "The number of repetitions depends on the longer prefix."
             ),
             message(
                 "W",
-                "Got it. The longer prefix is `[2, 3]`, so we lift `Tensor[int][[]]` by `[2, 3]`. "+
+                "Got it. The longer prefix is `[2, 3]`, so we wrap `Tensor[int][[]]` with `[2, 3]`. "+
                 "That is `Tensor[Tensor[int][[]]][[2, 3]]`, which simplifies to `Tensor[int][[2, 3]]`.\n" +
                 "Exactly the same as running the program!"
             ),
@@ -200,9 +202,9 @@
             message(
                 "D",
                 "Let's recap **rank polymorphism**:\n" +
-                "- (1) for each input, validate compatibility between the given and expected types, then find the prefixes;\n" +
+                "- (1) for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
                 "- (2) validate compatibility between those prefixes;\n" +
-                "- (3) lift the result type by the longer prefix.\n" +
+                "- (3) wrap the result type with the longer prefix.\n" +
                 "This process applies to all functions."
             ),
             message("W", "Are there other functions besides `+`?"),
@@ -214,6 +216,6 @@
             ),
             message("W", "Okay, ciao!"),
         ],
-        notes: "Two `int`s match, if they are identical, or if either of them is `1`."
+        notes: "* We match the `int`s in two `List[int]`s in matching positions, from the right end. We consider two `int`s match, if they are identical, or if either of them is `1`.",
     });
 })();

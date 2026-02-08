@@ -18,7 +18,7 @@
                 title: "Start with types",
             },
             {
-                slug: "tensor_ops/index.html",
+                slug: "tensor_add/index.html",
                 title: "Adding different tensors",
             },
         ],
