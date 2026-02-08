@@ -69,7 +69,7 @@
             message(
                 "D",
                 "We can. A `Tensor[int][[2, 3]]` contains two `Tensor[int][[3]]`s.\n" +
-                "So we run `+` twice. Every run still adds matching positions."
+                "So we run `+` twice. Each still adds matching positions."
             ),
             message(
                 "W",
@@ -184,7 +184,7 @@
                 "W",
                 "Got it. The longer prefix is `[2, 3]`, so we lift `Tensor[int][[]]` by `[2, 3]`. "+
                 "That is `Tensor[Tensor[int][[]]][[2, 3]]`, which simplifies to `Tensor[int][[2, 3]]`.\n" +
-                "Exactly same with running the program!"
+                "Exactly the same as running the program!"
             ),
             message(
                 "D",
