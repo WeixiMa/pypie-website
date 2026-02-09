@@ -118,9 +118,36 @@ const lineDefinitionBlock = {
                     },
                 ],
                 returns: {
-                    kind: "Identifier",
-                    name: "float",
-                    role: "type",
+                    kind: "TypeSubscript",
+                    base: {
+                        kind: "TypeSubscript",
+                        base: {
+                            kind: "Identifier",
+                            name: "Tensor",
+                            role: "type",
+                        },
+                        index: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                    },
+                    index: {
+                        kind: "TypeList",
+                        items: [
+                            {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "Identifier",
+                                        name: "n",
+                                        role: "var",
+                                        type: "int",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
                 },
                 decorator: {
                     kind: "Identifier",
@@ -548,7 +575,7 @@ const lineDefinitionBlock = {
         ],
     };
 
-    const lossDefinitionBlock = {
+    const problematicMinus = {
         kind: "Block",
         body: [
             {
@@ -596,6 +623,339 @@ const lineDefinitionBlock = {
                     ],
                 },
             },
+            {
+                kind: "Assign",
+                target: {
+                    kind: "Identifier",
+                    name: "m",
+                    role: "var",
+                    type: "int",
+                },
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Identifier",
+                        name: "Var",
+                        role: "fn",
+                    },
+                    args: [
+                        {
+                            kind: "Identifier",
+                            name: "\"m\"",
+                            role: "plain",
+                        },
+                        {
+                            kind: "Identifier",
+                            name: "int",
+                            role: "type",
+                        },
+                    ],
+                },
+            },
+            {
+                kind: "FunctionDef",
+                name: {
+                    kind: "Identifier",
+                    name: "bad_sub",
+                    role: "fn",
+                },
+                args: [
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "ys_pred",
+                            role: "var",
+                        },
+                        annotation: {
+                            kind: "TypeSubscript",
+                            base: {
+                                kind: "TypeSubscript",
+                                base: {
+                                    kind: "Identifier",
+                                    name: "Tensor",
+                                    role: "type",
+                                },
+                                index: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                            index: {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "n",
+                                                role: "var",
+                                                type: "int",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "ys",
+                            role: "var",
+                        },
+                        annotation: {
+                            kind: "TypeSubscript",
+                            base: {
+                                kind: "TypeSubscript",
+                                base: {
+                                    kind: "Identifier",
+                                    name: "Tensor",
+                                    role: "type",
+                                },
+                                index: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                            index: {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "m",
+                                                role: "var",
+                                                type: "int",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                ],
+                returns: {
+                    kind: "TypeSubscript",
+                    base: {
+                        kind: "TypeSubscript",
+                        base: {
+                            kind: "Identifier",
+                            name: "Tensor",
+                            role: "type",
+                        },
+                        index: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                    },
+                    index: {
+                        kind: "TypeList",
+                        items: [
+                            {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "Identifier",
+                                        name: "n",
+                                        role: "var",
+                                        type: "int",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+                decorator: {
+                    kind: "Identifier",
+                    name: "op",
+                    role: "fn",
+                },
+                body: [
+                    {
+                        kind: "Return",
+                        value: {
+                            kind: "BinOp",
+                            left: {
+                                kind: "Identifier",
+                                name: "ys_pred",
+                                role: "var",
+                            },
+                            op: "-",
+                            right: {
+                                kind: "Identifier",
+                                name: "ys",
+                                role: "var",
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+
+    const correctMinus = {
+        kind: "Block",
+        body: [
+            {
+                kind: "FunctionDef",
+                name: {
+                    kind: "Identifier",
+                    name: "good_sub",
+                    role: "fn",
+                },
+                args: [
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "ys_pred",
+                            role: "var",
+                        },
+                        annotation: {
+                            kind: "TypeSubscript",
+                            base: {
+                                kind: "TypeSubscript",
+                                base: {
+                                    kind: "Identifier",
+                                    name: "Tensor",
+                                    role: "type",
+                                },
+                                index: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                            index: {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "n",
+                                                role: "var",
+                                                type: "int",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "ys",
+                            role: "var",
+                        },
+                        annotation: {
+                            kind: "TypeSubscript",
+                            base: {
+                                kind: "TypeSubscript",
+                                base: {
+                                    kind: "Identifier",
+                                    name: "Tensor",
+                                    role: "type",
+                                },
+                                index: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                            index: {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "n",
+                                                role: "var",
+                                                type: "int",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                ],
+                returns: {
+                    kind: "TypeSubscript",
+                    base: {
+                        kind: "TypeSubscript",
+                        base: {
+                            kind: "Identifier",
+                            name: "Tensor",
+                            role: "type",
+                        },
+                        index: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                    },
+                    index: {
+                        kind: "TypeList",
+                        items: [
+                            {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "Identifier",
+                                        name: "n",
+                                        role: "var",
+                                        type: "int",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+                decorator: {
+                    kind: "Identifier",
+                    name: "op",
+                    role: "fn",
+                },
+                body: [
+                    {
+                        kind: "Return",
+                        value: {
+                            kind: "BinOp",
+                            left: {
+                                kind: "Identifier",
+                                name: "ys_pred",
+                                role: "var",
+                            },
+                            op: "-",
+                            right: {
+                                kind: "Identifier",
+                                name: "ys",
+                                role: "var",
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+
+    const lossDefinitionBlock = {
+        kind: "Block",
+        body: [
             {
                 kind: "FunctionDef",
                 name: {
@@ -798,12 +1158,12 @@ const lineDefinitionBlock = {
             },
             message(
                 "W",
-                "These imports are new to me."
+                "These imports look new to me."
             ),
             message(
                 "D",
-                "Because we borrow tools.\n" +
-                "`pypie` gives us tensor and learning tools.\n" +
+                "We need to borrow tools from existing libraries.\n" +
+                "`pypie` gives us tensors and learning tools.\n" +
                 "`typing` gives us some additional type notations, like `Tuple`.\n" +
                 "`Tuple[float, float]` says `params` contains exactly two `float`s."
             ),
@@ -818,7 +1178,7 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "`line` names `params` as `w` and `b`, computes `w * x + b`, and then names the computation `y`.\n" +
+                "In `line`, we name `params` as `w` and `b`, compute `w * x + b`, and then name the computation `y`.\n" +
                 "Is `y` the result of `line`?"
             ),
             message(
@@ -828,21 +1188,21 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "Earlier, `+` was typed only for `int` tensors.\n" +
+                "Hmm... earlier, `+` was typed only for `int` tensors.\n" +
                 "But `w`, `x`, and `b` are `float`s.\n" +
                 "How does `+` work here?"
             ),
             message(
                 "D",
-                "Good observation. We need generalize `+`:\n" +
+                "Good observation. We need to generalize `+`:\n" +
                 "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
                 "Read it this way:\n" +
-                "`T` must be a `Num`: either `int` or `float`. And both inputs must share that same `T`."
+                "`T` can be any type that is a `Num`. Both inputs must share that same `T`."
             ),
             message(
                 "W",
-                "Then in our case, `T` becomes `float`.\n" +
-                "So `w * x + b` is a `float`, matching the result type `line`."
+                "Here, `float` is a `Num`, so `T` becomes `float`.\n" +
+                "Then `w * x + b` is a `float`, matching the result type `line`."
             ),
             message(
                 "D",
@@ -852,7 +1212,7 @@ const lineDefinitionBlock = {
             {
                 ...message(
                 "W",
-                "So if I change the result annotation in `int`..."
+                "So if I change the result annotation to `int`..."
                 ),
                 codeLabel: "wrong `line` definition",
                 buildCodeBlock: (_ast: AstApi) => wrongLineDefinitionBlock,
@@ -904,13 +1264,13 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "How do we begin?"
+                "Fun game! How do we begin?"
             ),
             message(
                 "D",
                 "Start with a guess for `params`.\n" +
                 "For now, any guess is fine; say `(0.0, 0.0)`.\n" +
-                "Run `line` on `xs` with the `param`. Let's call the result `ys_pred`, for the predicated `ys`."
+                "Run `line` on `xs` with the `params`. Let's call the result `ys_pred`, for the predicted `ys`."
             ),
             {
                 ...message(
@@ -919,7 +1279,7 @@ const lineDefinitionBlock = {
                 ),
                 codeLabel: "init run",
                 buildCodeBlock: (_ast: AstApi) => runningInitParams,
-                textAfterCode: "We get `Tensor([-0.0, 0.0, 0.0, 0.0])`. That is far from `ys`.",
+                textAfterCode: "We get `Tensor([-0.0, 0.0, 0.0, 0.0])`. `ys_pred` is far from the real `ys`.",
             },
             message(
                 "D",
@@ -928,37 +1288,65 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "Do we need a function to measure?"
+                "How do we measure it?"
             ),
             {
                 ...message(
                     "D",
-                "Yes. Call it `loss`."
+                    "We define a function to measure! But before that, we need another tool.\nConsider this function."
+                ),
+                codeLabel: "problematic minus",
+                buildCodeBlock: (_ast: AstApi) => problematicMinus,
+            },
+            message(
+                "W",
+                "We imported one more thing from `pypie`.\n" +
+                "What are `Var(\"n\", int)` and `Var(\"m\", int)`?"
+            ),
+            message(
+                "D",
+                "**`Var`** creates a unique variable.\n" +
+                "When validating a function's definition, this variable is different from everything but itself.\n" +
+                "When applying the defined function, this variable can be replaced by any value of the same type.\n" +
+                "Let's ask `pypie` to validate `bad_sub`."
+            ),
+            message(
+                "W",
+                "`n != m`\nIt raises an error. Is it because `-` expects shared shape between its inputs, " +
+                "but variables are different from each other?"
+            ),
+            message(
+                "D",
+                "That's right. Try fixing the definition."
+            ),
+            {
+                ...message(
+                    "W",
+                    "Then the two inputs should have the same type."
+                ),
+                codeLabel: "correct minus",
+                buildCodeBlock: (_ast: AstApi) => correctMinus,
+                textAfterCode: "The error is gone!"
+            },
+            {
+                ...message(
+                    "D",
+                    "Now we can define the function to measure how far. It's called **`loss`**."
                 ),
                 codeLabel: "`loss` definition",
                 buildCodeBlock: (_ast: AstApi) => lossDefinitionBlock,
             },
             message(
                 "W",
-                "We imported one more thing from `pypie`.\n" +
-                "What is `Var(\"n\", int)`?"
+                "It modifies `good_sub` a bit. " +
+                "Why square with `** 2.0`, then call `sum`?"
             ),
             message(
                 "D",
-                "`Var(\"n\", int)` creates a symbolic integer.\n" +
-                "We place `n` in types of `ys_pred` and `ys`, to enforce a shared shape for their inputs."
-            ),
-            message(
-                "W",
-                "Then `ys_pred - ys` is valid because shapes match.\n" +
-                "But why square with `** 2.0`, then call `sum`?"
-            ),
-            message(
-                "D",
-                "`loss` should return one scalar `float`.\n" +
+                "`loss` should return a scalar `float`.\n" +
                 "`sum` reduces a tensor into one scalar, by adding all elements together. " +
                 "Before `sum`, we square each difference to remove negative numbers.\n" +
-                "Now run `loss`."
+                "Run `loss`."
             ),
             {
                 ...message(
@@ -969,6 +1357,33 @@ const lineDefinitionBlock = {
                 buildCodeBlock: (_ast: AstApi) => runLossBlock,
                 textAfterCode: "It prints `32.19`. That's the loss at `(0.0, 0.0)`!",
             },
+            message(
+                "D",
+                "We use the loss value to revise `params` and calculate the loss again, and again..."
+            ),
+            message(
+                "W",
+                "... until the loss becomes `0`?"
+            ),
+            message(
+                "D",
+                "In practice, the loss almost never reaches 0. More importantly, it is not supposed to.\nReaching 0 usually means " +
+                "overfitting: the `params` have learned too much from the existing data, which may contain noise and errors, " +
+                "damaging their generalization to new data.\n" +
+                "Here, we focus on adjusting the `params` for each revision, and simply set a fixed number of revisions."
+            ),
+            message(
+                "W",
+                "Can we see how `params` are adjusted?"
+            ),
+            message(
+                "D",
+                "Yes, in the next chapter."
+            ),
+            message(
+                "W",
+                "A break is appreciated!"
+            )
         ],
         notes: "* The figure is generated by feeding `xs` and `ys` to [matplotlib](https://matplotlib.org/stable/tutorials/pyplot.html)."
     });

@@ -106,7 +106,7 @@
             ),
             message(
                 "D",
-                "That's right. Machines can identify them, and then simplify the longer type to the smaller one, to make it easier for us to read."
+                "Convetionally, we have a name for values of `int` or `float`: **scalar**s."
             ),
             message("W", "Why do we need `Tensor`s, since we already have `List`s?"),
             message("D", "Good question! Can we make `[[1, 2, 3], [4, 5]]` a `Tensor`?"),
