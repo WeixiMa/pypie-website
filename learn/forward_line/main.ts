@@ -1311,7 +1311,7 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "The checker says `n != m`.\n" +
+                "It says `n != m`.\n" +
                 "Is that because `-` requires matching tensor shapes, " +
                 "but `n` and `m` are different values?"
             ),
