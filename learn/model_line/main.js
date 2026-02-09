@@ -482,7 +482,7 @@
             },
             message("W", "So we put `line` and `loss` under the same `Model`, which is called `Line`.\n" +
                 "Why is `line` renamed to `forward`?"),
-            message("D", "A !!`Model`!! learns `params` by repeating revisions. In each revision, we use `forward` to find a `ys_pred`, " +
+            message("D", "A `Model` learns `params` by repeating revisions. In each revision, we use `forward` to find a `ys_pred`, " +
                 "compute a `loss`, and then update the `params`.\n" +
                 "We omitted the `@op`s, since every definition in a `Model` is automatically a `pypie` operator.\n" +
                 "This `Line` `Model` is not complete, since it doesn't know how to `update` yet."),
@@ -493,7 +493,9 @@
                 codeLabel: "`update` definition",
                 buildCodeBlock: (_ast) => lineUpdateBlock,
                 textAfterCode: "For each scalar `p` in `params`, the `Model` finds a gradient* `g` using `loss` and adjusts `p` with `g`**."
-            }
+            },
+            message("W", "So, we tell a !!`Model`!! three functions: `forward`, `loss`, and `update`.\n" +
+                "Then the `Model` revises `params` for us?")
         ],
         notes: "* The mathematical definition of [gradient](https://en.wikipedia.org/wiki/Gradient) can be found in ...\n" +
             "** In `pypie`, a `Model` may also use different update methods for different `params`."
