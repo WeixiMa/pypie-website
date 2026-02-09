@@ -1151,19 +1151,19 @@ const lineDefinitionBlock = {
             {
                 ...message(
                     "D",
-                    "First up: `line`."
+                    "First up: **`line`**."
                 ),
                 codeLabel: "`line` definition",
                 buildCodeBlock: (_ast: AstApi) => lineDefinitionBlock,
             },
             message(
                 "W",
-                "These imports are new to me."
+                "These imports look new to me."
             ),
             message(
                 "D",
                 "`pypie` gives us tensors and learning primitives.\n" +
-                "`typing` gives us type notation such as `Tuple`.\n" +
+                "`typing` gives us some type notation, such as `Tuple`.\n" +
                 "`Tuple[float, float]` means `params` has exactly two `float` values."
             ),
             message(
@@ -1172,12 +1172,12 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "`@op` marks the next `def` as a `pypie` op.\n" +
+                "**`@op`** marks the next `def` as a `pypie` op.\n" +
                 "This enables `pypie` to validate its type with rank polymorphism."
             ),
             message(
                 "W",
-                "So in `line`, we unpack `params` into `w` and `b`, compute `y = w * x + b`, then return `y`.\n" +
+                "In `line`, we unpack `params` into `w` and `b`, compute `y = w * x + b`, then return `y`.\n" +
                 "Is that the whole story?"
             ),
             message(
@@ -1196,7 +1196,7 @@ const lineDefinitionBlock = {
                 "D",
                 "Good check. We need to generalize `+`:\n" +
                 "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
-                "Here `x` and `y` must share the same `Num` type. `pypie` then decides the concrete `T` when apply `+` to concrete inputs."
+                "Here `x` and `y` must share the same `Num` type. `pypie` then decides the concrete `T` when applying `+` to concrete inputs."
             ),
             message(
                 "W",
@@ -1219,8 +1219,8 @@ const lineDefinitionBlock = {
             },
             message(
                 "D",
-                "Because `line` is rank polymorphic, it also works on a tensor of many `x`s.\n" +
-                "Let's try `params = (1.0, 0.5)` with many `x`s."
+                "Because `line` is rank polymorphic, it also works on a tensor.\n" +
+                "Let's try `params = (1.0, 0.5)` with some `x`s."
             ),
             {
                 ...message(
@@ -1249,21 +1249,21 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "What does it mean to learn the line?" 
+                "Learn the line?" 
             ),
             message(
                 "D",
                 "It means finding `params` using `xs` and `ys`.\n" +
-                "A minute ago we picked `params`, then computed `ys`.\n" +
-                "In real work, it is the reverse: we have the data of `xs` and `ys, and need to infer `params.\n" +
+                "Just now, we picked `params`, then computed `ys`.\n" +
+                "In real work, it is the reverse: we have the data of `xs` and `ys`, and need to infer `params`.\n" +
                 "Let's pretend:\n" +
-                "- `xs` and `ys` are observed data\n" +
-                "- true `params` are hidden.\n" +
+                "- `xs` and `ys` are real data\n" +
+                "- true `params` are unknown yet.\n" +
                 "Then we write a program to find `params`."
             ),
             message(
                 "W",
-                "Okay. How to we begin?"
+                "Okay. How do we begin?"
             ),
             message(
                 "D",
@@ -1282,17 +1282,17 @@ const lineDefinitionBlock = {
             },
             message(
                 "D",
-                "Far is expected.\n" +
-                "Now we need a numeric measure of \"far\"."
+                "As expected.\n" +
+                "Now we just need to measure how far."
             ),
             message(
                 "W",
-                "How to we measure it?"
+                "How do we measure it?"
             ),
             {
                 ...message(
                     "D",
-                    "We'll define a function soon, but first we need one more type-checking tool.\n" +
+                    "We'll define a function soon, but first we need one more tool for types.\n" +
                     "Look at this function."
                 ),
                 codeLabel: "problematic minus",
@@ -1307,7 +1307,7 @@ const lineDefinitionBlock = {
                 "D",
                 "**`Var`** creates a type variable.\n" +
                 "During definition checking, each `Var` is distinct.\n" +
-                "During use, it can be instantiated with any value of its type.\n" +
+                "During use, the `Var` can be instantiated with any value of its type.\n" +
                 "Now ask `pypie` to validate `bad_sub`."
             ),
             message(
@@ -1343,9 +1343,9 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "`loss` must return one scalar `float`.\n" +
-                "`sum` collapses the tensor to one number.\n" +
-                "Before `sum`, we square each difference to remove negative numbers, so that negatives and positives don't cancel each other.\n" +
+                "`loss` returns a scalar `float`--our measure of how far.\n" +
+                "The scalar is computed by `sum`, collapsing the tensor to one value.\n" +
+                "Before running `sum`, we square each difference to remove negative numbers, so that negatives and positives don't cancel each other.\n" +
                 "Run `loss`."
             ),
             {
@@ -1371,19 +1371,19 @@ const lineDefinitionBlock = {
                 "Usually not.\n" +
                 "For real data, exact zero is uncommon and often undesirable.\n" +
                 "Chasing zero can overfit noise and hurt generalization.\n" +
-                "Here we focus on updating `params` and run a fixed number of steps."
+                "Here we focus on updating `params` and repeat for a fixed number."
             ),
             message(
                 "W",
-                "We are defining functions for updating `params`!"
+                "Will we define a function to update `params`?"
             ),
             message(
                 "D",
-                "Yes. Next chapter."
+                "We will, in the next chapter."
             ),
             message(
                 "W",
-                "Good. Brain break earned."
+                "Brain break earned!"
             )
         ],
         notes: "* The figure is generated by feeding `xs` and `ys` to [matplotlib](https://matplotlib.org/stable/tutorials/pyplot.html)."
