@@ -84,15 +84,15 @@
         pages: [
             {
                 slug: "types/index.html",
-                title: "Start with types",
+                title: "Types, Shapes & Tensors",
             },
             {
                 slug: "tensor_add/index.html",
-                title: "Adding different tensors",
+                title: "One Fnction, Any Rank",
             },
             {
                 slug: "forward_line/index.html",
-                title: "A forward line",
+                title: "A Forward Line",
             },
         ],
     };

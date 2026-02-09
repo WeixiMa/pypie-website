@@ -1,4 +1,23 @@
 (() => {
+    const THEME_STORAGE_KEY = "pypie.theme";
+    const isThemeName = (value) => value === "theme-dark" || value === "theme-solaris";
+    const readStoredTheme = () => {
+        try {
+            const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+            return isThemeName(stored) ? stored : null;
+        }
+        catch {
+            return null;
+        }
+    };
+    const writeStoredTheme = (theme) => {
+        try {
+            window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+        }
+        catch {
+            // Ignore storage failures (private mode, quotas, etc.).
+        }
+    };
     const container = document.querySelector("[data-top-actions]");
     if (!container) {
         return;
@@ -31,6 +50,7 @@
     const setTheme = (name) => {
         root.classList.remove("theme-dark", "theme-solaris");
         root.classList.add(name);
+        writeStoredTheme(name);
         if (themeToggle) {
             const label = name === "theme-solaris" ? "To the dark side!" : "To the light side!";
             themeToggle.setAttribute("aria-label", label);
@@ -43,5 +63,5 @@
             setTheme(isSolaris ? "theme-dark" : "theme-solaris");
         });
     }
-    setTheme("theme-dark");
+    setTheme(readStoredTheme() || "theme-dark");
 })();

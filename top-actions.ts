@@ -4,6 +4,30 @@
         label: string;
     };
 
+    type ThemeName = "theme-dark" | "theme-solaris";
+
+    const THEME_STORAGE_KEY = "pypie.theme";
+
+    const isThemeName = (value: unknown): value is ThemeName =>
+        value === "theme-dark" || value === "theme-solaris";
+
+    const readStoredTheme = (): ThemeName | null => {
+        try {
+            const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+            return isThemeName(stored) ? stored : null;
+        } catch {
+            return null;
+        }
+    };
+
+    const writeStoredTheme = (theme: ThemeName): void => {
+        try {
+            window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+        } catch {
+            // Ignore storage failures (private mode, quotas, etc.).
+        }
+    };
+
     const container = document.querySelector("[data-top-actions]");
     if (!container) {
         return;
@@ -40,9 +64,10 @@
     const themeToggle = container.querySelector("#theme-toggle");
     const root = document.body;
 
-    const setTheme = (name: "theme-dark" | "theme-solaris"): void => {
+    const setTheme = (name: ThemeName): void => {
         root.classList.remove("theme-dark", "theme-solaris");
         root.classList.add(name);
+        writeStoredTheme(name);
         if (themeToggle) {
             const label = name === "theme-solaris" ? "To the dark side!" : "To the light side!";
             themeToggle.setAttribute("aria-label", label);
@@ -57,5 +82,5 @@
         });
     }
 
-    setTheme("theme-dark");
+    setTheme(readStoredTheme() || "theme-dark");
 })();
