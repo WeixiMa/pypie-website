@@ -1305,7 +1305,7 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "They are two values of type `int`.\n" +
-                "When checking a function, different `Var`s are distinct.\n" +
+                "When checking a function, different **`Var`**s are distinct.\n" +
                 "When using the function, each `Var` is instantiated with a concrete `int`.\n" +
                 "Now ask `pypie` to validate `bad_sub`."
             ),

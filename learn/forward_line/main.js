@@ -1182,7 +1182,7 @@
             message("W", "We imported one more thing from `pypie`.\n" +
                 "What are `Var(\"n\", int)` and `Var(\"m\", int)`?"),
             message("D", "They are two values of type `int`.\n" +
-                "When checking a function, different `Var`s are distinct.\n" +
+                "When checking a function, different **`Var`**s are distinct.\n" +
                 "When using the function, each `Var` is instantiated with a concrete `int`.\n" +
                 "Now ask `pypie` to validate `bad_sub`."),
             message("W", "The checker says `n != m`.\n" +
