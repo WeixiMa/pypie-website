@@ -186,30 +186,6 @@
         kind: "Block",
         body: [
             {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "from pypie import op, Tensor",
-                    role: "plain",
-                },
-            },
-            {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "from typing import Tuple",
-                    role: "plain",
-                },
-            },
-            {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "",
-                    role: "plain",
-                },
-            },
-            {
                 kind: "FunctionDef",
                 name: {
                     kind: "Identifier",
@@ -776,15 +752,15 @@
                 codeLabel: "`line` definition",
                 buildCodeBlock: (_ast) => lineDefinitionBlock,
             },
-            message("W", "These imports are new."),
+            message("W", "These imports are new to me."),
             message("D", "Because we borrow tools.\n" +
                 "`pypie` gives us tensor and learning tools.\n" +
-                "`typing` gives us type notation.\n" +
-                "And `Tuple[float, float]` says `params` is exactly two `float`s."),
+                "`typing` gives us some additional type notations, like `Tuple`.\n" +
+                "`Tuple[float, float]` says `params` contains exactly two `float`s."),
             message("W", "Then what does `op` do?"),
             message("D", "`@op` marks the next `def` as a `pypie` function.\n" +
                 "This enables `pypie` to validate the function type with rank polymorphism."),
-            message("W", "So `line` names `params` as `w` and `b`, computes `w * x + b`, names the computation `y`.\n" +
+            message("W", "`line` names `params` as `w` and `b`, computes `w * x + b`, and then names the computation `y`.\n" +
                 "Is `y` the result of `line`?"),
             message("D", "Yes.\n" +
                 "What is the type of `y`?"),
@@ -795,17 +771,17 @@
                 "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
                 "Read it this way:\n" +
                 "`T` must be a `Num`: either `int` or `float`. And both inputs must share that same `T`."),
-            message("W", "Then in our case, `T` is `float`.\n" +
+            message("W", "Then in our case, `T` becomes `float`.\n" +
                 "So `w * x + b` is a `float`, matching the result type `line`."),
-            message("D", "Right. `pypie` checks the returned type against the annotated return type.\n" +
+            message("D", "Right. `pypie` checks the returned type against the annotation in the `def`.\n" +
                 "If they differ, `pypie` reports an error."),
             {
-                ...message("W", "So if I change the result type to `int`..."),
+                ...message("W", "So if I change the result annotation in `int`..."),
                 codeLabel: "wrong `line` definition",
                 buildCodeBlock: (_ast) => wrongLineDefinitionBlock,
-                textAfterCode: "... indeed! The checker complains:\n`int != float`",
+                textAfterCode: "... indeed! The checker complains:\n`int != float`.",
             },
-            message("D", "With rank polymorphism, our `line` works on a tensor of many `x`s.\n" +
+            message("D", "With rank polymorphism, our `line` applies to a tensor of many `x`s.\n" +
                 "Let us try `params = (1.0, 0.5)` and make some `x`s."),
             {
                 ...message("W", "Like this?"),
@@ -818,20 +794,20 @@
                 figureSrc: "forward_line/first_line.png",
                 figureAlt: "Visualization of four points on the line",
             },
-            message("W", "Nice. A line appears."),
+            message("W", "A nice line!"),
             message("D", "Now we learn the line."),
-            message("W", "Learn? Learn what?"),
+            message("W", "What does it mean to learn?"),
             message("D", "To learn the line is to find `params` from `xs` and `ys`.\n" +
-                "Before, we chose `params` and then synthesized `ys`.\n" +
-                "In real work, it is the reverse: we observe `xs` and `ys`, then infer `params`.\n" +
-                "Now let's pretend that\n" +
+                "Just now, we chose `params` and then synthesized `ys`.\n" +
+                "In real work, it is the reverse: we gather data for `xs` and `ys`, then infer `params`.\n" +
+                "Let's pretend that\n" +
                 "- `xs` and `ys` are real data\n" +
                 "- the true values of `params` are unknown.\n" +
-                "Then we write a program to recover `params`."),
+                "Then we write a program to learn `params`."),
             message("W", "How do we begin?"),
             message("D", "Start with a guess for `params`.\n" +
-                "For now, any guess is fine; choose `(0.0, 0.0)`.\n" +
-                "Run `line` on `xs` with that guess. The predicted values are `ys_pred`."),
+                "For now, any guess is fine; say `(0.0, 0.0)`.\n" +
+                "Run `line` on `xs` with the `param`. Let's call the result `ys_pred`, for the predicated `ys`."),
             {
                 ...message("W", "You mean this?"),
                 codeLabel: "init run",
@@ -840,7 +816,7 @@
             },
             message("D", "Being far is fine.\n" +
                 "But we must measure how far."),
-            message("W", "So we need a function that measures that distance?"),
+            message("W", "Do we need a function to measure?"),
             {
                 ...message("D", "Yes. Call it `loss`."),
                 codeLabel: "`loss` definition",
@@ -849,18 +825,18 @@
             message("W", "We imported one more thing from `pypie`.\n" +
                 "What is `Var(\"n\", int)`?"),
             message("D", "`Var(\"n\", int)` creates a symbolic integer.\n" +
-                "We place `n` in both tensor types to say: these inputs must share the same shape."),
+                "We place `n` in types of `ys_pred` and `ys`, to enforce a shared shape for their inputs."),
             message("W", "Then `ys_pred - ys` is valid because shapes match.\n" +
                 "But why square with `** 2.0`, then call `sum`?"),
-            message("D", "`loss` should return one scalar `float` that measures error between `ys_pred` and `ys`.\n" +
-                "`sum` combines all entries into one scalar.\n" +
-                "Squaring with `** 2.0` makes each difference nonnegative, so negatives and positives cannot cancel.\n" +
+            message("D", "`loss` should return one scalar `float`.\n" +
+                "`sum` reduces a tensor into one scalar, by adding all elements together. " +
+                "Before `sum`, we square each difference to remove negative numbers.\n" +
                 "Now run `loss`."),
             {
                 ...message("W", "Like this?"),
                 codeLabel: "run `loss`",
                 buildCodeBlock: (_ast) => runLossBlock,
-                textAfterCode: "It prints `Tensor([32.19])`. So at `(0.0, 0.0)`, the loss is `32.19`?",
+                textAfterCode: "It prints `32.19`. That's the loss at `(0.0, 0.0)`!",
             },
         ],
         notes: "* The figure is generated by feeding `xs` and `ys` to [matplotlib](https://matplotlib.org/stable/tutorials/pyplot.html)."

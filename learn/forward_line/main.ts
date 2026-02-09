@@ -216,30 +216,6 @@ const lineDefinitionBlock = {
         kind: "Block",
         body: [
             {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "from pypie import op, Tensor",
-                    role: "plain",
-                },
-            },
-            {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "from typing import Tuple",
-                    role: "plain",
-                },
-            },
-            {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "",
-                    role: "plain",
-                },
-            },
-            {
                 kind: "FunctionDef",
                 name: {
                     kind: "Identifier",
@@ -822,14 +798,14 @@ const lineDefinitionBlock = {
             },
             message(
                 "W",
-                "These imports are new."
+                "These imports are new to me."
             ),
             message(
                 "D",
                 "Because we borrow tools.\n" +
                 "`pypie` gives us tensor and learning tools.\n" +
-                "`typing` gives us type notation.\n" +
-                "And `Tuple[float, float]` says `params` is exactly two `float`s."
+                "`typing` gives us some additional type notations, like `Tuple`.\n" +
+                "`Tuple[float, float]` says `params` contains exactly two `float`s."
             ),
             message(
                 "W",
@@ -842,7 +818,7 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "So `line` names `params` as `w` and `b`, computes `w * x + b`, names the computation `y`.\n" +
+                "`line` names `params` as `w` and `b`, computes `w * x + b`, and then names the computation `y`.\n" +
                 "Is `y` the result of `line`?"
             ),
             message(
@@ -865,26 +841,26 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "Then in our case, `T` is `float`.\n" +
+                "Then in our case, `T` becomes `float`.\n" +
                 "So `w * x + b` is a `float`, matching the result type `line`."
             ),
             message(
                 "D",
-                "Right. `pypie` checks the returned type against the annotated return type.\n" +
+                "Right. `pypie` checks the returned type against the annotation in the `def`.\n" +
                 "If they differ, `pypie` reports an error."
             ),
             {
                 ...message(
                 "W",
-                "So if I change the result type to `int`..."
+                "So if I change the result annotation in `int`..."
                 ),
                 codeLabel: "wrong `line` definition",
                 buildCodeBlock: (_ast: AstApi) => wrongLineDefinitionBlock,
-                textAfterCode: "... indeed! The checker complains:\n`int != float`",
+                textAfterCode: "... indeed! The checker complains:\n`int != float`.",
             },
             message(
                 "D",
-                "With rank polymorphism, our `line` works on a tensor of many `x`s.\n" +
+                "With rank polymorphism, our `line` applies to a tensor of many `x`s.\n" +
                 "Let us try `params = (1.0, 0.5)` and make some `x`s."
             ),
             {
@@ -906,7 +882,7 @@ const lineDefinitionBlock = {
             },
             message(
                 "W",
-                "That a nice line!"
+                "A nice line!"
                 ),
             message(
                 "D",
@@ -920,8 +896,8 @@ const lineDefinitionBlock = {
                 "D",
                 "To learn the line is to find `params` from `xs` and `ys`.\n" +
                 "Just now, we chose `params` and then synthesized `ys`.\n" +
-                "In real work, it is the reverse: we gather data like `xs` and `ys`, then infer `params`.\n" +
-                "Now let's pretend that\n" +
+                "In real work, it is the reverse: we gather data for `xs` and `ys`, then infer `params`.\n" +
+                "Let's pretend that\n" +
                 "- `xs` and `ys` are real data\n" +
                 "- the true values of `params` are unknown.\n" +
                 "Then we write a program to learn `params`."
@@ -952,7 +928,7 @@ const lineDefinitionBlock = {
             ),
             message(
                 "W",
-                "So we need a function that measures that distance?"
+                "Do we need a function to measure?"
             ),
             {
                 ...message(
@@ -970,7 +946,7 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "`Var(\"n\", int)` creates a symbolic integer.\n" +
-                "We place `n` in types of `ys_pred` and `ys` to say, so that their inputs must share the same shape."
+                "We place `n` in types of `ys_pred` and `ys`, to enforce a shared shape for their inputs."
             ),
             message(
                 "W",
@@ -979,9 +955,9 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "`loss` should return one scalar `float` that measures how far between `ys_pred` and `ys`.\n" +
-                "`sum` combines all entries into one scalar, by adding all elements together.\n" +
-                "Squaring with `** 2.0` makes each difference nonnegative, so negatives and positives cannot cancel.\n" +
+                "`loss` should return one scalar `float`.\n" +
+                "`sum` reduces a tensor into one scalar, by adding all elements together. " +
+                "Before `sum`, we square each difference to remove negative numbers.\n" +
                 "Now run `loss`."
             ),
             {
@@ -991,7 +967,7 @@ const lineDefinitionBlock = {
                 ),
                 codeLabel: "run `loss`",
                 buildCodeBlock: (_ast: AstApi) => runLossBlock,
-                textAfterCode: "It prints `Tensor([32.19])`. So at `(0.0, 0.0)`, the loss is `32.19`?",
+                textAfterCode: "It prints `32.19`. That's the loss at `(0.0, 0.0)`!",
             },
         ],
         notes: "* The figure is generated by feeding `xs` and `ys` to [matplotlib](https://matplotlib.org/stable/tutorials/pyplot.html)."
