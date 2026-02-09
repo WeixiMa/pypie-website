@@ -1151,29 +1151,29 @@ const lineDefinitionBlock = {
             {
                 ...message(
                     "D",
-                    "First up: **`line`**."
+                    "First: **`line`**."
                 ),
                 codeLabel: "`line` definition",
                 buildCodeBlock: (_ast: AstApi) => lineDefinitionBlock,
             },
             message(
                 "W",
-                "These imports look new to me."
+                "These imports are new."
             ),
             message(
                 "D",
                 "`pypie` gives us tensors and learning primitives.\n" +
-                "`typing` gives us some type notation, such as `Tuple`.\n" +
-                "`Tuple[float, float]` means `params` has exactly two `float` values."
+                "`typing` gives us type notation like `Tuple`.\n" +
+                "`Tuple[float, float]` means `params` contains exactly two `float`s."
             ),
             message(
                 "W",
-                "And `op`?"
+                "What about `op`?"
             ),
             message(
                 "D",
-                "**`@op`** marks the next `def` as a `pypie` op.\n" +
-                "This enables `pypie` to validate its type with rank polymorphism."
+                "**`@op`** marks the next `def` as a `pypie` operation.\n" +
+                "That lets `pypie` validate it, like matching shapes."
             ),
             message(
                 "W",
@@ -1183,7 +1183,7 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "Yes.\n" +
-                "What is the type of `y`?"
+                "Now: what is the type of `y`?"
             ),
             message(
                 "W",
@@ -1194,19 +1194,18 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "Good check. We need to generalize `+`:\n" +
+                "Good check. Let's generalize the type of `+`:\n" +
                 "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
-                "Here `x` and `y` must share the same `Num` type. `pypie` then decides the concrete `T` when applying `+` to concrete inputs."
+                "Both inputs must share the same numeric type. At call time, `pypie` figures out the concrete `T` from the actual inputs."
             ),
             message(
                 "W",
-                "So the concrete `T` is `float`. " +
-                "Then `w * x + b` is `float`, which matches `line`."
+                "So here `T` becomes `float`, and `w * x + b` has type `float`, which matches `line`."
             ),
             message(
                 "D",
-                "Exactly. `pypie` compares the returned type with the annotation.\n" +
-                "If they differ, `pypie` reports an error."
+                "Exactly. `pypie` compares the return expression type against the definition.\n" +
+                "If they differ, it raises a type error."
             ),
             {
                 ...message(
@@ -1215,12 +1214,12 @@ const lineDefinitionBlock = {
                 ),
                 codeLabel: "wrong `line` definition",
                 buildCodeBlock: (_ast: AstApi) => wrongLineDefinitionBlock,
-                textAfterCode: "Yep. The checker says:\n`int != float`.",
+                textAfterCode: "Right. The type checker reports:\n`int != float`.",
             },
             message(
                 "D",
-                "Because `line` is rank polymorphic, it also works on a tensor.\n" +
-                "Let's try `params = (1.0, 0.5)` with some `x`s."
+                "Because `line` is rank polymorphic, the same definition applies to tensors.\n" +
+                "Let's try `params = (1.0, 0.5)` and a `Tensor` of `x`s."
             ),
             {
                 ...message(
@@ -1229,23 +1228,23 @@ const lineDefinitionBlock = {
                 ),
                 codeLabel: "`line` run",
                 buildCodeBlock: (_ast: AstApi) => lineWithParamsRunBlock,
-                textAfterCode: "And we get `Tensor([-3.7, 1.5, 2.0, 3.5])`.",
+                textAfterCode: "Result: `Tensor([-3.7, 1.5, 2.0, 3.5])`.",
             },
             {
                 ...message(
                     "D",
-                    "These are the four points on that line.*"
+                    "Those are the four points on the line.*"
                 ),
                 figureSrc: "forward_line/first_line.png",
                 figureAlt: "Visualization of four points on the line",
             },
             message(
                 "W",
-                "Clean line. No surprises."
+                "Clean line! No surprises."
                 ),
             message(
                 "D",
-                "Now we learn the line."
+                "Next step: learn the line from data."
             ),
             message(
                 "W",
@@ -1253,13 +1252,13 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "It means finding `params` using `xs` and `ys`.\n" +
-                "Just now, we picked `params`, then computed `ys`.\n" +
-                "In real work, it is the reverse: we have the data of `xs` and `ys`, and need to infer `params`.\n" +
+                "It means finding `params` from `xs` and `ys`.\n" +
+                "So far, we chose `params`, made `xs`, and computed `ys`.\n" +
+                "In practice, we first have `xs` and `ys` and then estimate `params`.\n" +
                 "Let's pretend:\n" +
                 "- `xs` and `ys` are real data\n" +
-                "- true `params` are unknown yet.\n" +
-                "Then we write a program to find `params`."
+                "- true `params` are unknown.\n" +
+                "Then we write a program that estimates `params`."
             ),
             message(
                 "W",
@@ -1267,8 +1266,8 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "Start with a guess for `params`.\n" +
-                "Any guess is fine; say `(0.0, 0.0)`.\n" +
+                "Start with an initial guess for `params`.\n" +
+                "Any guess works; say `(0.0, 0.0)`.\n" +
                 "Run `line(xs, params)` and call the output `ys_pred`."
             ),
             {
@@ -1282,17 +1281,17 @@ const lineDefinitionBlock = {
             },
             message(
                 "D",
-                "As expected.\n" +
-                "Now we just need to measure how far."
+                "Expected.\n" +
+                "Now we need to measure how far off we are. This is called the **loss**."
             ),
             message(
                 "W",
-                "How do we measure it?"
+                "Do we create a new function to measure the loss?"
             ),
             {
                 ...message(
                     "D",
-                    "We'll define a function soon, but first we need one more tool for types.\n" +
+                    "We will define that function soon, but first we need one more tool from `pypie`.\n" +
                     "Look at this function."
                 ),
                 codeLabel: "problematic minus",
@@ -1305,33 +1304,34 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "**`Var`** creates a type variable.\n" +
-                "During definition checking, each `Var` is distinct.\n" +
-                "During use, the `Var` can be instantiated with any value of its type.\n" +
+                "They are two values of type `int`.\n" +
+                "When checking a function, different `Var`s are distinct.\n" +
+                "When using the function, each `Var` is instantiated with a concrete `int`.\n" +
                 "Now ask `pypie` to validate `bad_sub`."
             ),
             message(
                 "W",
                 "The checker says `n != m`.\n" +
-                "Is that because `-` needs both tensors to share the same shape, but `n` and `m` are distinct?"
+                "Is that because `-` requires matching tensor shapes, " +
+                "but `n` and `m` are different values?"
             ),
             message(
                 "D",
-                "Exactly right. Fix the definition."
+                "Exactly. Let's fix the definition."
             ),
             {
                 ...message(
                     "W",
-                    "Then both inputs must use the same variable in their shapes."
+                    "Then both inputs must use the same `Var` in their shapes."
                 ),
                 codeLabel: "correct minus",
                 buildCodeBlock: (_ast: AstApi) => correctMinus,
-                textAfterCode: "Nice. The type error disappears."
+                textAfterCode: "The type error is gone."
             },
             {
                 ...message(
                     "D",
-                    "Great. Now we can define **`loss`**."
+                    "Great. Now we can define `loss`."
                 ),
                 codeLabel: "`loss` definition",
                 buildCodeBlock: (_ast: AstApi) => lossDefinitionBlock,
@@ -1343,10 +1343,10 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "`loss` returns a scalar `float`--our measure of how far.\n" +
-                "The scalar is computed by `sum`, collapsing the tensor to one value.\n" +
-                "Before running `sum`, we square each difference to remove negative numbers, so that negatives and positives don't cancel each other.\n" +
-                "Run `loss`."
+                "We need a scalar `float` as the loss.\n" +
+                "`sum` collapses a tensor into that scalar. " +
+                "We square each difference first, so negatives and positives cannot cancel out.\n" +
+                "Now run `loss`."
             ),
             {
                 ...message(
@@ -1355,7 +1355,7 @@ const lineDefinitionBlock = {
                 ),
                 codeLabel: "run `loss`",
                 buildCodeBlock: (_ast: AstApi) => runLossBlock,
-                textAfterCode: "It prints `32.19`. So that is the loss at `(0.0, 0.0)`.",
+                textAfterCode: "It prints `32.19`, the loss at `(0.0, 0.0)`!",
             },
             message(
                 "D",
@@ -1370,12 +1370,14 @@ const lineDefinitionBlock = {
                 "D",
                 "Usually not.\n" +
                 "For real data, exact zero is uncommon and often undesirable.\n" +
-                "Chasing zero can overfit noise and hurt generalization.\n" +
-                "Here we focus on updating `params` and repeat for a fixed number."
+                "In practice, the training data usually contain some noise and errors. " +
+                "Reaching zero often means overfitting: `params` have also learned from the noise and errors, " +
+                "and may perform worse on new, unseen data.\n" +
+                "Here we focus on update-and-repeat for a fixed number of iterations."
             ),
             message(
                 "W",
-                "Will we define a function to update `params`?"
+                "Will we define more functions to update and repeat?"
             ),
             message(
                 "D",
