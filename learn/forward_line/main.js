@@ -12,28 +12,42 @@
         kind: "Block",
         body: [
             {
-                kind: "ExprStmt",
-                value: {
+                kind: "ImportFrom",
+                module: {
                     kind: "Identifier",
-                    name: "from pypie import op, Tensor",
+                    name: "pypie",
                     role: "plain",
                 },
+                names: [
+                    {
+                        kind: "Identifier",
+                        name: "op",
+                        role: "fn",
+                    },
+                    {
+                        kind: "Identifier",
+                        name: "Tensor",
+                        role: "type",
+                    },
+                ],
             },
             {
-                kind: "ExprStmt",
-                value: {
+                kind: "ImportFrom",
+                module: {
                     kind: "Identifier",
-                    name: "from typing import Tuple",
+                    name: "typing",
                     role: "plain",
                 },
+                names: [
+                    {
+                        kind: "Identifier",
+                        name: "Tuple",
+                        role: "type",
+                    },
+                ],
             },
             {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "",
-                    role: "plain",
-                },
+                kind: "BlankLine",
             },
             {
                 kind: "FunctionDef",
@@ -546,20 +560,22 @@
         kind: "Block",
         body: [
             {
-                kind: "ExprStmt",
-                value: {
+                kind: "ImportFrom",
+                module: {
                     kind: "Identifier",
-                    name: "from pypie import Var",
+                    name: "pypie",
                     role: "plain",
                 },
+                names: [
+                    {
+                        kind: "Identifier",
+                        name: "Var",
+                        role: "fn",
+                    },
+                ],
             },
             {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "",
-                    role: "plain",
-                },
+                kind: "BlankLine",
             },
             {
                 kind: "Assign",
@@ -578,9 +594,8 @@
                     },
                     args: [
                         {
-                            kind: "Identifier",
-                            name: "\"n\"",
-                            role: "plain",
+                            kind: "String",
+                            value: "n",
                         },
                         {
                             kind: "Identifier",
@@ -607,9 +622,8 @@
                     },
                     args: [
                         {
-                            kind: "Identifier",
-                            name: "\"m\"",
-                            role: "plain",
+                            kind: "String",
+                            value: "m",
                         },
                         {
                             kind: "Identifier",
@@ -1106,7 +1120,7 @@
             message("D", "Ready to define a function?"),
             message("W", "At last!"),
             {
-                ...message("D", "First: **`line`**."),
+                ...message("D", "First: !!`line`!!."),
                 codeLabel: "`line` definition",
                 buildCodeBlock: (_ast) => lineDefinitionBlock,
             },
@@ -1115,7 +1129,7 @@
                 "`typing` gives us type notation like `Tuple`.\n" +
                 "`Tuple[float, float]` means `params` contains exactly two `float`s."),
             message("W", "What about `op`?"),
-            message("D", "**`@op`** marks the next `def` as a `pypie` operation.\n" +
+            message("D", "!!`@op`!! marks the next `def` as a `pypie` operator.\n" +
                 "That lets `pypie` validate it, like matching shapes."),
             message("W", "In `line`, we unpack `params` into `w` and `b`, compute `y = w * x + b`, then return `y`.\n" +
                 "Is that the whole story?"),
@@ -1171,7 +1185,7 @@
                 textAfterCode: "We get `Tensor([-0.0, 0.0, 0.0, 0.0])`. `ys_pred` is far from the real `ys`.",
             },
             message("D", "Expected.\n" +
-                "Now we need to measure how far off we are. This is called the **loss**."),
+                "Now we need to measure how far off we are. This is called the !!loss!!."),
             message("W", "Do we create a new function to measure the loss?"),
             {
                 ...message("D", "We will define that function soon, but first we need one more tool from `pypie`.\n" +
@@ -1181,12 +1195,12 @@
             },
             message("W", "We imported one more thing from `pypie`.\n" +
                 "What are `Var(\"n\", int)` and `Var(\"m\", int)`?"),
-            message("D", "They are two values of type `int`.\n" +
-                "When checking a function, different **`Var`**s are distinct.\n" +
+            message("D", "They are values of type `int`.\n" +
+                "When validating a function, different !!`Var`!!s are distinct.\n" +
                 "When using the function, each `Var` is instantiated with a concrete `int`.\n" +
                 "Now ask `pypie` to validate `bad_sub`."),
-            message("W", "The checker says `n != m`.\n" +
-                "Is that because `-` requires matching tensor shapes, " +
+            message("W", "It says `n != m`.\n" +
+                "Is that because `-` expects matching tensor shapes, just like `+` and `*`, " +
                 "but `n` and `m` are different values?"),
             message("D", "Exactly. Let's fix the definition."),
             {

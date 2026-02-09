@@ -36,14 +36,14 @@
                 "It's a nice trick to split the larger `Tensor`!"),
             message("D", "The trick is called rank polymorphism."),
             message("W", "An intimidating name!"),
-            message("D", "It's actually warmer and fuzzier than it looks. Here, **rank** is just the length of the shape.\n" +
+            message("D", "It's actually warmer and fuzzier than it looks. Here, !!rank!! is just the length of the shape.\n" +
                 "`Tensor[int][[3]]` has rank `1`, and `Tensor[int][[2, 3]]` has rank `2`."),
             message("W", "Then `42` has type `Tensor[int][[]]`, so rank `0`?"),
             message("D", "Yes.\n" +
                 "When we design a function, we define its expected types for inputs and result.\n" +
                 "Rank polymorphism lets us apply that function to higher-rank inputs when they are compatible, and it wraps the result type accordingly."),
             message("W", "So one function definition works across different input ranks.\n" +
-                "Is `+` a **function**?"),
+                "Is `+` a !!function!!?"),
             message("D", "`+` is a function. Just like\n" +
                 "`5` has type `Tensor[int][[]]`,\n" +
                 "`+` has type `(x: Tensor[int][[]], y: Tensor[int][[]]) -> Tensor[int][[]]`."),
@@ -63,9 +63,9 @@
                 "Are they compatible?"),
             message("D", "To decide that, we need a rule for compatibility of `List[int]`s."),
             message("W", "Let's see it!"),
-            message("D", "Two `List[int]`s are **compatible**, if we line them up from the right and find a " +
-                "**suffix** in the longer one that matches the shorter*. " +
-                "The remaining in the longer list is called the **prefix**.\n" +
+            message("D", "Two `List[int]`s are !!compatible!!, if we line them up from the right and find a " +
+                "!!suffix!! in the longer one that matches the shorter*. " +
+                "The remaining in the longer list is called the !!prefix!!.\n" +
                 "Find the suffix and prefix for `x` and `y`."),
             message("W", "For `x`, compare `[2, 3]` with `[]`: suffix `[]`, prefix `[2, 3]`.\n" +
                 "For `y`, compare `[3]` with `[]`: suffix `[]`, prefix `[3]`.\n" +
@@ -90,7 +90,7 @@
                 "Try a few failing examples too: cases where a given type is incompatible with an expected type, or where the prefixes are incompatible.\n" +
                 "It helps to internalize this trick."),
             message("W", "Will do."),
-            message("D", "Let's recap **rank polymorphism**:\n" +
+            message("D", "Let's recap !!rank polymorphism!!:\n" +
                 "- (1) for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
                 "- (2) validate compatibility between those prefixes;\n" +
                 "- (3) wrap the result type with the longer prefix.\n" +

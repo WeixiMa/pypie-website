@@ -41,28 +41,42 @@ const lineDefinitionBlock = {
         kind: "Block",
         body: [
             {
-                kind: "ExprStmt",
-                value: {
+                kind: "ImportFrom",
+                module: {
                     kind: "Identifier",
-                    name: "from pypie import op, Tensor",
+                    name: "pypie",
                     role: "plain",
                 },
+                names: [
+                    {
+                        kind: "Identifier",
+                        name: "op",
+                        role: "fn",
+                    },
+                    {
+                        kind: "Identifier",
+                        name: "Tensor",
+                        role: "type",
+                    },
+                ],
             },
             {
-                kind: "ExprStmt",
-                value: {
+                kind: "ImportFrom",
+                module: {
                     kind: "Identifier",
-                    name: "from typing import Tuple",
+                    name: "typing",
                     role: "plain",
                 },
+                names: [
+                    {
+                        kind: "Identifier",
+                        name: "Tuple",
+                        role: "type",
+                    },
+                ],
             },
             {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "",
-                    role: "plain",
-                },
+                kind: "BlankLine",
             },
             {
                 kind: "FunctionDef",
@@ -579,20 +593,22 @@ const lineDefinitionBlock = {
         kind: "Block",
         body: [
             {
-                kind: "ExprStmt",
-                value: {
+                kind: "ImportFrom",
+                module: {
                     kind: "Identifier",
-                    name: "from pypie import Var",
+                    name: "pypie",
                     role: "plain",
                 },
+                names: [
+                    {
+                        kind: "Identifier",
+                        name: "Var",
+                        role: "fn",
+                    },
+                ],
             },
             {
-                kind: "ExprStmt",
-                value: {
-                    kind: "Identifier",
-                    name: "",
-                    role: "plain",
-                },
+                kind: "BlankLine",
             },
             {
                 kind: "Assign",
@@ -611,9 +627,8 @@ const lineDefinitionBlock = {
                     },
                     args: [
                         {
-                            kind: "Identifier",
-                            name: "\"n\"",
-                            role: "plain",
+                            kind: "String",
+                            value: "n",
                         },
                         {
                             kind: "Identifier",
@@ -640,9 +655,8 @@ const lineDefinitionBlock = {
                     },
                     args: [
                         {
-                            kind: "Identifier",
-                            name: "\"m\"",
-                            role: "plain",
+                            kind: "String",
+                            value: "m",
                         },
                         {
                             kind: "Identifier",
@@ -1151,7 +1165,7 @@ const lineDefinitionBlock = {
             {
                 ...message(
                     "D",
-                    "First: **`line`**."
+                    "First: !!`line`!!."
                 ),
                 codeLabel: "`line` definition",
                 buildCodeBlock: (_ast: AstApi) => lineDefinitionBlock,
@@ -1172,7 +1186,7 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "**`@op`** marks the next `def` as a `pypie` operation.\n" +
+                "!!`@op`!! marks the next `def` as a `pypie` operator.\n" +
                 "That lets `pypie` validate it, like matching shapes."
             ),
             message(
@@ -1282,7 +1296,7 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "Expected.\n" +
-                "Now we need to measure how far off we are. This is called the **loss**."
+                "Now we need to measure how far off we are. This is called the !!loss!!."
             ),
             message(
                 "W",
@@ -1304,15 +1318,15 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "They are two values of type `int`.\n" +
-                "When checking a function, different **`Var`**s are distinct.\n" +
+                "They are values of type `int`.\n" +
+                "When validating a function, different !!`Var`!!s are distinct.\n" +
                 "When using the function, each `Var` is instantiated with a concrete `int`.\n" +
                 "Now ask `pypie` to validate `bad_sub`."
             ),
             message(
                 "W",
                 "It says `n != m`.\n" +
-                "Is that because `-` requires matching tensor shapes, " +
+                "Is that because `-` expects matching tensor shapes, just like `+` and `*`, " +
                 "but `n` and `m` are different values?"
             ),
             message(

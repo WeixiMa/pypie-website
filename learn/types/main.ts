@@ -36,7 +36,7 @@
             message("D", "Alrighty, let's get started."),
             message("W", "Can't wait!"),
             message("D", "What is `5`?"),
-            message("W", "Is `5` a **`Num`**?"),
+            message("W", "Is `5` a !!`Num`!!?"),
             message("D", "Excellent! Do you know other `Num`s?"),
             message("W", "Hmm... `0` and `-42`?"),
             message("D", "Good, they are `Num`s too."),
@@ -46,8 +46,8 @@
             message(
                 "D",
                 "On machines, `42` and `42.42` are stored differently. Also, they may behave differently, when running programs.\n" +
-                "We have a special name for `Num`s like `42`: **`int`**. And we have another name, **`float`**, for `Num`s like `42.42`. " +
-                "`int` and `float` are **type**s. A type describes the behavior of a set of values.",
+                "We have a special name for `Num`s like `42`: !!`int`!!. And we have another name, !!`float`!!, for `Num`s like `42.42`. " +
+                "`int` and `float` are !!type!!s. A type describes the behavior of a set of values.",
             ),
             message("W", "Is `Num` also a type?"),
             message(
@@ -60,7 +60,7 @@
             message("D", "We call `[1, 2, 3]` a `List[int]`."),
             message(
                 "W",
-                "So **`List[t]`** is a type, as long as `t` is a type.\nThen there must be a type called `List[List[int]]`, right?",
+                "So !!`List[t]`!! is a type, as long as `t` is a type.\nThen there must be a type called `List[List[int]]`, right?",
             ),
             message("D", "Yes, `List` can be nested, such as `[[1, 2, 3], [4, 5, 6]]`."),
             message("W", "What about `[[1, 2, 3], [4, 5]]`?"),
@@ -91,7 +91,7 @@
             ),
             message(
                 "W",
-                "Oh! `[2, 3]` is a `List[int]` that describes the **shape** of `Tensor([[1, 2, 3], [4, 5, 6]])`, since the outer layer contains two `List[int]`s and each inner layer contains three `int`s?",
+                "Oh! `[2, 3]` is a `List[int]` that describes the !!shape!! of `Tensor([[1, 2, 3], [4, 5, 6]])`, since the outer layer contains two `List[int]`s and each inner layer contains three `int`s?",
             ),
             message(
                 "D",
@@ -106,7 +106,7 @@
             ),
             message(
                 "D",
-                "Convetionally, we have a name for values of `int` or `float`: **scalar**s."
+                "Convetionally, we have a name for values of `int` or `float`: !!scalar!!s."
             ),
             message("W", "Why do we need `Tensor`s, since we already have `List`s?"),
             message("D", "Good question! Can we make `[[1, 2, 3], [4, 5]]` a `Tensor`?"),
@@ -118,7 +118,7 @@
             message("W", "So, shapes are important to `Tensor`s!"),
             message(
                 "D",
-                "**`Tensor[t][s]`** is a type as long as `t` is a type and `s` is a `List[int]`.\n" +
+                "!!`Tensor[t][s]`!! is a type as long as `t` is a type and `s` is a `List[int]`.\n" +
                     "With shapes, `Tensor`s describe their values more accurately than `List`s do.\n" +
                     "This precision enables many cool things.",
             ),

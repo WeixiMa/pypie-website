@@ -352,12 +352,82 @@ const printExpr = (builder, node, parentPrecedence = 0) => {
         case "Number":
             builder.token(node.value, "num");
             return;
+        case "String":
+            builder.token(JSON.stringify(String(node.value ?? "")));
+            return;
         default:
             return;
     }
 };
 const printStatement = (builder, node) => {
     switch (node.kind) {
+        case "BlankLine":
+            builder.newline();
+            return;
+        case "IndentedBlock": {
+            const rawLevel = Number(node.level);
+            const level = Number.isFinite(rawLevel) && rawLevel >= 0 ? Math.floor(rawLevel) : 1;
+            for (let i = 0; i < level; i += 1) {
+                builder.indent();
+            }
+            if (Array.isArray(node.body)) {
+                node.body.forEach((stmt) => {
+                    printStatement(builder, stmt);
+                });
+            }
+            else if (node.body) {
+                printStatement(builder, node.body);
+            }
+            for (let i = 0; i < level; i += 1) {
+                builder.dedent();
+            }
+            return;
+        }
+        case "ImportFrom":
+            builder.token("from", "kw");
+            builder.space();
+            printIdentifier(builder, node.module);
+            builder.space();
+            builder.token("import", "kw");
+            builder.space();
+            node.names.forEach((nameNode, index) => {
+                printIdentifier(builder, nameNode);
+                if (index < node.names.length - 1) {
+                    builder.token(",");
+                    builder.space();
+                }
+            });
+            builder.newline();
+            return;
+        case "ClassDef":
+            builder.token("class", "kw");
+            builder.space();
+            printIdentifier(builder, node.name);
+            if (Array.isArray(node.bases) && node.bases.length > 0) {
+                builder.token("(");
+                node.bases.forEach((baseNode, index) => {
+                    printExpr(builder, baseNode);
+                    if (index < node.bases.length - 1) {
+                        builder.token(",");
+                        builder.space();
+                    }
+                });
+                builder.token(")");
+            }
+            builder.token(":");
+            builder.newline();
+            builder.indent();
+            if (Array.isArray(node.body) && node.body.length > 0) {
+                node.body.forEach((stmt) => {
+                    printStatement(builder, stmt);
+                });
+            }
+            else {
+                builder.token("pass", "kw");
+                builder.newline();
+            }
+            builder.dedent();
+            return;
         case "FunctionDef":
             if (node.decorator) {
                 builder.token("@", "op");

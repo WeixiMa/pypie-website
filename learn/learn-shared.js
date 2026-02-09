@@ -70,11 +70,15 @@
             },
             {
                 slug: "tensor_add/index.html",
-                title: "One Fnction, Any Rank",
+                title: "One Function, Any Rank",
             },
             {
                 slug: "forward_line/index.html",
                 title: "A Forward Line",
+            },
+            {
+                slug: "model_line/index.html",
+                title: "The First Model",
             },
         ],
     };
@@ -132,9 +136,7 @@
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
-    const formatBoldText = (text) => String(text || "")
-        .replace(/\*\*([^*\n]+)\*\*/g, "<strong>$1</strong>")
-        .replace(/\*([^*\n]+)\*/g, "<strong>$1</strong>");
+    const formatBoldText = (text) => String(text || "").replace(/!!([^!\n]+)!!/g, "<strong>$1</strong>");
     const isSafeLinkHref = (href) => {
         const normalizedHref = String(href || "").trim();
         if (!normalizedHref) {
@@ -181,7 +183,7 @@
         .replace(/\s+/g, " ");
     const collectKeywordsFromText = (text) => {
         const keywords = new Set();
-        const keywordRegex = /\*\*([^*\n]+)\*\*/g;
+        const keywordRegex = /!!([^!\n]+)!!/g;
         let match = null;
         while ((match = keywordRegex.exec(String(text || ""))) !== null) {
             const keyword = normalizeKeyword(String(match[1] || ""));

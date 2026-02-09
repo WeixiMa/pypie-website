@@ -90,7 +90,7 @@
             message("W", "An intimidating name!"),
             message(
                 "D",
-                "It's actually warmer and fuzzier than it looks. Here, **rank** is just the length of the shape.\n" +
+                "It's actually warmer and fuzzier than it looks. Here, !!rank!! is just the length of the shape.\n" +
                 "`Tensor[int][[3]]` has rank `1`, and `Tensor[int][[2, 3]]` has rank `2`."
             ),
             message("W", "Then `42` has type `Tensor[int][[]]`, so rank `0`?"),
@@ -103,7 +103,7 @@
             message(
                 "W",
                 "So one function definition works across different input ranks.\n" +
-                "Is `+` a **function**?"
+                "Is `+` a !!function!!?"
             ),
             message(
                 "D",
@@ -144,9 +144,9 @@
             message("W", "Let's see it!"),
             message(
                 "D",
-                "Two `List[int]`s are **compatible**, if we line them up from the right and find a " +
-                "**suffix** in the longer one that matches the shorter*. " +
-                "The remaining in the longer list is called the **prefix**.\n" +
+                "Two `List[int]`s are !!compatible!!, if we line them up from the right and find a " +
+                "!!suffix!! in the longer one that matches the shorter*. " +
+                "The remaining in the longer list is called the !!prefix!!.\n" +
                 "Find the suffix and prefix for `x` and `y`."
             ),
             message(
@@ -201,7 +201,7 @@
                 ),
             message(
                 "D",
-                "Let's recap **rank polymorphism**:\n" +
+                "Let's recap !!rank polymorphism!!:\n" +
                 "- (1) for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
                 "- (2) validate compatibility between those prefixes;\n" +
                 "- (3) wrap the result type with the longer prefix.\n" +
