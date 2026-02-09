@@ -65,7 +65,11 @@
         pages: LearnPageMeta[];
     };
 
+    type ThemeName = "theme-dark" | "theme-solaris";
+
     const learnWindow = window as LearnWindow;
+    const THEME_QUERY_PARAM = "theme";
+    const THEME_CHANGE_EVENT = "pypie:theme-change";
 
     const getLearnRootUrl = (): URL => {
         const currentScript = document.currentScript as HTMLScriptElement | null;
@@ -77,6 +81,55 @@
 
     const learnRootUrl = getLearnRootUrl();
     const withLearnRoot = (href: string): string => new URL(href, learnRootUrl).href;
+    const isThemeName = (value: unknown): value is ThemeName =>
+        value === "theme-dark" || value === "theme-solaris";
+    const readThemeFromQuery = (): ThemeName | null => {
+        try {
+            const theme = new URL(window.location.href).searchParams.get(THEME_QUERY_PARAM);
+            return isThemeName(theme) ? theme : null;
+        } catch {
+            return null;
+        }
+    };
+    const readThemeFromBody = (): ThemeName | null => {
+        const body = document.body;
+        if (!body) {
+            return null;
+        }
+        if (body.classList.contains("theme-solaris")) {
+            return "theme-solaris";
+        }
+        if (body.classList.contains("theme-dark")) {
+            return "theme-dark";
+        }
+        return null;
+    };
+    const getActiveTheme = (): ThemeName | null => readThemeFromQuery() || readThemeFromBody();
+    const withLearnRootNav = (href: string): string => {
+        const pageUrl = new URL(href, learnRootUrl);
+        const activeTheme = getActiveTheme();
+        if (activeTheme) {
+            pageUrl.searchParams.set(THEME_QUERY_PARAM, activeTheme);
+        }
+        return pageUrl.href;
+    };
+    const syncNavThemeLinks = (theme: ThemeName | null = getActiveTheme()): void => {
+        const nav = document.querySelector("[data-learn-nav]");
+        if (!nav) {
+            return;
+        }
+
+        const links = nav.querySelectorAll<HTMLAnchorElement>("a[href]");
+        links.forEach((link) => {
+            const themedUrl = new URL(link.href, window.location.href);
+            if (theme) {
+                themedUrl.searchParams.set(THEME_QUERY_PARAM, theme);
+            } else {
+                themedUrl.searchParams.delete(THEME_QUERY_PARAM);
+            }
+            link.href = themedUrl.href;
+        });
+    };
 
     const LEARN_SERIES: LearnSeries = {
         title: "Deep Learning 101",
@@ -445,11 +498,12 @@
         const navLinks = allPages
             .map((page) => {
                 const currentAttr = page.id === pageId ? ' aria-current="page"' : "";
-                return `<a href="${withLearnRoot(page.slug)}"${currentAttr}>${page.navTitle}</a>`;
+                return `<a href="${withLearnRootNav(page.slug)}"${currentAttr}>${page.navTitle}</a>`;
             })
             .join("");
 
         nav.innerHTML = `<div class="doc-nav__title">${LEARN_SERIES.title}</div>${navLinks}`;
+        syncNavThemeLinks();
     };
 
     const renderChapter = (
@@ -548,6 +602,14 @@
         setText("[data-learn-lead]", "");
         renderChapter(config.dialog, pageId, config.notes);
     };
+
+    window.addEventListener(THEME_CHANGE_EVENT, (event) => {
+        const themeEvent = event as CustomEvent<{ theme?: unknown }>;
+        const theme = isThemeName(themeEvent.detail?.theme)
+            ? themeEvent.detail.theme
+            : getActiveTheme();
+        syncNavThemeLinks(theme);
+    });
 
     learnWindow.PYPIE_LEARN_RENDER = renderPage;
 })();
