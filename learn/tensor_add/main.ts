@@ -173,8 +173,8 @@
             message(
                 "D",
                 "Good progress! So far:\n" +
-                "- each given input type is compatible with its expected type;\n" +
-                "- the two prefixes from the inputs are compatible with one another.\n" +
+                "each given input type is compatible with its expected type;\n" +
+                "the two prefixes from the inputs are compatible with one another.\n" +
                 "So `Tensor[int][[2, 3]]` and `Tensor[int][[3]]` are valid inputs for `x` and `y` in `+`."
             ),
             message("W", "Nice. What's our next step?"),
@@ -202,9 +202,9 @@
             message(
                 "D",
                 "Let's recap !!rank polymorphism!!:\n" +
-                "- (1) for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
-                "- (2) validate compatibility between those prefixes;\n" +
-                "- (3) wrap the result type with the longer prefix.\n" +
+                "(1) for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
+                "(2) validate compatibility between those prefixes;\n" +
+                "(3) wrap the result type with the longer prefix.\n" +
                 "This process applies to all functions."
             ),
             message("W", "Are there other functions besides `+`?"),
