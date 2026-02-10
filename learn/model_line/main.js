@@ -1600,13 +1600,13 @@
                 ...message("W", "Like this?"),
                 codeLabel: "`train` run",
                 buildCodeBlock: (_ast) => lineTrainRunBlock,
-                textAfterCode: "It prints `(1.009, 0.302)`--very close to the real `params`.\nOur example sees too easy--how about something more challanging?"
+                textAfterCode: "It prints `(1.009, 0.302)`--very close to the real `params`.\nOur example seems too easy--how about something more challenging?"
             },
             {
                 ...message("D", "Now you asked for it!"),
                 codeLabel: "`ates.py` challenge run",
                 buildCodeBlock: (_ast) => lineChallengeRunBlock,
-                textAfterCode: "!!`rand`!! takes a shape, a lower bound, and a upper bound. It generates a `Tensor` of the specified shape, using random numbers within the bounds."
+                textAfterCode: "!!`rand`!! takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of the specified shape, using random numbers within the bounds."
             },
             {
                 ...message("W", "So `xs` is a `Tensor[int][[1000]]`. We then generate `ys` of the same shape--with some additional noise?\n" +
@@ -1618,7 +1618,7 @@
             message("D", "`nan` is short for not-a-number.\n" +
                 "Machines have limited storages for each number. As we squared and added many numbers over and over, " +
                 "we updated `params` with too large gradients to be stored. This is known as !!exploding gradients!!.\n" +
-                "On the other extreme, gardients may sometimes get too small. Then `update`s are not effective--known " +
+                "On the other extreme, gradients may sometimes get too small. Then `update`s are not effective--known " +
                 "as !!vanishing gradients!!."),
             message("W", "Can we give some smartness to `update` to prevent exploding and vanishing?"),
             {
@@ -1639,7 +1639,7 @@
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast) => lineInflateDeflateBlock,
                 textAfterCode: "When `train` starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
-                    "When `train` ends, it `delfate`s the `params` back."
+                    "When `train` ends, it `deflate`s the `params` back."
             },
             message("W", "Then at each `update`, `p` should be a `Tuple[float, float]`?"),
             {
@@ -1652,7 +1652,7 @@
             },
             message("W", "The returned tuple makes sense to me. But, in the definition, all these numbers seem magical and arbitrary."),
             message("D", "Magical, but not arbitrary. In practice, people put variables in those positions--called !!hyper parameters!!. " +
-                "People turn the knobs based on science, engineering, and sometimes alchemy.")
+                "People then turn the knobs based on science, engineering, and sometimes alchemy.")
         ],
         notes: "* The mathematical definition of [gradient](https://en.wikipedia.org/wiki/Gradient) can be found in ..."
     });

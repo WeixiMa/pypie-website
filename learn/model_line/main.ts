@@ -1662,7 +1662,7 @@
                 ),
                 codeLabel: "`train` run",
                 buildCodeBlock: (_ast: AstApi) => lineTrainRunBlock,
-                textAfterCode: "It prints `(1.009, 0.302)`--very close to the real `params`.\nOur example sees too easy--how about something more challanging?"
+                textAfterCode: "It prints `(1.009, 0.302)`--very close to the real `params`.\nOur example seems too easy--how about something more challenging?"
             },
             {
                 ...message(
@@ -1671,7 +1671,7 @@
                 ),
                 codeLabel: "`ates.py` challenge run",
                 buildCodeBlock: (_ast: AstApi) => lineChallengeRunBlock,
-                textAfterCode: "!!`rand`!! takes a shape, a lower bound, and a upper bound. It generates a `Tensor` of the specified shape, using random numbers within the bounds."
+                textAfterCode: "!!`rand`!! takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of the specified shape, using random numbers within the bounds."
             },
             {
                 ...message(
@@ -1688,7 +1688,7 @@
                 "`nan` is short for not-a-number.\n" +
                 "Machines have limited storages for each number. As we squared and added many numbers over and over, " +
                 "we updated `params` with too large gradients to be stored. This is known as !!exploding gradients!!.\n" +
-                "On the other extreme, gardients may sometimes get too small. Then `update`s are not effective--known " +
+                "On the other extreme, gradients may sometimes get too small. Then `update`s are not effective--known " +
                 "as !!vanishing gradients!!."
             ),
             message(
@@ -1722,7 +1722,7 @@
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast: AstApi) => lineInflateDeflateBlock,
                 textAfterCode: "When `train` starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
-                "When `train` ends, it `delfate`s the `params` back."
+                "When `train` ends, it `deflate`s the `params` back."
             },
             message(
                 "W",
