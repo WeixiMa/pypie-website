@@ -1676,7 +1676,7 @@
             {
                 ...message(
                     "W",
-                    "So `xs` is a `Tensor[int][[1000]]`. We then generate `ys` of the same shape--with some additional noise?\n"+
+                    "So `xs` is a `Tensor[float][[1000]]`. We then generate `ys` of the same shape--with some additional noise?\n"+
                     "Let me train it..."
                 ),
                 codeLabel: "`ates.py` lines 59-60",
@@ -1745,7 +1745,7 @@
             ),
             message(
                 "D",
-                "Magical, but not arbitrary. In practice, people put variables in those positions--called !!hyper parameters!!. " +
+                "Magical, but not arbitrary. In practice, people put variables in those positions--called !!hyperparameters!!. " +
                 "People then turn the knobs based on science, engineering, and sometimes alchemy."
             )
         ],
