@@ -1058,6 +1058,228 @@
         ],
     };
 
+    const lineSmoothBlock = {
+        kind: "Block",
+        body: [
+            {
+                kind: "FunctionDef",
+                name: {
+                    kind: "Identifier",
+                    name: "smooth",
+                    role: "fn",
+                },
+                decorator: {
+                    kind: "Identifier",
+                    name: "op",
+                    role: "fn",
+                },
+                args: [
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "decay",
+                            role: "var",
+                            type: "float",
+                        },
+                        annotation: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                    },
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "avg",
+                            role: "var",
+                            type: "float",
+                        },
+                        annotation: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                    },
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "g",
+                            role: "var",
+                            type: "float",
+                        },
+                        annotation: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                    },
+                ],
+                returns: {
+                    kind: "Identifier",
+                    name: "float",
+                    role: "type",
+                },
+                body: [
+                    {
+                        kind: "Return",
+                        value: {
+                            kind: "BinOp",
+                            left: {
+                                kind: "BinOp",
+                                left: {
+                                    kind: "Identifier",
+                                    name: "decay",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                op: "*",
+                                right: {
+                                    kind: "Identifier",
+                                    name: "avg",
+                                    role: "var",
+                                    type: "float",
+                                },
+                            },
+                            op: "+",
+                            right: {
+                                kind: "BinOp",
+                                left: {
+                                    kind: "BinOp",
+                                    left: {
+                                        kind: "Number",
+                                        value: "1.0",
+                                    },
+                                    op: "-",
+                                    right: {
+                                        kind: "Identifier",
+                                        name: "decay",
+                                        role: "var",
+                                        type: "float",
+                                    },
+                                },
+                                op: "*",
+                                right: {
+                                    kind: "Identifier",
+                                    name: "g",
+                                    role: "var",
+                                    type: "float",
+                                },
+                            },
+                        },
+                    },
+                ],
+            },
+            {
+                kind: "BlankLine",
+            },
+            {
+                kind: "FunctionDef",
+                name: {
+                    kind: "Identifier",
+                    name: "mean",
+                    role: "fn",
+                },
+                decorator: {
+                    kind: "Identifier",
+                    name: "op",
+                    role: "fn",
+                },
+                args: [
+                    {
+                        kind: "Arg",
+                        name: {
+                            kind: "Identifier",
+                            name: "xs",
+                            role: "var",
+                        },
+                        annotation: {
+                            kind: "TypeSubscript",
+                            base: {
+                                kind: "TypeSubscript",
+                                base: {
+                                    kind: "Identifier",
+                                    name: "Tensor",
+                                    role: "type",
+                                },
+                                index: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                            index: {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "n",
+                                                role: "var",
+                                                type: "int",
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                ],
+                returns: {
+                    kind: "Identifier",
+                    name: "float",
+                    role: "type",
+                },
+                body: [
+                    {
+                        kind: "Return",
+                        value: {
+                            kind: "BinOp",
+                            left: {
+                                kind: "Call",
+                                callee: {
+                                    kind: "Attribute",
+                                    value: {
+                                        kind: "Identifier",
+                                        name: "xs",
+                                        role: "var",
+                                    },
+                                    attr: {
+                                        kind: "Identifier",
+                                        name: "sum",
+                                        role: "plain",
+                                    },
+                                },
+                                args: [],
+                            },
+                            op: "/",
+                            right: {
+                                kind: "Call",
+                                callee: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "fn",
+                                },
+                                args: [
+                                    {
+                                        kind: "Identifier",
+                                        name: "n",
+                                        role: "var",
+                                        type: "int",
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+
     const lineRmsUpdateBlock = {
         kind: "Block",
         body: [
@@ -1286,6 +1508,107 @@
         ],
     };
 
+    const lineSmoothExampleBlock = {
+        kind: "Block",
+        body: [
+            {
+                kind: "Assign",
+                target: {
+                    kind: "Identifier",
+                    name: "xs",
+                    role: "var",
+                },
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Identifier",
+                        name: "Tensor",
+                        role: "type",
+                    },
+                    args: [
+                        {
+                            kind: "List",
+                            elements: [
+                                {
+                                    kind: "Number",
+                                    value: "-50.0",
+                                },
+                                {
+                                    kind: "Number",
+                                    value: "0.5",
+                                },
+                                {
+                                    kind: "Number",
+                                    value: "1000.42",
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            {
+                kind: "Assign",
+                target: {
+                    kind: "Identifier",
+                    name: "xs_smoothed",
+                    role: "var",
+                },
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Identifier",
+                        name: "smooth",
+                        role: "fn",
+                    },
+                    args: [
+                        {
+                            kind: "Number",
+                            value: "0.9",
+                        },
+                        {
+                            kind: "Call",
+                            callee: {
+                                kind: "Identifier",
+                                name: "mean",
+                                role: "fn",
+                            },
+                            args: [
+                                {
+                                    kind: "Identifier",
+                                    name: "xs",
+                                    role: "var",
+                                },
+                            ],
+                        },
+                        {
+                            kind: "Identifier",
+                            name: "xs",
+                            role: "var",
+                        },
+                    ],
+                },
+            },
+            {
+                kind: "ExprStmt",
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Identifier",
+                        name: "print",
+                        role: "fn",
+                    },
+                    args: [
+                        {
+                            kind: "Identifier",
+                            name: "xs_smoothed",
+                            role: "var",
+                        },
+                    ],
+                },
+            },
+        ],
+    };
+
     render({
         id: "model-line",
         dialog: [
@@ -1321,7 +1644,7 @@
                 ),
                 codeLabel: "`update` definition",
                 buildCodeBlock: (_ast: AstApi) => lineUpdateBlock,
-                textAfterCode: "For each scalar `p` in `params`, the `Model` finds a gradient* `g` using `loss` and adjusts `p` with `g`**."
+                textAfterCode: "For each scalar `p` in `params`, the `Model` finds a gradient* `g` using `loss` and adjusts `p` with `g`."
             },
             message(
                 "W",
@@ -1375,7 +1698,25 @@
             {
                 ...message(
                     "D",
-                    "Yes. A smarter `update` needs some additional information. Here are two buddies of `update`, " +
+                    "Yes, let's first learn how to smooth exploding and vanishing, and then make `update` smarter with !!`smooth`!!."
+                ),
+                codeLabel: "`smooth` definition",
+                buildCodeBlock: (_ast: AstApi) => lineSmoothBlock,
+                textAfterCode: "For the first input `decay`, `0.9` is usually a safe choice."
+            },
+            {
+                ...message(
+                    "W",
+                    "Let me try an example."
+                ),
+                codeLabel: "`ates.py` lines 32-34",
+                buildCodeBlock: (_ast: AstApi) => lineSmoothExampleBlock,
+                textAfterCode: "It prints `Tensor([280.276, 285.326, 385.318])`.\n`xs_smoothed` is indeed smoother than `xs`."
+            },
+            {
+                ...message(
+                    "D",
+                    "Now we make `update` smarter by giving it some additional information. Here are two buddies of `update`, " +
                     "named !!`inflate`!! and !!`deflate`!!."
                 ),
                 codeLabel: "`inflate` and `deflate`",
@@ -1395,11 +1736,19 @@
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast: AstApi) => lineRmsUpdateBlock,
                 textAfterCode: "Here, we calculate some `alpha * g` --smarter than the fixed `0.01 * g`. " +
-                "`alpha` depends on the moving average of `p`, which accompanies `p` in the `Tuple[float, float]`.\n" +
+                "`alpha` depends on the moving average of `p`, which accompanies `p` in the `Tuple[float, float]` through training.\n" +
                 "This approach is called RMSProp."
-            }
+            },
+            message(
+                "W",
+                "The returned tuple makes sense to me. But, in the definition, all these numbers seem magical and arbitrary."
+            ),
+            message(
+                "D",
+                "Magical, but not arbitrary. In practice, people put variables in those positions--called !!hyper parameters!!. " +
+                "People then turn the knobs based on science, engineering, and sometimes alchemy."
+            )
         ],
-        notes: "* The mathematical definition of [gradient](https://en.wikipedia.org/wiki/Gradient) can be found in ...\n" +
-        "** In `pypie`, a `Model` may also use different update methods for different `params`."
+        notes: "* The mathematical definition of [gradient](https://en.wikipedia.org/wiki/Gradient) can be found in ..."
     });
 })();
