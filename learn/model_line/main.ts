@@ -1615,7 +1615,7 @@
             {
                 ...message(
                     "D",
-                    "We are ready for our first Model. Let's start with a new look of `line`."
+                    "We are ready for our first Model. Let's start with the refreshed `Line`."
                 ),
                 codeLabel: "`ates.py`",
                 buildCodeBlock: (_ast: AstApi) => atesModelBlock,
@@ -1627,7 +1627,7 @@
             ),
             message(
                 "D",
-                "A **`Model`** learns `params` by repeating revisions. In each revision, it uses `forward` to find a `ys_pred`, " +
+                "A **`Model`** learns `params` by repeating revisions. In each revision, it uses `forward` to generate `ys_pred`, " +
                 "computes a `loss`, and then updates the `params`.\n" +
                 "We omitted the `@op`s, since every definition in a `Model` is automatically a `pypie` operator.\n" +
                 "This `Model` is not complete, since it doesn't know how to `update` yet."
@@ -1644,7 +1644,7 @@
                 ),
                 codeLabel: "`update` definition",
                 buildCodeBlock: (_ast: AstApi) => lineUpdateBlock,
-                textAfterCode: "For each scalar `p` in `params`, the `Model` finds a gradient* `g` using `loss` and adjusts `p` with `g`."
+                textAfterCode: "For each scalar `p` in `params`, the `Model` computes a gradient* `g` from `loss` and adjusts `p` using `g`."
             },
             message(
                 "W",
@@ -1667,11 +1667,11 @@
             {
                 ...message(
                     "D",
-                    "Now you asked for it!"
+                    "Now that's a challenge!"
                 ),
                 codeLabel: "`ates.py` challenge run",
                 buildCodeBlock: (_ast: AstApi) => lineChallengeRunBlock,
-                textAfterCode: "!!`rand`!! takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of the specified shape, using random numbers within the bounds."
+                textAfterCode: "!!`rand`!! takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of that shape with random numbers within the bounds."
             },
             {
                 ...message(
@@ -1685,15 +1685,14 @@
             },
             message(
                 "D",
-                "`nan` is short for not-a-number.\n" +
-                "Machines have limited storages for each number. As we squared and added many numbers over and over, " +
-                "we updated `params` with too large gradients to be stored. This is known as !!exploding gradients!!.\n" +
-                "On the other extreme, gradients may sometimes get too small. Then `update`s are not effective--known " +
-                "as !!vanishing gradients!!."
+                "`nan` stands for not-a-number.\n" +
+                "Computers store numbers with limited precision and range. Repeated squaring and summing can make gradients blow up, " +
+                "so updates overflow and produce `nan`. This is called !!exploding gradients!!.\n" +
+                "On the other extreme, gradients can also become too small to move the parameters effectively. This is called !!vanishing gradients!!."
             ),
             message(
                 "W",
-                "Can we give some smartness to `update` to prevent exploding and vanishing?"
+                "Can we make `update` smarter to prevent exploding and vanishing gradients?"
             ),
             {
                 ...message(
@@ -1702,7 +1701,7 @@
                 ),
                 codeLabel: "`smooth` definition",
                 buildCodeBlock: (_ast: AstApi) => lineSmoothBlock,
-                textAfterCode: "For the first input `decay`, `0.9` is usually a safe choice."
+                textAfterCode: "For `decay`, `0.9` is usually a safe default."
             },
             {
                 ...message(
@@ -1716,8 +1715,8 @@
             {
                 ...message(
                     "D",
-                    "Now we make `update` smarter by giving it some additional information. Here are two buddies of `update`, " +
-                    "named !!`inflate`!! and !!`deflate`!!."
+                    "Now we make `update` smarter by giving it extra information. Here are two buddies of `update`, " +
+                    "called !!`inflate`!! and !!`deflate`!!."
                 ),
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast: AstApi) => lineInflateDeflateBlock,
@@ -1726,26 +1725,26 @@
             },
             message(
                 "W",
-                "Then at each `update`, `p` should be a `Tuple[float, float]`?" 
+                "Then in each `update`, `p` should be a `Tuple[float, float]`?"
             ),
             {
                 ...message(
                     "D",
-                    "Good observation. Here's the updated `update`."
+                    "Good observation. Here is the updated `update`."
                 ),
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast: AstApi) => lineRmsUpdateBlock,
-                textAfterCode: "Here, we calculate some `alpha * g` --smarter than the fixed `0.01 * g`. " +
-                "`alpha` depends on the moving average of `p`, which accompanies `p` in the `Tuple[float, float]` through training.\n" +
+                textAfterCode: "The key is `alpha * g`, which is smarter than the fixed `0.01 * g`. " +
+                "`alpha` depends on the moving average stored alongside `p` in `Tuple[float, float]` during training.\n" +
                 "This approach is called RMSProp."
             },
             message(
                 "W",
-                "The returned tuple makes sense to me. But, in the definition, all these numbers seem magical and arbitrary."
+                "The returned tuple makes sense to me. But in the definition, these numbers still seem magical and arbitrary."
             ),
             message(
                 "D",
-                "Magical, but not arbitrary. In practice, people put variables in those positions--called !!hyperparameters!!. " +
+                "Magical, maybe, but not arbitrary. In practice, people place variables in those positions--called !!hyperparameters!!. " +
                 "People then turn the knobs based on science, engineering, and sometimes alchemy."
             )
         ],
