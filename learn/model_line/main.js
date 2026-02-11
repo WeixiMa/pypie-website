@@ -104,7 +104,7 @@
                         kind: "FunctionDef",
                         name: {
                             kind: "Identifier",
-                            name: "forward",
+                            name: "predict",
                             role: "fn",
                         },
                         args: [
@@ -754,7 +754,7 @@
                             },
                             attr: {
                                 kind: "Identifier",
-                                name: "forward",
+                                name: "predict",
                                 role: "plain",
                             },
                         },
@@ -1575,27 +1575,30 @@
         id: "model-line",
         dialog: [
             {
-                ...message("D", "We are ready for our first Model. Let's take a new look at `line`."),
+                ...message("D", "We are ready for our first `Model`. Let's start with the refreshed `Line`."),
                 codeLabel: "`ates.py`",
                 buildCodeBlock: (_ast) => atesModelBlock,
+                textAfterCode: "We always omit `@op`s for the definitions in a `Model`."
             },
             message("W", "So we put `line` and `loss` under the same `Model`, which is called `Line`.\n" +
-                "Why is `line` renamed to `forward`?"),
-            message("D", "A **`Model`** learns `params` by repeating revisions. In each revision, it uses `forward` to compute `ys_pred`, " +
-                "computes a `loss`, and then updates the `params`.\n" +
-                "We omitted the `@op`s, since every definition in a `Model` is automatically a `pypie` operator.\n" +
-                "This `Model` is not complete, since it doesn't know how to `update` yet."),
+                "Why is `line` renamed to `predict`?"),
+            message("D", "We train a !!`Model`!! by repeating three steps: `predict` with the current `params`, " +
+                "compute a `loss`, and then update the `params`.\n" +
+                "`Line` is not complete, since it doesn't know how to `update` yet."),
             message("W", "Indeed. I asked `pypie` to validate `Line` and received an error.\n" +
-                "`Method update is missing in the Line class`.\n"),
+                "`Method update is missing in Line`.\n"),
             {
-                ...message("D", "Now we define the !!`update`!! function for `Line`."),
+                ...message("D", "Here's how we !!`update`!!."),
                 codeLabel: "`update` definition",
                 buildCodeBlock: (_ast) => lineUpdateBlock,
-                textAfterCode: "For each scalar `p` in `params`, the `Model` computes a gradient* `g` from `loss` and adjusts `p` using `g`."
+                textAfterCode: "On each step, for each scalar `p` in `params`, the `Model` computes a !!gradient!! `g`. " +
+                    "`g` is the local slope of `loss` with respect to `p`: if `g` is positive, increasing `p` raises `loss`; " +
+                    "if `g` is negative, increasing `p` lowers `loss`.\n" +
+                    "The update moves `p` in the opposite direction of `g`, then uses the new `params` for the next `predict`."
             },
-            message("W", "Can we see an example of revising `params`?"),
-            message("D", "A complete `Model` provides the !!`train`!! function. The function expects four inputs: `xs`, `ys`, `params`, and `revs`.\n" +
-                "Let's `train` the `Model` with `xs`, `ys`, and `params` from the last chapter--for 10 `revs`."),
+            message("W", "`Line` is now complete!"),
+            message("D", "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs`.\n" +
+                "Try `10` revs, with the `xs`, `ys`, and `params` from the last chapter."),
             {
                 ...message("W", "Like this?"),
                 codeLabel: "`train` run",
@@ -1606,7 +1609,7 @@
                 ...message("D", "Now that's a challenge!"),
                 codeLabel: "`ates.py` challenge run",
                 buildCodeBlock: (_ast) => lineChallengeRunBlock,
-                textAfterCode: "!!`rand`!! takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of that shape with random numbers within the bounds."
+                textAfterCode: "`rand` takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of that shape using random numbers within the bounds."
             },
             {
                 ...message("W", "So `xs` is a `Tensor[float][[1000]]`. We then generate `ys` of the same shape--with some additional noise?\n" +
@@ -1615,44 +1618,49 @@
                 buildCodeBlock: (_ast) => lineChallengeTrainBlock,
                 textAfterCode: "It prints `(nan, nan)`. Whoa! What are these?"
             },
-            message("D", "`nan` stands for not-a-number.\n" +
-                "Computers store numbers with limited precision and range. Repeated squaring and summing can make gradients blow up, " +
-                "so updates overflow and produce `nan`. This is called !!exploding gradients!!.\n" +
-                "On the other extreme, gradients can become too small to move the parameters effectively. This is called !!vanishing gradients!!."),
-            message("W", "Can we make `update` smarter to prevent exploding and vanishing gradients?"),
+            message("D", "`nan` means not a number.\n" +
+                "Gradients can become unstable during training. If their magnitudes get very large, updates become huge " +
+                "and parameters can overflow to `inf` or `nan`; this is called exploding gradients.\n" +
+                "If gradients get very small, updates become tiny and learning nearly stops; this is called vanishing gradients."),
+            message("W", "Can we make `update` smarter to reduce exploding and vanishing gradients?"),
             {
-                ...message("D", "Yes, let's first learn how to smooth exploding and vanishing, and then make `update` smarter with !!`smooth`!!."),
+                ...message("D", "Yes, it requires a new function, `smooth`."),
                 codeLabel: "`smooth` definition",
                 buildCodeBlock: (_ast) => lineSmoothBlock,
-                textAfterCode: "For `decay`, `0.9` is usually a safe default."
+                textAfterCode: "Try an example. For `decay`, `0.9` is usually a safe default."
             },
             {
-                ...message("W", "Let me try an example."),
+                ...message("W", "Let's see."),
                 codeLabel: "`ates.py` lines 32-34",
                 buildCodeBlock: (_ast) => lineSmoothExampleBlock,
                 textAfterCode: "It prints `Tensor([280.276, 285.326, 385.318])`.\n`xs_smoothed` is indeed smoother than `xs`."
             },
             {
-                ...message("D", "Now we make `update` smarter by giving it extra information. Here are two helper methods for `update`, " +
+                ...message("D", "Now we give `update` extra information. Here are two buddies of `update`, " +
                     "called !!`inflate`!! and !!`deflate`!!."),
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast) => lineInflateDeflateBlock,
                 textAfterCode: "When `train` starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
-                    "When `train` ends, it `deflate`s the `params` back."
+                    "When `train` ends, it `deflate`s `params` by removing the additional `float`s."
             },
-            message("W", "Then in each `update`, `p` should be a `Tuple[float, float]`?"),
+            message("W", "Then `update` should handle the inflated `Tuple[float, float]`?"),
             {
-                ...message("D", "Good observation. Here is the `update` method in `LineRMS`."),
+                ...message("D", "Good observation. Here is the updated `update`."),
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast) => lineRmsUpdateBlock,
-                textAfterCode: "Here, we compute `alpha * g`, which is smarter than the fixed `0.01 * g`. " +
-                    "`alpha` depends on the moving average stored alongside `p` in `Tuple[float, float]` during training.\n" +
+                textAfterCode: "The key difference is `alpha * g`, which is smarter than the fixed `0.01 * g`. " +
+                    "`alpha` depends on the moving average, which accompanies `p` during training.\n" +
                     "This approach is called RMSProp."
             },
             message("W", "The returned tuple makes sense to me. But in the definition, these numbers still seem magical and arbitrary."),
-            message("D", "Magical, maybe, but not arbitrary. In practice, people place variables in those positions--called !!hyperparameters!!. " +
-                "People then turn the knobs based on science, engineering, and sometimes alchemy.")
+            message("D", "Maybe magical, but not arbitrary. In practice, people place variables in those positions, called !!hyperparameters!!, " +
+                "and then adjust their values based on science, engineering, and sometimes alchemy.\n" +
+                "Alright, let's call it a chapter."),
+            message("W", "Wait, fewer frames?"),
+            message("D", "Because this chapter answers a simpler question: " +
+                "how to `train` `Model`s with `predict`, `loss`, `update`, " +
+                "and occasionally `inflate` and `deflate`."),
+            message("W", "And `Tensor` shapes!"),
         ],
-        notes: "* The mathematical definition of [gradient](https://en.wikipedia.org/wiki/Gradient) can be found in ..."
     });
 })();

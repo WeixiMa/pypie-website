@@ -149,7 +149,7 @@
             },
             {
                 slug: "model_line/index.html",
-                title: "The First Model",
+                title: "The Complete Line",
             },
         ],
     };
