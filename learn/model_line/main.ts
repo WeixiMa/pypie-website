@@ -1758,12 +1758,12 @@
             message(
                 "D",
                 "Because this chapter answers a simpler question: " +
-                "how to `train` `Model`s with `predict`, `loss`, `update`, " +
-                "and occasionally `inflate` and `deflate`."
+                "how to `train` `Model`s. The core is `predict`, `loss`, and `update`; " +
+                "with `inflate` and `deflate` occasionally."
             ),
             message(
                 "W",
-                "And `Tensor` shapes!"
+                "Plus shaped `Tensor`s!"
             ),
         ],
     });

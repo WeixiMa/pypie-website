@@ -35,7 +35,14 @@
         dialog: [
             message(
                 "W",
-                "Welcome! This section is under construction."
+                "This tutorial is about writing programs for machine learning problems in the real world, with clarity and elegance.\n\n" +
+                "Clarity is achieved by types. Types serve as annotations during authoring, to remind us the behavior of each module. " +
+                "Types serve as contracts before programs run, to detect bugs early.\n\n" +
+                "Elegance is achieved by abstractions. Abstractions enable reusing the core concepts while ignoring implementation details. " +
+                "So programming becomes a pleasing experience that puts some creativity on top of a recurring pattern.\n\n" +
+                "This tutorial is simply for programming. We hope readers with high school math knowledge may internalize all examples without difficulties. " +
+                "We begin with types in chapter 1 and 2, focusing on tensor shapes and rank polymorphism. " +
+                "Then we show how the core concepts apply to a linear regression model (chapter 3 & 4), a CNN, and an RNN.\n\n"
             ),
         ],
     });

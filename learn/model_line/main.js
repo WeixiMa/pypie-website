@@ -1592,9 +1592,9 @@
                 codeLabel: "`update` definition",
                 buildCodeBlock: (_ast) => lineUpdateBlock,
                 textAfterCode: "On each step, for each scalar `p` in `params`, the `Model` computes a !!gradient!! `g`. " +
-                    "`g` is the local slope of `loss` with respect to `p`: if `g` is positive, increasing `p` raises `loss`; " +
+                    "The gradient tells how `loss` changes with respect to `p`: if `g` is positive, increasing `p` raises `loss`; " +
                     "if `g` is negative, increasing `p` lowers `loss`.\n" +
-                    "The update moves `p` in the opposite direction of `g`, then uses the new `params` for the next `predict`."
+                    "`update` moves `p` in the opposite direction of `g`, then `Model` uses the new `params` for the next `predict`."
             },
             message("W", "`Line` is now complete!"),
             message("D", "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs`.\n" +
@@ -1619,9 +1619,9 @@
                 textAfterCode: "It prints `(nan, nan)`. Whoa! What are these?"
             },
             message("D", "`nan` means not a number.\n" +
-                "Gradients can become unstable during training. If their magnitudes get very large, updates become huge " +
-                "and parameters can overflow to `inf` or `nan`; this is called exploding gradients.\n" +
-                "If gradients get very small, updates become tiny and learning nearly stops; this is called vanishing gradients."),
+                "Machines store numbers with limited precision and range. Repeated squaring and summing can make gradients too large, " +
+                "so `update`s blos up `params`; this is called exploding gradients.\n" +
+                "Gradients may also get very small. Then `update`s become tiny and learning nearly stops; this is called vanishing gradients."),
             message("W", "Can we make `update` smarter to reduce exploding and vanishing gradients?"),
             {
                 ...message("D", "Yes, it requires a new function, `smooth`."),
@@ -1658,9 +1658,9 @@
                 "Alright, let's call it a chapter."),
             message("W", "Wait, fewer frames?"),
             message("D", "Because this chapter answers a simpler question: " +
-                "how to `train` `Model`s with `predict`, `loss`, `update`, " +
-                "and occasionally `inflate` and `deflate`."),
-            message("W", "And `Tensor` shapes!"),
+                "how to `train` `Model`s. The core is `predict`, `loss`, and `update`; " +
+                "with `inflate` and `deflate` occasionally."),
+            message("W", "Plus shaped `Tensor`s!"),
         ],
     });
 })();
