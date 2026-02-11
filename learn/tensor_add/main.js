@@ -16,7 +16,7 @@
             message("W", "`2`. But are those even `Tensor`s?"),
             message("D", "Yes, `1` has type `Tensor[int][[]]`.\n" +
                 "Try this next: `Tensor([1]) + Tensor([1])`."),
-            message("W", "Hmm... if we break the larger tensor into smaller tensors, " +
+            message("W", "Hmm... if we break them into smaller tensors, " +
                 "then at the matching position, we have `1 + 1` again--a problem we've already solved."),
             message("D", "Great instinct. Indeed, we add the matching positions."),
             message("W", "Then it is `Tensor([2])`, right?\n" +
@@ -91,9 +91,9 @@
                 "It helps to internalize this trick."),
             message("W", "Will do."),
             message("D", "Let's recap !!rank polymorphism!!:\n" +
-                "(1) for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
-                "(2) validate compatibility between those prefixes;\n" +
-                "(3) wrap the result type with the longer prefix.\n" +
+                "for each input, validate compatibility between the given and expected types, find the prefixes;\n" +
+                "validate compatibility between those prefixes;\n" +
+                "wrap the result type with the longer prefix.\n" +
                 "This process applies to all functions."),
             message("W", "Are there other functions besides `+`?"),
             message("D", "Yes, you can define as many as you need. " +

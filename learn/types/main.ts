@@ -62,7 +62,7 @@
                 "W",
                 "So !!`List[t]`!! is a type, as long as `t` is a type.\nThen there must be a type called `List[List[int]]`, right?",
             ),
-            message("D", "Yes, `List` can be nested, such as `[[1, 2, 3], [4, 5, 6]]`."),
+            message("D", "Yes, `List`s can be nested, such as `[[1, 2, 3], [4, 5, 6]]`."),
             message("W", "What about `[[1, 2, 3], [4, 5]]`?"),
             message(
                 "D",
@@ -102,7 +102,7 @@
             ),
             message(
                 "W",
-                "I see.\n- `Tensor[int][[2, 3]]` and `Tensor[Tensor[int][[3]]][[2]]` are the same type.\n- `int` and `Tensor[int][[]]` are also the same type.",
+                "I see.\n`Tensor[int][[2, 3]]` and `Tensor[Tensor[int][[3]]][[2]]` are the same type.\n`int` and `Tensor[int][[]]` are also the same type.",
             ),
             message(
                 "D",

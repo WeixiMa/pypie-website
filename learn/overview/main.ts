@@ -42,14 +42,11 @@
                 "Abstraction lets us reuse core concepts while hiding low-level mechanics. " +
                 "This allows us to focus on the creative and enjoyable parts, trusting recurring patterns to handle the less interesting details.\n\n" +
                 "These fundamental principles are simple to demonstrate and require little prior background: " +
-                "first-time programmers are welcome and high school math is sufficient. " +
+                "high school math is sufficient and first-time programmers are encouraged to join. " +
                 "We, however, ask for patience and hands-on practice: fully explore every chapter and learn by building. " +
                 "Each chapter is a dialog between a teacher and a student, with questions, answers, and programs. " + 
                 "As you are enjoying the dialogs, internalize them by typing in and running the programs in PyPie.\n\n" +
-                "PyPie is inspired by The Little Learner written by Friedman and Mendhekar, " +
-                "where readers will find a logical foundation. " + 
-                "The CNN and RNN examples originate from Dive into Deep Learning, " +
-                "which offers the math underlying these models and more."
+                "Now let's welcome our teacher."
             ),
         ],
     });
