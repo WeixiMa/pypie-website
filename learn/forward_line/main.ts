@@ -260,7 +260,7 @@ const lineDefinitionBlock = {
                 kind: "FunctionDef",
                 name: {
                     kind: "Identifier",
-                    name: "line",
+                    name: "bad_line",
                     role: "fn",
                 },
                 args: [
@@ -1177,7 +1177,7 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "`pypie` gives us tensors and learning primitives.\n" +
-                "`typing` gives us type notation like `Tuple`.\n" +
+                "`typing` gives us other type annotations like `Tuple`.\n" +
                 "`Tuple[float, float]` means `params` contains exactly two `float`s."
             ),
             message(
@@ -1197,7 +1197,7 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "Yes.\n" +
-                "Now: what is the type of `y`?"
+                "What is the type of `y`?"
             ),
             message(
                 "W",
@@ -1209,13 +1209,13 @@ const lineDefinitionBlock = {
             message(
                 "D",
                 "Good check. Let's generalize the type of `+`:\n" +
-                "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
+                "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`.\n" +
                 "Both inputs must share the same numeric type. At call time, `pypie` figures out the concrete `T` from the actual inputs.\n" +
-                "`+` has the same type."
+                "BTW, `*` has the same type as `+`."
             ),
             message(
                 "W",
-                "So here `T` becomes `float`, and `w * x + b` has type `float`, which matches `line`."
+                "So here `T` becomes `float`, and `w * x + b` has type `float`."
             ),
             message(
                 "D",
@@ -1259,17 +1259,17 @@ const lineDefinitionBlock = {
                 ),
             message(
                 "D",
-                "Next step: learn the line from data."
+                "Next step: learn the line."
             ),
             message(
                 "W",
-                "Learn the line?" 
+                "Learn what?" 
             ),
             message(
                 "D",
                 "It means finding `params` from `xs` and `ys`.\n" +
                 "So far, we chose `params`, made `xs`, and computed `ys`.\n" +
-                "In practice, we first have `xs` and `ys` and then estimate `params`.\n" +
+                "In practice, we first have some real data for `xs` and `ys` and then estimate `params`.\n" +
                 "Let's pretend:\n" +
                 "`xs` and `ys` are real data;\n" +
                 "true `params` are unknown.\n" +
@@ -1358,7 +1358,7 @@ const lineDefinitionBlock = {
             ),
             message(
                 "D",
-                "We need a scalar `float` as the loss.\n" +
+                "Almost always, we use a scalar as the loss.\n" +
                 "`sum` collapses a tensor into that scalar. " +
                 "We square each difference first, so negatives and positives cannot cancel out.\n" +
                 "Now run `loss`."
@@ -1370,7 +1370,7 @@ const lineDefinitionBlock = {
                 ),
                 codeLabel: "run `loss`",
                 buildCodeBlock: (_ast: AstApi) => runLossBlock,
-                textAfterCode: "It prints `32.19`, the loss at `(0.0, 0.0)`!",
+                textAfterCode: "It prints `32.19`, the loss at `(0.0, 0.0)`?",
             },
             message(
                 "D",

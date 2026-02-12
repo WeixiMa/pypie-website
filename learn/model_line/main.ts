@@ -1426,7 +1426,7 @@
                                     kind: "BinOp",
                                     left: {
                                         kind: "Number",
-                                        value: "0.001",
+                                        value: "0.01",
                                     },
                                     op: "/",
                                     right: {
@@ -1628,7 +1628,7 @@
             ),
             message(
                 "D",
-                "We train a !!`Model`!! by repeating this revision: `predict` with the current `params`, " +
+                "A !!`Model`!! learns by repeating three steps: `predict` with the current `params`, " +
                 "compute a `loss`, and then update the `params`.\n" +
                 "`Line` is not complete, since it doesn't know how to `update` yet."
             ),
@@ -1644,10 +1644,10 @@
                 ),
                 codeLabel: "`update` definition",
                 buildCodeBlock: (_ast: AstApi) => lineUpdateBlock,
-                textAfterCode: "On each revision, the `Model` finds a !!gradient!! `g` for each scalar `p` in `params`. " +
+                textAfterCode: "During each repetition, the `Model` finds a !!gradient!! `g` for each scalar `p` in `params`. " +
                 "The gradient tells how `loss` changes with respect to `p`: if `g` is positive, increasing `p` raises `loss`; " +
                 "if `g` is negative, increasing `p` lowers `loss`.\n"  +
-                "To reduce `loss`, `update` adjusts `p` in the opposite direction of `g`. The adjusted value becomes part of the new `params` for the next revision.\n"
+                "To reduce `loss`, `update` adjusts `p` in the opposite direction of `g` with a small factor. The adjusted value becomes part of the new `params` for the next repetition.\n"
             },
             message(
                 "W",
@@ -1655,8 +1655,8 @@
             ),
             message(
                 "D",
-                "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs` for the number of revisions.\n" +
-                "Try `10` revs, with the `xs`, `ys`, and `params` from the last chapter."
+                "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs` for the number of repetitions.\n" +
+                "Try `50` revs, with the `xs`, `ys`, and `params` from the last chapter."
             ),
             {
                 ...message(
@@ -1665,7 +1665,7 @@
                 ),
                 codeLabel: "`train` run",
                 buildCodeBlock: (_ast: AstApi) => lineTrainRunBlock,
-                textAfterCode: "It prints `(1.009, 0.302)`--very close to the real `params`.\nOur example seems too easy--how about something more challenging?"
+                textAfterCode: "It prints `(1.009, 0.492)`--very close to the real `params`.\nThis example seems too easy--how about something more challenging?"
             },
             {
                 ...message(
@@ -1690,7 +1690,7 @@
                 "D",
                 "`nan` means not a number.\n" +
                 "Machines store numbers with limited precision and range. Repeated squaring and summing can make gradients too large, " +
-                "so `update`s blos up `params`; this is called exploding gradients.\n" +
+                "so `update`s blows up `params`; this is called exploding gradients.\n" +
                 "Gradients may also get very small. Then `update`s become tiny and learning nearly stops; this is called vanishing gradients."
             ),
             message(
@@ -1737,8 +1737,8 @@
                 ),
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast: AstApi) => lineRmsUpdateBlock,
-                textAfterCode: "Then we adjust `p` with `alpha * g`, instead of the fixed `0.01 * g`. " +
-                "This approach is called RMSProp."
+                textAfterCode: "Instead of the fixed `0.01`, we adjust `p` with an adapted `alpha`.\n" +
+                "This approach is called RMSProp--for propagating root, mean, square."
             },
             message(
                 "W",

@@ -25,7 +25,7 @@
             message("W", "Wait, their types are different: " +
                 "`Tensor[int][[2, 3]]` and `Tensor[int][[3]]`.\n" +
                 "Can we add `Tensor`s with different types?"),
-            message("D", "We can. A `Tensor[int][[2, 3]]` contains two `Tensor[int][[3]]`s.\n" +
+            message("D", "For this one, yes. A `Tensor[int][[2, 3]]` contains two `Tensor[int][[3]]`s.\n" +
                 "So we run `+` twice. Each still adds matching positions."),
             message("W", "Right.\n" +
                 "First: `Tensor([1, 2, 3]) + Tensor([5, 7, 9])`.\n" +
@@ -47,7 +47,7 @@
             message("D", "`+` is a function. Just like\n" +
                 "`5` has type `Tensor[int][[]]`,\n" +
                 "`+` has type `(x: Tensor[int][[]], y: Tensor[int][[]]) -> Tensor[int][[]]`."),
-            message("W", "This function type seems to suggest three things:\n" +
+            message("W", "This function type suggests three things:\n" +
                 "`+` expects two inputs, `x` and `y`.\n" +
                 "`x` is `Tensor[int][[]]`, and so is `y`.\n" +
                 "The result is also a `Tensor[int][[]]`."),
@@ -60,8 +60,8 @@
                 "Let's start by validating the inputs."),
             message("W", "Here, `x` has type `Tensor[int][[2, 3]]` and `y` has type `Tensor[int][[3]]`.\n" +
                 "Neither exactly matches the expected `Tensor[int][[]]`.\n" +
-                "Are they compatible?"),
-            message("D", "To decide that, we need a rule for compatibility of `List[int]`s."),
+                "But they must be compatible, since we added them just now!"),
+            message("D", "We need a rule for the compatibility between `List[int]`s."),
             message("W", "Let's see it!"),
             message("D", "Two `List[int]`s are !!compatible!!, if we line them up from the right and find a " +
                 "!!suffix!! in the longer one that matches the shorter.* " +
@@ -71,7 +71,7 @@
                 "For `y`, compare `[3]` with `[]`: suffix `[]`, prefix `[3]`.\n" +
                 "That means: each given input is compatible with its expected type!"),
             message("D", "Great. Next, validate compatibility between the two prefixes."),
-            message("W", "Does compatibility work on prefixes too?"),
+            message("W", "Does compatibility also work on prefixes?"),
             message("D", "Yes. Compatibility applies to `List[int]`s. Prefixes are `List[int]`s too."),
             message("W", "So we compare `[2, 3]` with `[3]`.\n" +
                 "The suffix is `[3]` and the prefix is `[2]`.\n" +
@@ -84,7 +84,7 @@
             message("D", "Now we wrap the result type. Under rank polymorphism, we repeatedly apply `+` to generate many `Tensor[int][[]]`s.\n" +
                 "The number of repetitions depends on the longer prefix."),
             message("W", "Got it. The longer prefix is `[2, 3]`, so we wrap `Tensor[int][[]]` with `[2, 3]`. " +
-                "That is `Tensor[Tensor[int][[]]][[2, 3]]`, which simplifies to `Tensor[int][[2, 3]]`.\n" +
+                "That makes `Tensor[Tensor[int][[]]][[2, 3]]`, which simplifies to `Tensor[int][[2, 3]]`.\n" +
                 "Exactly the same as running the program!"),
             message("D", "Great work!\n" +
                 "Try a few failing examples too: cases where a given type is incompatible with an expected type, or where the prefixes are incompatible.\n" +

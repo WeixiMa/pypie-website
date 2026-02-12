@@ -39,7 +39,7 @@
             message("W", "Is `5` a !!`Num`!!?"),
             message("D", "Excellent! Do you know other `Num`s?"),
             message("W", "Hmm... `0` and `-42`?"),
-            message("D", "Good, they are `Num`s too."),
+            message("D", "They are `Num`s too."),
             message("W", "What about `-42.42`?"),
             message("D", "Yes, `-42.42` is also a `Num`, but it is different from `42`."),
             message("W", "How?"),
@@ -87,7 +87,7 @@
             ),
             message(
                 "D",
-                "It has the type `Tensor[int][[2, 3]]`. In addition to the element type, we set a constraint on the shape.",
+                "It has the type `Tensor[int][[2, 3]]`. Besides the element type, a `Tensor` also knows its shape.",
             ),
             message(
                 "W",
@@ -95,13 +95,16 @@
             ),
             message(
                 "D",
-                "That's almost right.\n" +
-                    "The elements of the outer layer, however, are not `List[int]`s;\nthey are two `Tensor[int][[3]]`s.\n" +
-                    "Then, we have three `Tensor[int][[]]` at the inner layer."
+                "Not quite, but close.\n" +
+                "`Tensor([[1, 2, 3], [4, 5, 6]])` is the prettier way to write `Tensor([Tensor([1, 2, 3]), Tensor([4, 5, 6])])`.\n" +
+                "Its contains two elements; both are `Tensor[int][[3]]`s.\n" +
+                "Each element contains three elements; all are `Tensor[int][[]]`s."
             ),
             message(
                 "W",
-                "I see.\n`Tensor[int][[2, 3]]` and `Tensor[Tensor[int][[3]]][[2]]` are the same type.\n`int` and `Tensor[int][[]]` are also the same type.",
+                "I see.\n" +
+                "`int` and `Tensor[int][[]]` are the same type.\n" +
+                "`Tensor[int][[2, 3]]` and `Tensor[Tensor[int][[3]]][[2]]` are also the same type." 
             ),
             message(
                 "D",

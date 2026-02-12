@@ -230,7 +230,7 @@
                 kind: "FunctionDef",
                 name: {
                     kind: "Identifier",
-                    name: "line",
+                    name: "bad_line",
                     role: "fn",
                 },
                 args: [
@@ -1126,7 +1126,7 @@
             },
             message("W", "These imports are new."),
             message("D", "`pypie` gives us tensors and learning primitives.\n" +
-                "`typing` gives us type notation like `Tuple`.\n" +
+                "`typing` gives us other type annotations like `Tuple`.\n" +
                 "`Tuple[float, float]` means `params` contains exactly two `float`s."),
             message("W", "What about `op`?"),
             message("D", "!!`@op`!! marks the next `def` as a `pypie` operator.\n" +
@@ -1134,16 +1134,16 @@
             message("W", "In `line`, we unpack `params` into `w` and `b`, compute `y = w * x + b`, then return `y`.\n" +
                 "Is that the whole story?"),
             message("D", "Yes.\n" +
-                "Now: what is the type of `y`?"),
+                "What is the type of `y`?"),
             message("W", "I want to sanity-check.\n" +
                 "Earlier, `+` showed up with `int` tensors.\n" +
                 "Here `w`, `x`, and `b` are `float`s.\n" +
                 "Why is `w * x + b` still valid?"),
             message("D", "Good check. Let's generalize the type of `+`:\n" +
-                "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
+                "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`.\n" +
                 "Both inputs must share the same numeric type. At call time, `pypie` figures out the concrete `T` from the actual inputs.\n" +
-                "`+` has the same type."),
-            message("W", "So here `T` becomes `float`, and `w * x + b` has type `float`, which matches `line`."),
+                "BTW, `*` has the same type as `+`."),
+            message("W", "So here `T` becomes `float`, and `w * x + b` has type `float`."),
             message("D", "Exactly. `pypie` compares the return expression type against the definition.\n" +
                 "If they differ, it raises a type error."),
             {
@@ -1166,11 +1166,11 @@
                 figureAlt: "Visualization of four points on the line",
             },
             message("W", "Clean line! No surprises."),
-            message("D", "Next step: learn the line from data."),
-            message("W", "Learn the line?"),
+            message("D", "Next step: learn the line."),
+            message("W", "Learn what?"),
             message("D", "It means finding `params` from `xs` and `ys`.\n" +
                 "So far, we chose `params`, made `xs`, and computed `ys`.\n" +
-                "In practice, we first have `xs` and `ys` and then estimate `params`.\n" +
+                "In practice, we first have some real data for `xs` and `ys` and then estimate `params`.\n" +
                 "Let's pretend:\n" +
                 "`xs` and `ys` are real data;\n" +
                 "true `params` are unknown.\n" +
@@ -1217,7 +1217,7 @@
             },
             message("W", "It looks like `good_sub` plus extras.\n" +
                 "Why square with `** 2.0` and then call `sum`?"),
-            message("D", "We need a scalar `float` as the loss.\n" +
+            message("D", "Almost always, we use a scalar as the loss.\n" +
                 "`sum` collapses a tensor into that scalar. " +
                 "We square each difference first, so negatives and positives cannot cancel out.\n" +
                 "Now run `loss`."),
@@ -1225,7 +1225,7 @@
                 ...message("W", "Like this?"),
                 codeLabel: "run `loss`",
                 buildCodeBlock: (_ast) => runLossBlock,
-                textAfterCode: "It prints `32.19`, the loss at `(0.0, 0.0)`!",
+                textAfterCode: "It prints `32.19`, the loss at `(0.0, 0.0)`?",
             },
             message("D", "Exactly.\n" +
                 "Then we update `params`, recompute loss, and repeat."),

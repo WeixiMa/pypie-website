@@ -70,7 +70,7 @@
             ),
             message(
                 "D",
-                "We can. A `Tensor[int][[2, 3]]` contains two `Tensor[int][[3]]`s.\n" +
+                "For this one, yes. A `Tensor[int][[2, 3]]` contains two `Tensor[int][[3]]`s.\n" +
                 "So we run `+` twice. Each still adds matching positions."
             ),
             message(
@@ -113,7 +113,7 @@
             ),
             message(
                 "W",
-                "This function type seems to suggest three things:\n" +
+                "This function type suggests three things:\n" +
                 "`+` expects two inputs, `x` and `y`.\n" +
                 "`x` is `Tensor[int][[]]`, and so is `y`.\n" +
                 "The result is also a `Tensor[int][[]]`."
@@ -138,9 +138,9 @@
                 "W",
                 "Here, `x` has type `Tensor[int][[2, 3]]` and `y` has type `Tensor[int][[3]]`.\n" +
                 "Neither exactly matches the expected `Tensor[int][[]]`.\n" +
-                "Are they compatible?"
+                "But they must be compatible, since we added them just now!"
             ),
-            message("D", "To decide that, we need a rule for compatibility of `List[int]`s."),
+            message("D", "We need a rule for the compatibility between `List[int]`s."),
             message("W", "Let's see it!"),
             message(
                 "D",
@@ -158,7 +158,7 @@
             message("D", "Great. Next, validate compatibility between the two prefixes."),
             message(
                 "W",
-                "Does compatibility work on prefixes too?"
+                "Does compatibility also work on prefixes?"
             ),
             message(
                 "D",
@@ -186,7 +186,7 @@
             message(
                 "W",
                 "Got it. The longer prefix is `[2, 3]`, so we wrap `Tensor[int][[]]` with `[2, 3]`. "+
-                "That is `Tensor[Tensor[int][[]]][[2, 3]]`, which simplifies to `Tensor[int][[2, 3]]`.\n" +
+                "That makes `Tensor[Tensor[int][[]]][[2, 3]]`, which simplifies to `Tensor[int][[2, 3]]`.\n" +
                 "Exactly the same as running the program!"
             ),
             message(
