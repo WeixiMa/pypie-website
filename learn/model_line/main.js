@@ -1471,6 +1471,668 @@
             },
         ],
     };
+    const lineRmsModelBlock = {
+        kind: "Block",
+        body: [
+            {
+                kind: "ClassDef",
+                name: {
+                    kind: "Identifier",
+                    name: "LineRMS",
+                    role: "type",
+                },
+                bases: [
+                    {
+                        kind: "Identifier",
+                        name: "Model",
+                        role: "type",
+                    },
+                ],
+                body: [
+                    {
+                        kind: "FunctionDef",
+                        name: {
+                            kind: "Identifier",
+                            name: "predict",
+                            role: "fn",
+                        },
+                        args: [
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "x",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                annotation: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "params",
+                                    role: "var",
+                                },
+                                annotation: {
+                                    kind: "TypeSubscript",
+                                    base: {
+                                        kind: "Identifier",
+                                        name: "Tuple",
+                                        role: "type",
+                                    },
+                                    index: {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "float",
+                                                role: "type",
+                                            },
+                                            {
+                                                kind: "Identifier",
+                                                name: "float",
+                                                role: "type",
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                        returns: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                        body: [
+                            {
+                                kind: "Assign",
+                                target: {
+                                    kind: "Identifier",
+                                    name: "w",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                value: {
+                                    kind: "Subscript",
+                                    value: {
+                                        kind: "Identifier",
+                                        name: "params",
+                                        role: "var",
+                                    },
+                                    index: {
+                                        kind: "Number",
+                                        value: "0",
+                                    },
+                                },
+                            },
+                            {
+                                kind: "Assign",
+                                target: {
+                                    kind: "Identifier",
+                                    name: "b",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                value: {
+                                    kind: "Subscript",
+                                    value: {
+                                        kind: "Identifier",
+                                        name: "params",
+                                        role: "var",
+                                    },
+                                    index: {
+                                        kind: "Number",
+                                        value: "1",
+                                    },
+                                },
+                            },
+                            {
+                                kind: "Assign",
+                                target: {
+                                    kind: "Identifier",
+                                    name: "y",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                value: {
+                                    kind: "BinOp",
+                                    left: {
+                                        kind: "BinOp",
+                                        left: {
+                                            kind: "Identifier",
+                                            name: "w",
+                                            role: "var",
+                                            type: "float",
+                                        },
+                                        op: "*",
+                                        right: {
+                                            kind: "Identifier",
+                                            name: "x",
+                                            role: "var",
+                                            type: "float",
+                                        },
+                                    },
+                                    op: "+",
+                                    right: {
+                                        kind: "Identifier",
+                                        name: "b",
+                                        role: "var",
+                                        type: "float",
+                                    },
+                                },
+                            },
+                            {
+                                kind: "Return",
+                                value: {
+                                    kind: "Identifier",
+                                    name: "y",
+                                    role: "var",
+                                    type: "float",
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        kind: "BlankLine",
+                    },
+                    {
+                        kind: "FunctionDef",
+                        name: {
+                            kind: "Identifier",
+                            name: "loss",
+                            role: "fn",
+                        },
+                        args: [
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "ys_pred",
+                                    role: "var",
+                                },
+                                annotation: {
+                                    kind: "TypeSubscript",
+                                    base: {
+                                        kind: "TypeSubscript",
+                                        base: {
+                                            kind: "Identifier",
+                                            name: "Tensor",
+                                            role: "type",
+                                        },
+                                        index: {
+                                            kind: "Identifier",
+                                            name: "float",
+                                            role: "type",
+                                        },
+                                    },
+                                    index: {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "TypeList",
+                                                items: [
+                                                    {
+                                                        kind: "Identifier",
+                                                        name: "n",
+                                                        role: "var",
+                                                        type: "int",
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "ys",
+                                    role: "var",
+                                },
+                                annotation: {
+                                    kind: "TypeSubscript",
+                                    base: {
+                                        kind: "TypeSubscript",
+                                        base: {
+                                            kind: "Identifier",
+                                            name: "Tensor",
+                                            role: "type",
+                                        },
+                                        index: {
+                                            kind: "Identifier",
+                                            name: "float",
+                                            role: "type",
+                                        },
+                                    },
+                                    index: {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "TypeList",
+                                                items: [
+                                                    {
+                                                        kind: "Identifier",
+                                                        name: "n",
+                                                        role: "var",
+                                                        type: "int",
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                        returns: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                        body: [
+                            {
+                                kind: "Return",
+                                value: {
+                                    kind: "Call",
+                                    callee: {
+                                        kind: "Attribute",
+                                        value: {
+                                            kind: "BinOp",
+                                            left: {
+                                                kind: "BinOp",
+                                                left: {
+                                                    kind: "Identifier",
+                                                    name: "ys_pred",
+                                                    role: "var",
+                                                },
+                                                op: "-",
+                                                right: {
+                                                    kind: "Identifier",
+                                                    name: "ys",
+                                                    role: "var",
+                                                },
+                                            },
+                                            op: "**",
+                                            right: {
+                                                kind: "Number",
+                                                value: "2.0",
+                                            },
+                                        },
+                                        attr: {
+                                            kind: "Identifier",
+                                            name: "sum",
+                                            role: "plain",
+                                        },
+                                    },
+                                    args: [],
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        kind: "BlankLine",
+                    },
+                    {
+                        kind: "FunctionDef",
+                        name: {
+                            kind: "Identifier",
+                            name: "update",
+                            role: "fn",
+                        },
+                        args: [
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "P",
+                                    role: "var",
+                                },
+                                annotation: {
+                                    kind: "TypeSubscript",
+                                    base: {
+                                        kind: "Identifier",
+                                        name: "Tuple",
+                                        role: "type",
+                                    },
+                                    index: {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "float",
+                                                role: "type",
+                                            },
+                                            {
+                                                kind: "Identifier",
+                                                name: "float",
+                                                role: "type",
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "g",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                annotation: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                        ],
+                        returns: {
+                            kind: "TypeSubscript",
+                            base: {
+                                kind: "Identifier",
+                                name: "Tuple",
+                                role: "type",
+                            },
+                            index: {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "Identifier",
+                                        name: "float",
+                                        role: "type",
+                                    },
+                                    {
+                                        kind: "Identifier",
+                                        name: "float",
+                                        role: "type",
+                                    },
+                                ],
+                            },
+                        },
+                        body: [
+                            {
+                                kind: "Assign",
+                                target: {
+                                    kind: "Identifier",
+                                    name: "avg",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                value: {
+                                    kind: "Call",
+                                    callee: {
+                                        kind: "Identifier",
+                                        name: "smooth",
+                                        role: "fn",
+                                    },
+                                    args: [
+                                        {
+                                            kind: "Number",
+                                            value: "0.9",
+                                        },
+                                        {
+                                            kind: "Subscript",
+                                            value: {
+                                                kind: "Identifier",
+                                                name: "P",
+                                                role: "var",
+                                            },
+                                            index: {
+                                                kind: "Number",
+                                                value: "1",
+                                            },
+                                        },
+                                        {
+                                            kind: "BinOp",
+                                            left: {
+                                                kind: "Identifier",
+                                                name: "g",
+                                                role: "var",
+                                                type: "float",
+                                            },
+                                            op: "**",
+                                            right: {
+                                                kind: "Number",
+                                                value: "2.0",
+                                            },
+                                        },
+                                    ],
+                                },
+                            },
+                            {
+                                kind: "Assign",
+                                target: {
+                                    kind: "Identifier",
+                                    name: "alpha",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                value: {
+                                    kind: "BinOp",
+                                    left: {
+                                        kind: "Number",
+                                        value: "0.01",
+                                    },
+                                    op: "/",
+                                    right: {
+                                        kind: "BinOp",
+                                        left: {
+                                            kind: "Number",
+                                            value: "1e-8",
+                                        },
+                                        op: "+",
+                                        right: {
+                                            kind: "Call",
+                                            callee: {
+                                                kind: "Identifier",
+                                                name: "sqrt",
+                                                role: "fn",
+                                            },
+                                            args: [
+                                                {
+                                                    kind: "Identifier",
+                                                    name: "avg",
+                                                    role: "var",
+                                                    type: "float",
+                                                },
+                                            ],
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                kind: "Return",
+                                value: {
+                                    kind: "Tuple",
+                                    elements: [
+                                        {
+                                            kind: "BinOp",
+                                            left: {
+                                                kind: "Subscript",
+                                                value: {
+                                                    kind: "Identifier",
+                                                    name: "P",
+                                                    role: "var",
+                                                },
+                                                index: {
+                                                    kind: "Number",
+                                                    value: "0",
+                                                },
+                                            },
+                                            op: "-",
+                                            right: {
+                                                kind: "BinOp",
+                                                left: {
+                                                    kind: "Identifier",
+                                                    name: "alpha",
+                                                    role: "var",
+                                                    type: "float",
+                                                },
+                                                op: "*",
+                                                right: {
+                                                    kind: "Identifier",
+                                                    name: "g",
+                                                    role: "var",
+                                                    type: "float",
+                                                },
+                                            },
+                                        },
+                                        {
+                                            kind: "Identifier",
+                                            name: "avg",
+                                            role: "var",
+                                            type: "float",
+                                        },
+                                    ],
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        kind: "BlankLine",
+                    },
+                    {
+                        kind: "FunctionDef",
+                        name: {
+                            kind: "Identifier",
+                            name: "inflate",
+                            role: "fn",
+                        },
+                        args: [
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "p",
+                                    role: "var",
+                                    type: "float",
+                                },
+                                annotation: {
+                                    kind: "Identifier",
+                                    name: "float",
+                                    role: "type",
+                                },
+                            },
+                        ],
+                        returns: {
+                            kind: "TypeSubscript",
+                            base: {
+                                kind: "Identifier",
+                                name: "Tuple",
+                                role: "type",
+                            },
+                            index: {
+                                kind: "TypeList",
+                                items: [
+                                    {
+                                        kind: "Identifier",
+                                        name: "float",
+                                        role: "type",
+                                    },
+                                    {
+                                        kind: "Identifier",
+                                        name: "float",
+                                        role: "type",
+                                    },
+                                ],
+                            },
+                        },
+                        body: [
+                            {
+                                kind: "Return",
+                                value: {
+                                    kind: "Tuple",
+                                    elements: [
+                                        {
+                                            kind: "Identifier",
+                                            name: "p",
+                                            role: "var",
+                                            type: "float",
+                                        },
+                                        {
+                                            kind: "Number",
+                                            value: "0.0",
+                                        },
+                                    ],
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        kind: "BlankLine",
+                    },
+                    {
+                        kind: "FunctionDef",
+                        name: {
+                            kind: "Identifier",
+                            name: "deflate",
+                            role: "fn",
+                        },
+                        args: [
+                            {
+                                kind: "Arg",
+                                name: {
+                                    kind: "Identifier",
+                                    name: "P",
+                                    role: "var",
+                                },
+                                annotation: {
+                                    kind: "TypeSubscript",
+                                    base: {
+                                        kind: "Identifier",
+                                        name: "Tuple",
+                                        role: "type",
+                                    },
+                                    index: {
+                                        kind: "TypeList",
+                                        items: [
+                                            {
+                                                kind: "Identifier",
+                                                name: "float",
+                                                role: "type",
+                                            },
+                                            {
+                                                kind: "Identifier",
+                                                name: "float",
+                                                role: "type",
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                        returns: {
+                            kind: "Identifier",
+                            name: "float",
+                            role: "type",
+                        },
+                        body: [
+                            {
+                                kind: "Return",
+                                value: {
+                                    kind: "Subscript",
+                                    value: {
+                                        kind: "Identifier",
+                                        name: "P",
+                                        role: "var",
+                                    },
+                                    index: {
+                                        kind: "Number",
+                                        value: "0",
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    };
     const lineSmoothExampleBlock = {
         kind: "Block",
         body: [
@@ -1648,13 +2310,17 @@
                 ...message("D", "Good observation. Here is the updated `update`. The added `float` stores the smoothed `g`, using its historical average."),
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast) => lineRmsUpdateBlock,
-                textAfterCode: "Instead of the fixed `0.01`, we adjust `p` with an adapted `alpha`.\n" +
-                    "This approach is called RMSProp--for propagating root, mean, square."
+                textAfterCode: "Instead of the fixed `0.01`, we adjust `p` with a more adaptive `alpha`.\n" +
+                    "This approach is called RMSProp, for propagating the root-mean-square."
             },
             message("W", "The returned tuple makes sense to me. But in the definition, these numbers still seem magical and arbitrary."),
-            message("D", "Maybe magical, but not arbitrary. In practice, people place variables in those positions, called !!hyperparameters!!, " +
-                "and then adjust their values based on science, engineering, and sometimes alchemy.\n" +
-                "Alright, let's call it a chapter."),
+            {
+                ...message("D", "Maybe magical, but not arbitrary. In practice, people place variables in those positions, called !!hyperparameters!!, " +
+                    "and then adjust their values based on science, engineering, and sometimes alchemy.\n" +
+                    "Here's a new `Model` using RMSProp, let's try it on our example."),
+                codeLabel: "`LineRMS` definition",
+                buildCodeBlock: (_ast) => lineRmsModelBlock,
+            },
             message("W", "Wait, fewer frames?"),
             message("D", "Because this chapter answers a simpler question: " +
                 "how to `train` `Model`s. The core is `predict`, `loss`, and `update`; " +
