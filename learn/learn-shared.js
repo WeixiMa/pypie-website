@@ -61,7 +61,7 @@
         });
     };
     const LEARN_SERIES = {
-        title: "Deep Learning 101",
+        title: "ML Programming 101",
         preludeSlug: "overview/index.html",
         pages: [
             {
@@ -70,7 +70,7 @@
             },
             {
                 slug: "tensor_add/index.html",
-                title: "One Function, Any Rank",
+                title: "One Function, Many Ranks",
             },
             {
                 slug: "forward_line/index.html",

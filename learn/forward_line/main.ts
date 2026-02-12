@@ -1210,7 +1210,8 @@ const lineDefinitionBlock = {
                 "D",
                 "Good check. Let's generalize the type of `+`:\n" +
                 "`{T: Num} (x: Tensor[T][[]], y: Tensor[T][[]]) -> Tensor[T][[]]`\n" +
-                "Both inputs must share the same numeric type. At call time, `pypie` figures out the concrete `T` from the actual inputs."
+                "Both inputs must share the same numeric type. At call time, `pypie` figures out the concrete `T` from the actual inputs.\n" +
+                "`+` has the same type."
             ),
             message(
                 "W",
@@ -1270,8 +1271,8 @@ const lineDefinitionBlock = {
                 "So far, we chose `params`, made `xs`, and computed `ys`.\n" +
                 "In practice, we first have `xs` and `ys` and then estimate `params`.\n" +
                 "Let's pretend:\n" +
-                "- `xs` and `ys` are real data\n" +
-                "- true `params` are unknown.\n" +
+                "`xs` and `ys` are real data;\n" +
+                "true `params` are unknown.\n" +
                 "Then we write a program that estimates `params`."
             ),
             message(
@@ -1313,7 +1314,7 @@ const lineDefinitionBlock = {
             },
             message(
                 "W",
-                "We imported one more thing from `pypie`.\n" +
+                "We imported one more thing.\n" +
                 "What are `Var(\"n\", int)` and `Var(\"m\", int)`?"
             ),
             message(
@@ -1387,7 +1388,7 @@ const lineDefinitionBlock = {
                 "In practice, the training data usually contain some noise and errors. " +
                 "Reaching zero often means overfitting: `params` have also learned from the noise and errors, " +
                 "and may perform worse on new, unseen data.\n" +
-                "Here we focus on update-and-repeat for a fixed number of iterations."
+                "For now, we simply update and repeat for a fixed number of iterations."
             ),
             message(
                 "W",

@@ -1582,7 +1582,7 @@
             },
             message("W", "So we put `line` and `loss` under the same `Model`, which is called `Line`.\n" +
                 "Why is `line` renamed to `predict`?"),
-            message("D", "We train a !!`Model`!! by repeating three steps: `predict` with the current `params`, " +
+            message("D", "We train a !!`Model`!! by repeating this revision: `predict` with the current `params`, " +
                 "compute a `loss`, and then update the `params`.\n" +
                 "`Line` is not complete, since it doesn't know how to `update` yet."),
             message("W", "Indeed. I asked `pypie` to validate `Line` and received an error.\n" +
@@ -1591,13 +1591,13 @@
                 ...message("D", "Here's how we !!`update`!!."),
                 codeLabel: "`update` definition",
                 buildCodeBlock: (_ast) => lineUpdateBlock,
-                textAfterCode: "On each step, for each scalar `p` in `params`, the `Model` computes a !!gradient!! `g`. " +
+                textAfterCode: "On each revision, the `Model` finds a !!gradient!! `g` for each scalar `p` in `params`. " +
                     "The gradient tells how `loss` changes with respect to `p`: if `g` is positive, increasing `p` raises `loss`; " +
                     "if `g` is negative, increasing `p` lowers `loss`.\n" +
-                    "`update` moves `p` in the opposite direction of `g`, then `Model` uses the new `params` for the next `predict`."
+                    "To reduce `loss`, `update` adjusts `p` in the opposite direction of `g`. The adjusted value becomes part of the new `params` for the next revision.\n"
             },
             message("W", "`Line` is now complete!"),
-            message("D", "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs`.\n" +
+            message("D", "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs` for the number of revisions.\n" +
                 "Try `10` revs, with the `xs`, `ys`, and `params` from the last chapter."),
             {
                 ...message("W", "Like this?"),
@@ -1612,7 +1612,7 @@
                 textAfterCode: "`rand` takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of that shape using random numbers within the bounds."
             },
             {
-                ...message("W", "So `xs` is a `Tensor[float][[1000]]`. We then generate `ys` of the same shape--with some additional noise?\n" +
+                ...message("W", "So `xs` is a `Tensor[float][[1000]]`. We then generate `ys` of the same shape--with some added noise?\n" +
                     "Let me train it..."),
                 codeLabel: "`ates.py` lines 59-60",
                 buildCodeBlock: (_ast) => lineChallengeTrainBlock,
@@ -1645,11 +1645,10 @@
             },
             message("W", "Then `update` should handle the inflated `Tuple[float, float]`?"),
             {
-                ...message("D", "Good observation. Here is the updated `update`."),
+                ...message("D", "Good observation. Here is the updated `update`. The added `float` stores the smoothed `g`, using its historical average."),
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast) => lineRmsUpdateBlock,
-                textAfterCode: "The key difference is `alpha * g`, which is smarter than the fixed `0.01 * g`. " +
-                    "`alpha` depends on the moving average, which accompanies `p` during training.\n" +
+                textAfterCode: "Then we adjust `p` with `alpha * g`, instead of the fixed `0.01 * g`. " +
                     "This approach is called RMSProp."
             },
             message("W", "The returned tuple makes sense to me. But in the definition, these numbers still seem magical and arbitrary."),

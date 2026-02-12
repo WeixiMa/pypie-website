@@ -130,8 +130,8 @@
             message(
                 "D",
                 "Next: `Tensor([[1, 2, 3], [3, 2, 1]]) + Tensor([5, 7, 9])`. " +
-                "In the earlier exercise, we virtually ran the program and found its result type `Tensor[int][[2, 3]]`.\n" +
-                "Now we derive the result type, without needing to run the program.\n" +
+                "In the earlier exercise, we virtually ran the program and found `Tensor[int][[2, 3]]` by looking at the result value.\n" +
+                "Now we derive the result type, without running the program.\n" +
                 "Let's start by validating the inputs."
             ),
             message(
@@ -145,7 +145,7 @@
             message(
                 "D",
                 "Two `List[int]`s are !!compatible!!, if we line them up from the right and find a " +
-                "!!suffix!! in the longer one that matches the shorter*. " +
+                "!!suffix!! in the longer one that matches the shorter.* " +
                 "The remaining in the longer list is called the !!prefix!!.\n" +
                 "Find the suffix and prefix for `x` and `y`."
             ),
@@ -162,7 +162,7 @@
             ),
             message(
                 "D",
-                "Yes. Compatibility applies to `List[int]`s, and prefixes are `List[int]`s too."
+                "Yes. Compatibility applies to `List[int]`s. Prefixes are `List[int]`s too."
             ),
             message(
                 "W",
@@ -173,7 +173,7 @@
             message(
                 "D",
                 "Good progress! So far:\n" +
-                "each given input type is compatible with its expected type;\n" +
+                "for each input, the given type is compatible with the expected type;\n" +
                 "the two prefixes from the inputs are compatible with one another.\n" +
                 "So `Tensor[int][[2, 3]]` and `Tensor[int][[3]]` are valid inputs for `x` and `y` in `+`."
             ),
@@ -212,7 +212,7 @@
                 "D",
                 "Yes, you can define as many as you need. " +
                 "We'll cover that in the next chapter.\n" +
-                "Time for another break!"
+                "Time for a break!"
             ),
             message("W", "Okay, ciao!"),
         ],

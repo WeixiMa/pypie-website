@@ -45,7 +45,7 @@
             message("W", "How?"),
             message(
                 "D",
-                "On machines, `42` and `42.42` are stored differently. Also, they may behave differently, when running programs.\n" +
+                "On machines, `42` and `42.42` are stored differently. Also, they may behave differently, when programs run.\n" +
                 "We have a special name for `Num`s like `42`: !!`int`!!. And we have another name, !!`float`!!, for `Num`s like `42.42`. " +
                 "`int` and `float` are !!type!!s. A type describes the behavior of a set of values.",
             ),
@@ -87,7 +87,7 @@
             ),
             message(
                 "D",
-                "It has the type `Tensor[int][[2, 3]]`. In addition to the element type, we set a constraint on the element shape.",
+                "It has the type `Tensor[int][[2, 3]]`. In addition to the element type, we set a constraint on the shape.",
             ),
             message(
                 "W",
@@ -96,9 +96,8 @@
             message(
                 "D",
                 "That's almost right.\n" +
-                    "The elements of the outer layer, however, are not `List[int]`s; they are `Tensor[int][[3]]`s.\n" +
-                    "Here is how we see that `Tensor([[1, 2, 3], [4, 5, 6]])` has type `Tensor[int][[2, 3]]`:\n" +
-                    "The outer layer contains two `Tensor[int][[3]]`s, and each inner layer contains three `Tensor[int][[]]`s.",
+                    "The elements of the outer layer, however, are not `List[int]`s;\nthey are two `Tensor[int][[3]]`s.\n" +
+                    "Then, we have three `Tensor[int][[]]` at the inner layer."
             ),
             message(
                 "W",
@@ -109,7 +108,7 @@
                 "Convetionally, we have a name for values of `int` or `float`: !!scalar!!s."
             ),
             message("W", "Why do we need `Tensor`s, since we already have `List`s?"),
-            message("D", "Good question! Can we make `[[1, 2, 3], [4, 5]]` a `Tensor`?"),
+            message("D", "Can we make `[[1, 2, 3], [4, 5]]` a `Tensor`?"),
             message("W", "Hmm... I don't know how to describe its shape."),
             message(
                 "D",
