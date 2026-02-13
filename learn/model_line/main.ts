@@ -2420,7 +2420,7 @@
                 ...message(
                     "W",
                     "So `xs` is a `Tensor[float][[1000]]`. We then generate `ys` of the same shape--with some added noise?\n"+
-                    "Let me learn it..."
+                    "Learning ..."
                 ),
                 codeLabel: "`ates.py` lines 59-60",
                 buildCodeBlock: (_ast: AstApi) => lineChallengelearnBlock,
@@ -2440,7 +2440,7 @@
             {
                 ...message(
                     "D",
-                    "Yes, it requires a new function, `smooth`."
+                    "Yes, it starts with a new function, `smooth`."
                 ),
                 codeLabel: "`smooth` definition",
                 buildCodeBlock: (_ast: AstApi) => lineSmoothBlock,
@@ -2463,8 +2463,8 @@
                 ),
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast: AstApi) => lineInflateDeflateBlock,
-                textAfterCode: "When `learn` starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
-                "When `learn` ends, it `deflate`s `params` by removing the additional `float`s."
+                textAfterCode: "When learning starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
+                "When learning ends, it `deflate`s `params` by removing the additional `float`s."
             },
             message(
                 "W",
@@ -2473,7 +2473,7 @@
             {
                 ...message(
                     "D",
-                    "Good observation. Here is the updated `update`. The added `float` stores the smoothed `g`, using its historical average."
+                    "Good observation. Here is the updated `update`. The added `float` stores the smoothed `g`, using its average of previous repetitions."
                 ),
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast: AstApi) => lineRmsUpdateBlock,

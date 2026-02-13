@@ -472,7 +472,7 @@
             },
         ],
     };
-    const lineTrainRunBlock = {
+    const linelearnRunBlock = {
         kind: "Block",
         body: [
             {
@@ -608,7 +608,7 @@
                         },
                         attr: {
                             kind: "Identifier",
-                            name: "train",
+                            name: "learn",
                             role: "plain",
                         },
                     },
@@ -803,7 +803,7 @@
             },
         ],
     };
-    const lineChallengeTrainBlock = {
+    const lineChallengelearnBlock = {
         kind: "Block",
         body: [
             {
@@ -824,7 +824,7 @@
                         },
                         attr: {
                             kind: "Identifier",
-                            name: "train",
+                            name: "learn",
                             role: "plain",
                         },
                     },
@@ -2339,8 +2339,8 @@
                 "Try `50` revs, with the `xs`, `ys`, and `params` from the last chapter."),
             {
                 ...message("W", "Like this?"),
-                codeLabel: "`train` run",
-                buildCodeBlock: (_ast) => lineTrainRunBlock,
+                codeLabel: "`learn` run",
+                buildCodeBlock: (_ast) => linelearnRunBlock,
                 textAfterCode: "It prints `(1.009, 0.492)`--very close to the real `params`.\nThis example seems too easy--how about something more challenging?"
             },
             {
@@ -2351,9 +2351,9 @@
             },
             {
                 ...message("W", "So `xs` is a `Tensor[float][[1000]]`. We then generate `ys` of the same shape--with some added noise?\n" +
-                    "Let me train it..."),
+                    "Learning ..."),
                 codeLabel: "`ates.py` lines 59-60",
-                buildCodeBlock: (_ast) => lineChallengeTrainBlock,
+                buildCodeBlock: (_ast) => lineChallengelearnBlock,
                 textAfterCode: "It prints `(nan, nan)`. Whoa! What are these?"
             },
             message("D", "`nan` means not a number.\n" +
@@ -2362,7 +2362,7 @@
                 "Gradients may also get very small. Then `update`s become tiny and learning nearly stops; this is called vanishing gradients."),
             message("W", "Can we make `update` smarter to reduce exploding and vanishing gradients?"),
             {
-                ...message("D", "Yes, it requires a new function, `smooth`."),
+                ...message("D", "Yes, it starts with a new function, `smooth`."),
                 codeLabel: "`smooth` definition",
                 buildCodeBlock: (_ast) => lineSmoothBlock,
                 textAfterCode: "Try an example. For `decay`, `0.9` is usually a safe default."
@@ -2378,12 +2378,12 @@
                     "called !!`inflate`!! and !!`deflate`!!."),
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast) => lineInflateDeflateBlock,
-                textAfterCode: "When `train` starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
-                    "When `train` ends, it `deflate`s `params` by removing the additional `float`s."
+                textAfterCode: "When learning starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
+                    "When learning ends, it `deflate`s `params` by removing the additional `float`s."
             },
             message("W", "Then `update` should handle the inflated `Tuple[float, float]`?"),
             {
-                ...message("D", "Good observation. Here is the updated `update`. The added `float` stores the smoothed `g`, using its historical average."),
+                ...message("D", "Good observation. Here is the updated `update`. The added `float` stores the smoothed `g`, using its average of previous repetitions."),
                 codeLabel: "`LineRMS.update`",
                 buildCodeBlock: (_ast) => lineRmsUpdateBlock,
                 textAfterCode: "Instead of the fixed `0.01`, we adjust `p` with a more adaptive `alpha`.\n" +
