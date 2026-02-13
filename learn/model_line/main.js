@@ -2233,6 +2233,82 @@
             },
         ],
     };
+    const lineRmsLearnRunBlock = {
+        kind: "Block",
+        body: [
+            {
+                kind: "Assign",
+                target: {
+                    kind: "Identifier",
+                    name: "params",
+                    role: "var",
+                },
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Attribute",
+                        value: {
+                            kind: "Identifier",
+                            name: "LineRMS",
+                            role: "type",
+                        },
+                        attr: {
+                            kind: "Identifier",
+                            name: "learn",
+                            role: "plain",
+                        },
+                    },
+                    args: [
+                        {
+                            kind: "Identifier",
+                            name: "xs",
+                            role: "var",
+                        },
+                        {
+                            kind: "Identifier",
+                            name: "ys",
+                            role: "var",
+                        },
+                        {
+                            kind: "Tuple",
+                            elements: [
+                                {
+                                    kind: "Number",
+                                    value: "0.0",
+                                },
+                                {
+                                    kind: "Number",
+                                    value: "0.0",
+                                },
+                            ],
+                        },
+                        {
+                            kind: "Number",
+                            value: "200",
+                        },
+                    ],
+                },
+            },
+            {
+                kind: "ExprStmt",
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Identifier",
+                        name: "print",
+                        role: "fn",
+                    },
+                    args: [
+                        {
+                            kind: "Identifier",
+                            name: "params",
+                            role: "var",
+                        },
+                    ],
+                },
+            },
+        ],
+    };
     render({
         id: "model-line",
         dialog: [
@@ -2322,10 +2398,16 @@
                 buildCodeBlock: (_ast) => lineRmsModelBlock,
                 textAfterCode: "Let's try the challenging example with 200 `revs`."
             },
-            message("D", "Let's call it a chapter."),
-            message("W", "Wait, fewer frames?"),
+            {
+                ...message("W", "Using the `xs` and `ys` from frame 9, running 200 `revs`..."),
+                codeLabel: "`ates.py` lines 82-83",
+                buildCodeBlock: (_ast) => lineRmsLearnRunBlock,
+                textAfterCode: "`(1.005, 0.512)`. `LineRMS` has learned!"
+            },
+            message("D", "Very well. Mission complete."),
+            message("W", "A short chapter?"),
             message("D", "Because this chapter answers a simpler question: " +
-                "how to `train` `Model`s. The core is `predict`, `loss`, and `update`; " +
+                "how a `Model` `learn`s. The core is `predict`, `loss`, and `update`; " +
                 "with `inflate` and `deflate` occasionally."),
             message("W", "Plus shaped `Tensor`s!"),
         ],

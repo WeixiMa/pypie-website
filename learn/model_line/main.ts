@@ -2272,6 +2272,83 @@
         ],
     };
 
+    const lineRmsLearnRunBlock = {
+        kind: "Block",
+        body: [
+            {
+                kind: "Assign",
+                target: {
+                    kind: "Identifier",
+                    name: "params",
+                    role: "var",
+                },
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Attribute",
+                        value: {
+                            kind: "Identifier",
+                            name: "LineRMS",
+                            role: "type",
+                        },
+                        attr: {
+                            kind: "Identifier",
+                            name: "learn",
+                            role: "plain",
+                        },
+                    },
+                    args: [
+                        {
+                            kind: "Identifier",
+                            name: "xs",
+                            role: "var",
+                        },
+                        {
+                            kind: "Identifier",
+                            name: "ys",
+                            role: "var",
+                        },
+                        {
+                            kind: "Tuple",
+                            elements: [
+                                {
+                                    kind: "Number",
+                                    value: "0.0",
+                                },
+                                {
+                                    kind: "Number",
+                                    value: "0.0",
+                                },
+                            ],
+                        },
+                        {
+                            kind: "Number",
+                            value: "200",
+                        },
+                    ],
+                },
+            },
+            {
+                kind: "ExprStmt",
+                value: {
+                    kind: "Call",
+                    callee: {
+                        kind: "Identifier",
+                        name: "print",
+                        role: "fn",
+                    },
+                    args: [
+                        {
+                            kind: "Identifier",
+                            name: "params",
+                            role: "var",
+                        },
+                    ],
+                },
+            },
+        ],
+    };
+
     render({
         id: "model-line",
         dialog: [
@@ -2353,7 +2430,7 @@
                 "D",
                 "`nan` means not a number.\n" +
                 "Machines store numbers with limited precision and range. Repeated squaring and summing can make gradients too large, " +
-                "so `update`s blows up `params`; this is called exploding gradients.\n" +
+                "so `update`s can blow up `params`; this is called exploding gradients.\n" +
                 "Gradients may also get very small. Then `update`s become tiny and learning nearly stops; this is called vanishing gradients."
             ),
             message(
@@ -2381,7 +2458,7 @@
             {
                 ...message(
                     "D",
-                    "Now we give `update` extra information. Here are two buddies of `update`, " +
+                    "Now we give `update` extra information. Here are two friends of `update`, " +
                     "called !!`inflate`!! and !!`deflate`!!."
                 ),
                 codeLabel: "`inflate` and `deflate`",
@@ -2418,23 +2495,32 @@
                 buildCodeBlock: (_ast: AstApi) => lineRmsModelBlock,
                 textAfterCode: "Let's try the challenging example with 200 `revs`."
             },
+            {
+                ...message(
+                    "W",
+                    "Using the `xs` and `ys` from frame 9, I will run 200 `revs`..."
+                ),
+                codeLabel: "`ates.py` lines 82-83",
+                buildCodeBlock: (_ast: AstApi) => lineRmsLearnRunBlock,
+                textAfterCode: "`(1.005, 0.512)`. `LineRMS` has learned!"
+            },
             message(
                 "D",
-                "Let's call it a chapter."
+                "Very well. Mission complete."
             ),
             message(
                 "W",
-                "Wait, fewer frames?"
+                "A short chapter?"
             ),
             message(
                 "D",
-                "Because this chapter answers a simpler question: " +
-                "how to `train` `Model`s. The core is `predict`, `loss`, and `update`; " +
+                "Because it answers a simpler question: " +
+                "how a `Model` `learn`s. The core is `predict`, `loss`, and `update`; " +
                 "with `inflate` and `deflate` occasionally."
             ),
             message(
                 "W",
-                "Plus shaped `Tensor`s!"
+                "And shaped `Tensor`s!"
             ),
         ],
     });
