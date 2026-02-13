@@ -2313,7 +2313,7 @@
         id: "model-line",
         dialog: [
             {
-                ...message("D", "We are ready for our first `Model`. Let's start with the refreshed `Line`."),
+                ...message("D", "We are ready for our first `Model`. Let's start with a refreshed `Line`."),
                 codeLabel: "`ates.py`",
                 buildCodeBlock: (_ast) => atesModelBlock,
                 textAfterCode: "We always omit `@op`s for the definitions in a `Model`."
@@ -2335,7 +2335,7 @@
                     "To reduce `loss`, `update` adjusts `p` in the opposite direction of `g` with a small factor. The adjusted value becomes part of the new `params` for the next repetition.\n"
             },
             message("W", "`Line` is now complete!"),
-            message("D", "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs` for the number of repetitions.\n" +
+            message("D", "Yes, it is now ready to learn. The !!`learn`!! function expects four inputs: `xs`, `ys`, `params`, and `revs` for the number of repetitions.\n" +
                 "Try `50` revs, with the `xs`, `ys`, and `params` from the last chapter."),
             {
                 ...message("W", "Like this?"),

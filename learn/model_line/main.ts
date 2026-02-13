@@ -503,7 +503,7 @@
         ],
     };
 
-    const lineTrainRunBlock = {
+    const linelearnRunBlock = {
         kind: "Block",
         body: [
             {
@@ -639,7 +639,7 @@
                         },
                         attr: {
                             kind: "Identifier",
-                            name: "train",
+                            name: "learn",
                             role: "plain",
                         },
                     },
@@ -836,7 +836,7 @@
         ],
     };
 
-    const lineChallengeTrainBlock = {
+    const lineChallengelearnBlock = {
         kind: "Block",
         body: [
             {
@@ -857,7 +857,7 @@
                         },
                         attr: {
                             kind: "Identifier",
-                            name: "train",
+                            name: "learn",
                             role: "plain",
                         },
                     },
@@ -2395,7 +2395,7 @@
             ),
             message(
                 "D",
-                "Yes, it is now ready for training. The !!`train`!! function expects four inputs: `xs`, `ys`, `params`, and `revs` for the number of repetitions.\n" +
+                "Yes, it is now ready to learn. The !!`learn`!! function expects four inputs: `xs`, `ys`, `params`, and `revs` for the number of repetitions.\n" +
                 "Try `50` revs, with the `xs`, `ys`, and `params` from the last chapter."
             ),
             {
@@ -2403,8 +2403,8 @@
                     "W",
                     "Like this?"
                 ),
-                codeLabel: "`train` run",
-                buildCodeBlock: (_ast: AstApi) => lineTrainRunBlock,
+                codeLabel: "`learn` run",
+                buildCodeBlock: (_ast: AstApi) => linelearnRunBlock,
                 textAfterCode: "It prints `(1.009, 0.492)`--very close to the real `params`.\nThis example seems too easy--how about something more challenging?"
             },
             {
@@ -2420,10 +2420,10 @@
                 ...message(
                     "W",
                     "So `xs` is a `Tensor[float][[1000]]`. We then generate `ys` of the same shape--with some added noise?\n"+
-                    "Let me train it..."
+                    "Let me learn it..."
                 ),
                 codeLabel: "`ates.py` lines 59-60",
-                buildCodeBlock: (_ast: AstApi) => lineChallengeTrainBlock,
+                buildCodeBlock: (_ast: AstApi) => lineChallengelearnBlock,
                 textAfterCode: "It prints `(nan, nan)`. Whoa! What are these?"
             },
             message(
@@ -2463,8 +2463,8 @@
                 ),
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast: AstApi) => lineInflateDeflateBlock,
-                textAfterCode: "When `train` starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
-                "When `train` ends, it `deflate`s `params` by removing the additional `float`s."
+                textAfterCode: "When `learn` starts, it `inflate`s each scalar in `params` with an additional `float`.\n" +
+                "When `learn` ends, it `deflate`s `params` by removing the additional `float`s."
             },
             message(
                 "W",
