@@ -2344,7 +2344,7 @@
                 textAfterCode: "It prints `(1.009, 0.492)`--very close to the real `params`.\nThis example seems too easy--how about something more challenging?"
             },
             {
-                ...message("D", "Now that's a challenge!"),
+                ...message("D", "Take this challenge!"),
                 codeLabel: "`ates.py` challenge run",
                 buildCodeBlock: (_ast) => lineChallengeRunBlock,
                 textAfterCode: "`rand` takes a shape, a lower bound, and an upper bound. It generates a `Tensor` of that shape using random numbers within the bounds."
@@ -2358,7 +2358,7 @@
             },
             message("D", "`nan` means not a number.\n" +
                 "Machines store numbers with limited precision and range. Repeated squaring and summing can make gradients too large, " +
-                "so `update`s blows up `params`; this is called exploding gradients.\n" +
+                "so `update`s can blow up `params`; this is called exploding gradients.\n" +
                 "Gradients may also get very small. Then `update`s become tiny and learning nearly stops; this is called vanishing gradients."),
             message("W", "Can we make `update` smarter to reduce exploding and vanishing gradients?"),
             {
@@ -2374,7 +2374,7 @@
                 textAfterCode: "It prints `Tensor([280.276, 285.326, 385.318])`.\n`xs_smoothed` is indeed smoother than `xs`."
             },
             {
-                ...message("D", "Now we give `update` extra information. Here are two buddies of `update`, " +
+                ...message("D", "Now we give `update` extra information. Here are two friends of `update`, " +
                     "called !!`inflate`!! and !!`deflate`!!."),
                 codeLabel: "`inflate` and `deflate`",
                 buildCodeBlock: (_ast) => lineInflateDeflateBlock,
@@ -2399,17 +2399,17 @@
                 textAfterCode: "Let's try the challenging example with 200 `revs`."
             },
             {
-                ...message("W", "Using the `xs` and `ys` from frame 9, running 200 `revs`..."),
+                ...message("W", "Using the `xs` and `ys` of `Tensor[float][[1000]]`, I will run 200 `revs`..."),
                 codeLabel: "`ates.py` lines 82-83",
                 buildCodeBlock: (_ast) => lineRmsLearnRunBlock,
                 textAfterCode: "`(1.005, 0.512)`. `LineRMS` has learned!"
             },
             message("D", "Very well. Mission complete."),
             message("W", "A short chapter?"),
-            message("D", "Because this chapter answers a simpler question: " +
+            message("D", "Because it answers a simpler question: " +
                 "how a `Model` `learn`s. The core is `predict`, `loss`, and `update`; " +
                 "with `inflate` and `deflate` occasionally."),
-            message("W", "Plus shaped `Tensor`s!"),
+            message("W", "And shaped `Tensor`s!"),
         ],
     });
 })();

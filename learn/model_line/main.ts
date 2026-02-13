@@ -2410,7 +2410,7 @@
             {
                 ...message(
                     "D",
-                    "Now that's a challenge!"
+                    "Take this challenge!"
                 ),
                 codeLabel: "`ates.py` challenge run",
                 buildCodeBlock: (_ast: AstApi) => lineChallengeRunBlock,
@@ -2498,7 +2498,7 @@
             {
                 ...message(
                     "W",
-                    "Using the `xs` and `ys` from frame 9, I will run 200 `revs`..."
+                    "Using the `xs` and `ys` of `Tensor[float][[1000]]`, I will run 200 `revs`..."
                 ),
                 codeLabel: "`ates.py` lines 82-83",
                 buildCodeBlock: (_ast: AstApi) => lineRmsLearnRunBlock,
