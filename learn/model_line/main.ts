@@ -2416,8 +2416,12 @@
                 ),
                 codeLabel: "`LineRMS` definition",
                 buildCodeBlock: (_ast: AstApi) => lineRmsModelBlock,
-                textAfterCode: "Let's try the challenging example again!"
+                textAfterCode: "Let's try the challenging example with 200 `revs`."
             },
+            message(
+                "D",
+                "Let's call it a chapter."
+            ),
             message(
                 "W",
                 "Wait, fewer frames?"

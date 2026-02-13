@@ -2317,10 +2317,12 @@
             {
                 ...message("D", "Maybe magical, but not arbitrary. In practice, people place variables in those positions, called !!hyperparameters!!, " +
                     "and then adjust their values based on science, engineering, and sometimes alchemy.\n" +
-                    "Here's a new `Model` using RMSProp, let's try it on our example."),
+                    "Here's our new `Model` using RMSProp."),
                 codeLabel: "`LineRMS` definition",
                 buildCodeBlock: (_ast) => lineRmsModelBlock,
+                textAfterCode: "Let's try the challenging example with 200 `revs`."
             },
+            message("D", "Let's call it a chapter."),
             message("W", "Wait, fewer frames?"),
             message("D", "Because this chapter answers a simpler question: " +
                 "how to `train` `Model`s. The core is `predict`, `loss`, and `update`; " +
