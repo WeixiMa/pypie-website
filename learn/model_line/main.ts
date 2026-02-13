@@ -2355,7 +2355,7 @@
             {
                 ...message(
                     "D",
-                    "We are ready for our first `Model`. Let's start with the refreshed `Line`."
+                    "We are ready for our first `Model`. Let's start with a refreshed `Line`."
                 ),
                 codeLabel: "`ates.py`",
                 buildCodeBlock: (_ast: AstApi) => atesModelBlock,
