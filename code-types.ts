@@ -1,6 +1,7 @@
 // @ts-nocheck
 const DEFAULT_TYPE = "float";
 const HOVER_RADIUS = 10;
+const MAX_LINE_LENGTH = 80;
 
 const id = (name, role, type) => ({
   kind: "Identifier",
@@ -43,10 +44,14 @@ const block = (body) => ({ kind: "Block", body });
 const attr = (value, name) => ({ kind: "Attribute", value, attr: plainId(name) });
 const call = (callee, args) => ({ kind: "Call", callee, args });
 const subscript = (value, index) => ({ kind: "Subscript", value, index });
+const sliceExpr = (start, end, step) => ({ kind: "Slice", start, end, step });
 const listExpr = (elements) => ({ kind: "List", elements });
 const tupleExpr = (elements) => ({ kind: "Tuple", elements });
 const listComp = (elt, target, iter) => ({ kind: "ListComp", elt, target, iter });
 const binOp = (left, op, right) => ({ kind: "BinOp", left, op, right });
+const boolOp = (op, values) => ({ kind: "BoolOp", op, values });
+const compare = (left, op, right) => ({ kind: "Compare", left, op, right });
+const ifExpr = (body, test, orelse) => ({ kind: "IfExpr", body, test, orelse });
 const unaryOp = (op, operand) => ({ kind: "UnaryOp", op, operand });
 const number = (value) => ({ kind: "Number", value: String(value) });
 
@@ -164,10 +169,14 @@ const astApi = {
   attr,
   call,
   subscript,
+  sliceExpr,
   listExpr,
   tupleExpr,
   listComp,
   binOp,
+  boolOp,
+  compare,
+  ifExpr,
   unaryOp,
   number,
   tensorType,
@@ -214,6 +223,17 @@ class DocBuilder {
     this.indentLevel = Math.max(0, this.indentLevel - 1);
   }
 
+  currentLineLength() {
+    if (this.lines.length === 0) {
+      return 0;
+    }
+    const line = this.lines[this.lines.length - 1];
+    return line.reduce(
+      (total, segment) => total + String(segment?.text ?? "").length,
+      0
+    );
+  }
+
   toHtml() {
     const lines = this.lines.slice();
     if (lines.length > 0 && lines[lines.length - 1].length === 0) {
@@ -241,6 +261,151 @@ class DocBuilder {
       .join("\n");
   }
 }
+
+const estimateIdentifierLength = (node) => String(node?.name ?? "").length;
+
+const estimateTypeLength = (node) => {
+  if (!node) {
+    return 0;
+  }
+  if (node.kind === "Identifier") {
+    return estimateIdentifierLength(node);
+  }
+  if (node.kind === "TypeList") {
+    const itemsLength = (node.items || []).reduce(
+      (sum, item, index) =>
+        sum + estimateTypeLength(item) + (index < node.items.length - 1 ? 2 : 0),
+      0
+    );
+    return 1 + itemsLength + 1;
+  }
+  if (node.kind === "TypeSubscript") {
+    const indexLength =
+      node.index?.kind === "TypeList"
+        ? (node.index.items || []).reduce(
+            (sum, item, index) =>
+              sum +
+              estimateTypeLength(item) +
+              (index < node.index.items.length - 1 ? 2 : 0),
+            0
+          )
+        : estimateTypeLength(node.index);
+    return estimateTypeLength(node.base) + 1 + indexLength + 1;
+  }
+  return estimateExprLength(node);
+};
+
+const estimateExprLength = (node) => {
+  if (!node) {
+    return 0;
+  }
+  switch (node.kind) {
+    case "Identifier":
+      return estimateIdentifierLength(node);
+    case "Attribute":
+      return estimateExprLength(node.value) + 1 + estimateIdentifierLength(node.attr);
+    case "Call": {
+      const argsLength = (node.args || []).reduce(
+        (sum, argNode, index) =>
+          sum + estimateExprLength(argNode) + (index < node.args.length - 1 ? 2 : 0),
+        0
+      );
+      return estimateExprLength(node.callee) + 1 + argsLength + 1;
+    }
+    case "Subscript":
+      return estimateExprLength(node.value) + 1 + estimateExprLength(node.index) + 1;
+    case "Slice": {
+      let length = 3; // " : "
+      if (node.start) {
+        length += estimateExprLength(node.start);
+      }
+      if (node.end) {
+        length += estimateExprLength(node.end);
+      }
+      if (node.step) {
+        length += 1 + estimateExprLength(node.step);
+      }
+      return length;
+    }
+    case "List": {
+      const itemsLength = (node.elements || []).reduce(
+        (sum, element, index) =>
+          sum + estimateExprLength(element) + (index < node.elements.length - 1 ? 2 : 0),
+        0
+      );
+      return 1 + itemsLength + 1;
+    }
+    case "Tuple": {
+      const itemsLength = (node.elements || []).reduce(
+        (sum, element, index) =>
+          sum + estimateExprLength(element) + (index < node.elements.length - 1 ? 2 : 0),
+        0
+      );
+      const trailingComma = node.elements?.length === 1 ? 1 : 0;
+      return 1 + itemsLength + trailingComma + 1;
+    }
+    case "ListComp": {
+      const targetLength = (node.target || []).reduce(
+        (sum, targetNode, index) =>
+          sum + estimateExprLength(targetNode) + (index < node.target.length - 1 ? 2 : 0),
+        0
+      );
+      return (
+        1 +
+        estimateExprLength(node.elt) +
+        5 +
+        targetLength +
+        4 +
+        estimateExprLength(node.iter) +
+        1
+      );
+    }
+    case "BinOp":
+      return (
+        estimateExprLength(node.left) +
+        node.op.length +
+        2 +
+        estimateExprLength(node.right)
+      );
+    case "BoolOp": {
+      const sep = node.op.length + 2;
+      return (node.values || []).reduce(
+        (sum, valueNode, index) =>
+          sum + estimateExprLength(valueNode) + (index < node.values.length - 1 ? sep : 0),
+        0
+      );
+    }
+    case "Compare":
+      return (
+        estimateExprLength(node.left) +
+        node.op.length +
+        2 +
+        estimateExprLength(node.right)
+      );
+    case "IfExpr":
+      return (
+        estimateExprLength(node.body) +
+        4 +
+        estimateExprLength(node.test) +
+        6 +
+        estimateExprLength(node.orelse)
+      );
+    case "UnaryOp":
+      return node.op.length + estimateExprLength(node.operand);
+    case "Number":
+      return String(node.value ?? "").length;
+    case "String":
+      return JSON.stringify(String(node.value ?? "")).length;
+    default:
+      return 0;
+  }
+};
+
+const estimateArgLength = (argNode) =>
+  estimateIdentifierLength(argNode?.name) + 2 + estimateTypeLength(argNode?.annotation);
+
+const wouldOverflow = (builder, trailingLength) =>
+  builder.currentLineLength() + trailingLength > MAX_LINE_LENGTH;
 
 const printIdentifier = (builder, node) => {
   const hoverType =
@@ -292,6 +457,25 @@ const printType = (builder, node) => {
   }
   if (node.kind === "Identifier") {
     printIdentifier(builder, node);
+    return;
+  }
+  if (
+    node.kind === "Attribute" ||
+    node.kind === "Call" ||
+    node.kind === "Subscript" ||
+    node.kind === "List" ||
+    node.kind === "Tuple" ||
+    node.kind === "ListComp" ||
+    node.kind === "BinOp" ||
+    node.kind === "BoolOp" ||
+    node.kind === "Compare" ||
+    node.kind === "IfExpr" ||
+    node.kind === "UnaryOp" ||
+    node.kind === "Number" ||
+    node.kind === "String" ||
+    node.kind === "Slice"
+  ) {
+    printExpr(builder, node);
   }
 };
 
@@ -330,9 +514,32 @@ const printExpr = (builder, node, parentPrecedence = 0) => {
       builder.token(".");
       printIdentifier(builder, node.attr);
       return;
-    case "Call":
+    case "Call": {
       printExpr(builder, node.callee);
       builder.token("(");
+      const inlineArgsLength = (node.args || []).reduce(
+        (sum, argNode, index) =>
+          sum + estimateExprLength(argNode) + (index < node.args.length - 1 ? 2 : 0),
+        0
+      );
+      const shouldWrapArgs =
+        node.args.length > 0 && wouldOverflow(builder, inlineArgsLength + 1);
+
+      if (shouldWrapArgs) {
+        builder.newline();
+        builder.indent();
+        node.args.forEach((argNode, index) => {
+          printExpr(builder, argNode);
+          if (index < node.args.length - 1) {
+            builder.token(",");
+          }
+          builder.newline();
+        });
+        builder.dedent();
+        builder.token(")");
+        return;
+      }
+
       node.args.forEach((argNode, index) => {
         printExpr(builder, argNode);
         if (index < node.args.length - 1) {
@@ -342,14 +549,53 @@ const printExpr = (builder, node, parentPrecedence = 0) => {
       });
       builder.token(")");
       return;
+    }
     case "Subscript":
       printExpr(builder, node.value);
       builder.token("[");
       printExpr(builder, node.index);
       builder.token("]");
       return;
-    case "List":
+    case "Slice":
+      if (node.start) {
+        printExpr(builder, node.start);
+      }
+      builder.space();
+      builder.token(":");
+      builder.space();
+      if (node.end) {
+        printExpr(builder, node.end);
+      }
+      if (node.step) {
+        builder.token(":");
+        printExpr(builder, node.step);
+      }
+      return;
+    case "List": {
       builder.token("[");
+      const inlineElementsLength = (node.elements || []).reduce(
+        (sum, element, index) =>
+          sum + estimateExprLength(element) + (index < node.elements.length - 1 ? 2 : 0),
+        0
+      );
+      const shouldWrapElements =
+        node.elements.length > 0 && wouldOverflow(builder, inlineElementsLength + 1);
+
+      if (shouldWrapElements) {
+        builder.newline();
+        builder.indent();
+        node.elements.forEach((element, index) => {
+          printExpr(builder, element);
+          if (index < node.elements.length - 1) {
+            builder.token(",");
+          }
+          builder.newline();
+        });
+        builder.dedent();
+        builder.token("]");
+        return;
+      }
+
       node.elements.forEach((element, index) => {
         printExpr(builder, element);
         if (index < node.elements.length - 1) {
@@ -359,8 +605,34 @@ const printExpr = (builder, node, parentPrecedence = 0) => {
       });
       builder.token("]");
       return;
-    case "Tuple":
+    }
+    case "Tuple": {
       builder.token("(");
+      const inlineElementsLength = (node.elements || []).reduce(
+        (sum, element, index) =>
+          sum + estimateExprLength(element) + (index < node.elements.length - 1 ? 2 : 0),
+        0
+      );
+      const trailingComma = node.elements.length === 1 ? 1 : 0;
+      const shouldWrapElements =
+        node.elements.length > 0 &&
+        wouldOverflow(builder, inlineElementsLength + trailingComma + 1);
+
+      if (shouldWrapElements) {
+        builder.newline();
+        builder.indent();
+        node.elements.forEach((element, index) => {
+          printExpr(builder, element);
+          if (index < node.elements.length - 1 || node.elements.length === 1) {
+            builder.token(",");
+          }
+          builder.newline();
+        });
+        builder.dedent();
+        builder.token(")");
+        return;
+      }
+
       node.elements.forEach((element, index) => {
         printExpr(builder, element);
         if (index < node.elements.length - 1) {
@@ -373,8 +645,46 @@ const printExpr = (builder, node, parentPrecedence = 0) => {
       }
       builder.token(")");
       return;
-    case "ListComp":
+    }
+    case "ListComp": {
       builder.token("[");
+      const inlineCompLength = estimateExprLength(node.elt) +
+        5 +
+        (node.target || []).reduce(
+          (sum, targetNode, index) =>
+            sum + estimateExprLength(targetNode) + (index < node.target.length - 1 ? 2 : 0),
+          0
+        ) +
+        4 +
+        estimateExprLength(node.iter) +
+        1;
+      const shouldWrapComp =
+        wouldOverflow(builder, inlineCompLength) || node.elt?.kind === "IfExpr";
+
+      if (shouldWrapComp) {
+        builder.newline();
+        builder.indent();
+        printExpr(builder, node.elt);
+        builder.newline();
+        builder.token("for", "kw");
+        builder.space();
+        node.target.forEach((targetNode, index) => {
+          printExpr(builder, targetNode);
+          if (index < node.target.length - 1) {
+            builder.token(",");
+            builder.space();
+          }
+        });
+        builder.space();
+        builder.token("in", "kw");
+        builder.space();
+        printExpr(builder, node.iter);
+        builder.newline();
+        builder.dedent();
+        builder.token("]");
+        return;
+      }
+
       printExpr(builder, node.elt);
       builder.space();
       builder.token("for", "kw");
@@ -392,6 +702,72 @@ const printExpr = (builder, node, parentPrecedence = 0) => {
       printExpr(builder, node.iter);
       builder.token("]");
       return;
+    }
+    case "BoolOp": {
+      const precedence = 8;
+      const shouldWrap = true;
+      if (shouldWrap) {
+        builder.token("(");
+      }
+
+      node.values.forEach((valueNode, index) => {
+        printExpr(builder, valueNode, precedence + 1);
+        if (index < node.values.length - 1) {
+          builder.space();
+          if (node.op === "and" || node.op === "or") {
+            builder.token(node.op, "kw");
+          } else {
+            builder.token(node.op, "op");
+          }
+          builder.space();
+        }
+      });
+
+      if (shouldWrap) {
+        builder.token(")");
+      }
+      return;
+    }
+    case "IfExpr": {
+      const precedence = 5;
+      const shouldWrap = precedence < parentPrecedence;
+      if (shouldWrap) {
+        builder.token("(");
+      }
+
+      printExpr(builder, node.body, precedence + 1);
+      builder.space();
+      builder.token("if", "kw");
+      builder.space();
+      printExpr(builder, node.test, precedence + 1);
+      builder.space();
+      builder.token("else", "kw");
+      builder.space();
+      printExpr(builder, node.orelse, precedence);
+
+      if (shouldWrap) {
+        builder.token(")");
+      }
+      return;
+    }
+    case "Compare": {
+      const precedence = 15;
+      const shouldWrap = precedence < parentPrecedence;
+      if (shouldWrap) {
+        builder.token("(");
+      }
+
+      printExpr(builder, node.left, precedence + 1);
+      builder.space();
+      builder.token(node.op, "op");
+      builder.space();
+      printExpr(builder, node.right, precedence + 1);
+
+      if (shouldWrap) {
+        builder.token(")");
+      }
+      return;
+    }
     case "BinOp": {
       const precedence = getBinOpPrecedence(node.op);
       const shouldWrap = precedence < parentPrecedence;
@@ -509,16 +885,42 @@ const printStatement = (builder, node) => {
       builder.space();
       printIdentifier(builder, node.name);
       builder.token("(");
-      node.args.forEach((argNode, index) => {
-        printIdentifier(builder, argNode.name);
-        builder.token(":");
-        builder.space();
-        printType(builder, argNode.annotation);
-        if (index < node.args.length - 1) {
-          builder.token(",");
+      const inlineArgsLength = (node.args || []).reduce(
+        (sum, argNode, index) =>
+          sum + estimateArgLength(argNode) + (index < node.args.length - 1 ? 2 : 0),
+        0
+      );
+      const returnSuffixLength = 1 + 4 + estimateTypeLength(node.returns) + 1;
+      const shouldWrapArgs =
+        node.args.length > 0 &&
+        wouldOverflow(builder, inlineArgsLength + returnSuffixLength);
+
+      if (shouldWrapArgs) {
+        builder.newline();
+        builder.indent();
+        node.args.forEach((argNode, index) => {
+          printIdentifier(builder, argNode.name);
+          builder.token(":");
           builder.space();
-        }
-      });
+          printType(builder, argNode.annotation);
+          if (index < node.args.length - 1) {
+            builder.token(",");
+          }
+          builder.newline();
+        });
+        builder.dedent();
+      } else {
+        node.args.forEach((argNode, index) => {
+          printIdentifier(builder, argNode.name);
+          builder.token(":");
+          builder.space();
+          printType(builder, argNode.annotation);
+          if (index < node.args.length - 1) {
+            builder.token(",");
+            builder.space();
+          }
+        });
+      }
       builder.token(")");
       builder.space();
       builder.token("->", "op");

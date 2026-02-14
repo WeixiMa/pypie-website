@@ -80,6 +80,10 @@
                 slug: "model_line/index.html",
                 title: "The Complete Line",
             },
+            {
+                slug: "corr/index.html",
+                title: "Finding Patterns",
+            }
         ],
     };
     const PRELUDE_PAGE_ID = "prelude";

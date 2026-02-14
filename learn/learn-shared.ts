@@ -151,6 +151,10 @@
                 slug: "model_line/index.html",
                 title: "The Complete Line",
             },
+            {
+                slug: "corr/index.html",
+                title: "Finding Patterns",
+            }
         ],
     };
 
